@@ -37,6 +37,8 @@ package org.puremvc.as3.demos.flex.login.view
 			a.y = 10*i+30;
 			e.target.parent.addChild(a);
 			i++;
+			this.sendNotification(Notification.STARTCONNECT);
+			
 		}
 		
 		override public function listNotificationInterests():Array 

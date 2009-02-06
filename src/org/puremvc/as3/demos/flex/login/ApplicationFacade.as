@@ -1,5 +1,6 @@
 package org.puremvc.as3.demos.flex.login
 {
+	import org.puremvc.as3.demos.flex.login.controller.ModelPrepCommand;
 	import org.puremvc.as3.demos.flex.login.controller.StartUpCommand;
 	import org.puremvc.as3.demos.flex.login.model.emu.Notification;
 	import org.puremvc.as3.interfaces.IFacade;
@@ -26,6 +27,7 @@ package org.puremvc.as3.demos.flex.login
 		 */
 		 override protected function initializeController():void{
 		 	super.initializeController();
+		 	registerCommand( Notification.STARTCONNECT,ModelPrepCommand );
 		 	registerCommand( Notification.STARTUP,StartUpCommand );
 		 }
 	}
