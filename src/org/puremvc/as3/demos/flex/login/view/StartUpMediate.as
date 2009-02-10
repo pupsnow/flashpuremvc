@@ -26,6 +26,7 @@ package org.puremvc.as3.demos.flex.login.view
 			_mybt = viewComponent.getChildByName("btn") as SimpleButton;
 			_myha = viewComponent.getChildByName("myha") as MyMovie;
 			_mybt.addEventListener(MouseEvent.CLICK,clickHandler);
+			
 		}
 		private function clickHandler(e:MouseEvent):void
 		{
@@ -37,6 +38,7 @@ package org.puremvc.as3.demos.flex.login.view
 			a.y = 10*i+30;
 			e.target.parent.addChild(a);
 			i++;
+			
 			this.sendNotification(Notification.STARTCONNECT);
 			
 		}

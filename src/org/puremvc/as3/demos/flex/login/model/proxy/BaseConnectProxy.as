@@ -6,10 +6,14 @@ package org.puremvc.as3.demos.flex.login.model.proxy
 	import org.puremvc.as3.interfaces.IProxy;
 	public class BaseConnectProxy extends ServiceDelegate implements IProxy,IServiceConnect
 	{
-		private static const NAME:String = "BaseConnectProxy";
+		public static const NAME:String = "BaseConnectProxy";
         public function BaseConnectProxy(data:Object=null)
 		{
 			super(NAME,data);
+		}
+		
+		public function connectservice():void
+		{
 			this.connectService("FirstJavaClassRemoteObject.sayHello");
 			this.serverCall("nihao");
 		}
