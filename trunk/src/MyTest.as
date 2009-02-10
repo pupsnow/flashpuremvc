@@ -27,10 +27,10 @@
 		private function initHandler(e:Event):void
 		{
 			
-			//var mov:LoadSWF = e.target.content;
-			//trace(e.target);
-			//mov.data = DataSource.getInstance();
-			//facade.registerMediator(new LoadSwfMediate(mov));
+			var mov:LoadSWF = e.target.content;
+			trace(e.target);
+			mov.data = DataSource.getInstance();
+			facade.registerMediator(new LoadSwfMediate(mov));
 		}
 	}
 }
