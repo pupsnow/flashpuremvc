@@ -7,11 +7,13 @@
 <classEntry path="org.puremvc.as3.demos.flex.login.controller.ModelPrepCommand"/>
 <classEntry path="org.puremvc.as3.demos.flex.login.model.ServiceDelegate"/>
 <classEntry path="MyTest"/>
+<classEntry path="Movie"/>
 <classEntry path="org.puremvc.as3.demos.flex.login.controller.StartUpCommand"/>
+<classEntry path="loadswf.LoadSwfManager"/>
+<classEntry path="org.puremvc.as3.demos.flex.login.model.DataSource"/>
 <classEntry path="org.puremvc.as3.demos.flex.login.view.StartUpMediate"/>
 <classEntry path="selfdesizenUI.StringUtilComponent"/>
 <classEntry path="MyBt"/>
-<classEntry path="org.puremvc.as3.demos.flex.login.model.DataSource"/>
 </includeClasses>
 <includeResources/>
 <namespaceManifests/>

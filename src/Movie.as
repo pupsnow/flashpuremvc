@@ -1,4 +1,4 @@
-﻿package
+package
 {
 	import fl.controls.Button;
 	
@@ -10,10 +10,12 @@
 	import loadswf.LoadSwfManager;
 	
 	import org.puremvc.as3.demos.flex.login.model.DataSource;
-	public class LoadSWF extends Sprite {
+
+	public class Movie extends Sprite
+	{
 		public var data:DataSource;
-		
-		public function LoadSWF() {
+		public function Movie()
+		{
 			super();
 			var btn:Button = new Button();
 			btn.label = "aaa";
@@ -24,20 +26,20 @@
 			this.addEventListener(KeyboardEvent.KEY_DOWN,keyDownHandler);
 		}
 		private function clickHandler(e:MouseEvent):void {
-			data.testdata = "ceshi";
+			data.testdata = "ceshi2";
 		}
 		private function keyDownHandler(e:KeyboardEvent):void
 		{
 			switch(e.keyCode)
 			{
-				case Keyboard.ENTER:
-					trace("enter2");
-					LoadSwfManager.getInstance().unloadSwf();
-					LoadSwfManager.getInstance().loadSwf("movie.swf");
-					break;
+//				case Keyboard.ENTER:
+//					LoadSwfManager.getInstance().unloadSwf();
+//					LoadSwfManager.getInstance().loadSwf("loadswf.swf");
+//					break;
 				case Keyboard.ESCAPE:
 					LoadSwfManager.getInstance().unloadSwf();
-					trace("out2");
+					LoadSwfManager.getInstance().loadSwf("loadswf.swf");
+					trace("out3");
 					break;
 					
 				
