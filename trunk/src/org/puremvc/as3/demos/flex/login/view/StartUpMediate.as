@@ -17,6 +17,7 @@ package org.puremvc.as3.demos.flex.login.view
 		public static const NAME:String = 'StartUpMediator';
 		public var _mybt:SimpleButton;
 		public var _myha:MyMovie;
+		private var name_text:TextInput;
 		private var i:int = 0;
 		[Bindable]
 		private var data:DataSource = DataSource.getInstance();
@@ -25,6 +26,8 @@ package org.puremvc.as3.demos.flex.login.view
 			super(NAME, viewComponent);
 			_mybt = viewComponent.getChildByName("btn") as SimpleButton;
 			_myha = viewComponent.getChildByName("myha") as MyMovie;
+			TextInput(_myha.getChildByName("sex_txt")).setFocus();
+//			TextInput(_myha.getChildByName("sex_txt")).
 			_mybt.addEventListener(MouseEvent.CLICK,clickHandler);
 			
 		}
