@@ -3,6 +3,7 @@
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.system.System;
 	import flash.ui.Keyboard;
 	
 	import loadswf.LoadSwfManager;
@@ -15,6 +16,9 @@
 		public function MyTest()
 		{
 			super();
+			trace("w:"+this.stage.width+"H:"+this.stage.height)
+			this.width= this.stage.width;
+			this.height= this.stage.height;
 			loadManager.mainswf = this;
 			facade.startUp(this);
 			this.addEventListener(KeyboardEvent.KEY_DOWN,keyDownHandler);
