@@ -1,5 +1,6 @@
 package org.puremvc.as3.demos.flex.login.model.proxy
 {
+	
 	import org.puremvc.as3.demos.flex.login.model.DataSource;
 	import org.puremvc.as3.demos.flex.login.model.IServiceConnect;
 	import org.puremvc.as3.demos.flex.login.model.ServiceDelegate;
@@ -19,8 +20,9 @@ package org.puremvc.as3.demos.flex.login.model.proxy
 		}
      	override  public function result(rs:Object):void
 		{
-			trace("ok2");
-			DataSource.getInstance().testdata = rs.toString();
+			trace(rs is Array);
+			var a:Array = rs as Array;
+			DataSource.getInstance().testdata = a.length.toString() ;
 		}
 		override public function fault(fl:Object):void
 		{

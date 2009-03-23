@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service id="remoting-service" 
+    class="flex.messaging.services.RemotingService">
+
+    <adapters>
+        <adapter-definition id="java-object" class="flex.messaging.services.remoting.adapters.JavaAdapter" default="true"/>
+    </adapters>
+
+    <default-channels>
+        <channel ref="my-amf"/>
+    </default-channels>
+    <destination id="FirstJavaClassRemoteObject">
+        <properties>
+            <source>com.test.FirstJavaClass</source>
+            <scope>application</scope>
+        </properties>
+    </destination>
+    <destination id="dataServiceOne">
+        <properties>
+            <source>com.connectDB.DataServiceImpl</source>
+            <scope>application</scope>
+        </properties>
+    </destination>   
+    <destination id="XmlService">
+        <properties>
+            <source>com.xml.XmlWrite</source>
+            <scope>application</scope>
+        </properties>
+    </destination>
+    
+    <destination id="command">
+        <properties>
+            <source>com.command.CommandLine</source>
+            <scope>application</scope>
+        </properties>
+    </destination>
+    
+</service>
