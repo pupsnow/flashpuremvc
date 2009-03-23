@@ -56,6 +56,7 @@ package loadswf
 		public function unloadSwf():void
 		{
 			urll.unload();
+			mainswf.removeChild(urll);
 		}
 
 	}
