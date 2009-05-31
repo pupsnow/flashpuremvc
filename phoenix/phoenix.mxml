@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="absolute" xmlns:input="com.eto.phoenix.component.input.*"  
+	 xmlns:local="*" xmlns:container="com.eto.phoenix.component.containers.*" 
+	 xmlns:dataStateLayout="com.eto.phoenix.component.containers.dataStateLayout.*" 
+	 xmlns:dataGridClasses="com.eto.phoenix.component.controls.dataGridClasses.*"
+	 initialize="sdk.send()" xmlns:view="com.eto.samples.view.*"
+	 pageTitle="Phoenix Component Explorer">
+	 <mx:Script>
+	 	<![CDATA[
+	 		import com.eto.phoenix.model.request.PageListDataModel;
+	 		import com.eto.phoenix.commands.request.RequestCommand;
+	 		import mx.controls.dataGridClasses.DataGridItemRenderer;
+	 		import mx.controls.Text;
+	 		import mx.controls.Label;
+	 		import mx.containers.ViewStack;
+	 		import com.eto.phoenix.components.skins.NullSkin;
+	 		import mx.skins.halo.ButtonSkin;
+	 		//import com.eto.phoenix.commands.request.RequestCommand;
+	 		import mx.controls.Button;
+	 		import mx.containers.Panel;
+	 		import mx.controls.LinkButton;
+	 		import mx.controls.DataGrid;
+	 		import mx.controls.Alert;
+	 		import mx.collections.ICollectionView
+	 		//import com.eto.phoenix.component.controls.dataGridClasses.DataGridCheckRenderer
+			//new DataGridItemRenderer
+	 		//private var aaa:RequestCommand=new RequestCommand();
+	 		private var aa1:PageListDataModel = new PageListDataModel(sdkLoaded);
+	 		[Bindable]
+	 		private var ResultList:XMLList; 
+	 		 new RequestCommand();
+	 		private function openTree(xml:XMLList):void
+	 		{
+	 			//new NullSkin
+	 			new ViewStack
+	 		}
+	 		
+	 		private function aa(item:Object):void
+	 		{
+	 			//headc
+	 		}
+	 		
+	 		private function treeChanged(event:Event):void
+	        {
+	            var urlSource:String = compLibTree.selectedItem.@url;
+	            if (urlSource != null && urlSource != "")
+	            {
+	            	var url:String = "com/eto/samples/view/"+urlSource;
+	            	moduleLoader.url = url+".swf";
+	            	vs.loadSource(url,"");
+	            	viewPanel.title = compLibTree.selectedItem.@label;
+	            }
+	            else
+	            {
+	                compLibTree.expandItem(compLibTree.selectedItem, true, true);
+	            }
+	        }
+	        
+	        private function sdkLoaded():void
+	        {
+	            explorerTree = XML(sdk.lastResult.node);
+	            compLibTree.dataProvider = explorerTree;
+	           // compLibTree.
+	        } 
+	 	]]>
+	 </mx:Script>
+	 
+	<!-- <mx:Style source="style/yflexskin/yflexskin.css"/>
+	 
+	 <mx:Style source="style/style.css"/>-->
+	 
+	 <mx:XML id="explorerTree"/>
+	 
+	 <mx:HTTPService id="sdk" url="explorer.xml" resultFormat="e4x" 
+	  		result="sdkLoaded();"/>
+	  
+	 <mx:HDividedBox width="100%" height="100%">
+	 
+	 	<mx:Panel width="30%" height="100%" title="Phoenix Component Explorer">
+            <mx:Tree id="compLibTree" width="100%" height="100%" showRoot="false" labelField="@label"
+                     change="treeChanged(event);"/>
+        </mx:Panel>
+        
+        <mx:VDividedBox width="100%" height="100%">
+        	<mx:Panel id="viewPanel" 
+        		width="100%" height="45%" 
+        		horizontalAlign="center">
+        		<mx:ModuleLoader id="moduleLoader" 
+        			width="100%" height="100%"/>
+        	</mx:Panel>                                
+        	<view:ViewSource id="vs" width="100%" height="55%"/>
+        </mx:VDividedBox>
+	 </mx:HDividedBox>
+</mx:Application>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:control="com.eto.phoenix.components.controls.*" 
+	layout="horizontal" width="100%" height="100%"
+    verticalAlign="middle" horizontalAlign="center">
+	<control:StyleLinkButton label="linkButtonSkin" styleState="linkButtonSkin" width="108"/>
+	<control:StyleLinkButton label="buttonSkin" styleState="buttonSkin" width="108"/>
+	<control:StyleLinkButton label="textUnderLine" styleState="textUnderLine" width="95"/>
+</mx:Module>

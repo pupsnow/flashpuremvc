@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" 
+	verticalAlign="middle" horizontalAlign="center" 
+	xmlns:control="com.eto.phoenix.components.controls.*">
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			public var showOtherOperation:Boolean = true;
+			
+			[Bindable]
+			public var otherOperationLable:String = "高级搜索";
+		]]>
+	</mx:Script>
+	
+	<mx:Metadata>
+		[Event("advancedSearch")]
+	</mx:Metadata>
+	<mx:HBox width="100%" height="50" verticalAlign="middle" horizontalAlign="center">
+		<mx:Label text="没有您搜索的结果" fontSize="15"/>
+	</mx:HBox>
+	<mx:HBox width="100%" height="30" horizontalGap="0" 
+		verticalAlign="middle" horizontalAlign="center">
+		<mx:Label text="您还可以点击这里执行" visible="{showOtherOperation}"/>
+		<control:StyleLinkButton styleState="textUnderLine" 
+			 label="{otherOperationLable}"
+			 click="dispatchEvent(new Event('advancedSearch'))"/>
+	</mx:HBox>
+</mx:VBox>
