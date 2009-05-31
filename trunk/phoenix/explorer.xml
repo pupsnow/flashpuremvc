@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<compTree>
+    <node label="FrameWork Components">
+
+    <node label="Visual Components">
+        <node label="Controls">
+            <node label="SearchInput" url="controls/SearchInputExample"/>
+            <node label="StyleLinkButton" url="controls/StyleLinkButtonExample"/>
+            <node label="DataGridChooseColumn" url="controls/DataGridChooseColumnExample"/>
+        </node>
+        <node label="Containers">
+            <node label="ButtonCanvas" url="containers/ButtonCanvasExample"/>
+            <node label="DataStateLayout" url="containers/DataStateLayoutExample"/>
+        </node>
+     </node>
+     
+     </node>
+</compTree>

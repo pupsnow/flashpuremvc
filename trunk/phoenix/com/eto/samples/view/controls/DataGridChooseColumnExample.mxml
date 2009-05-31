@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="horizontal" 
+	width="100%" height="100%"
+	xmlns:dataGridClasses="com.eto.phoenix.components.controls.dataGridClasses.*">
+	
+	<mx:XMLList id="xm4" xmlns="">
+		<r>
+			<Subject>
+				Thank you 
+			</Subject>
+		</r>
+		<r>
+			<Subject>
+				Thank your mother
+			</Subject>
+		</r>
+		<r>
+			<Subject>
+				Thank you for support eto studio
+			</Subject>
+		</r>
+	</mx:XMLList>
+	
+	<mx:VBox width="50%" height="100%" verticalAlign="middle" horizontalAlign="center">
+		<mx:Label text="checkBoxState:" fontWeight="bold"/>
+	 	 
+		<mx:DataGrid width="431" height="168" dataProvider="{xm4}">
+			<mx:columns>
+				<dataGridClasses:DataGridChooseColumn chooseState="checkBox"
+				 	 showCheckHeader="true" width="25"/>
+				<mx:DataGridColumn dataField="Subject" headerText="Thank you"/>
+			</mx:columns> 
+		</mx:DataGrid>
+		
+	</mx:VBox>
+	
+	<mx:VBox width="50%" height="100%"  verticalAlign="middle" horizontalAlign="center">
+	 	 <mx:Label text="RadioButtonState:" fontWeight="bold"/>
+	 	 
+	 	 <mx:DataGrid width="431" height="168" dataProvider="{xm4}">
+	 	 	 <mx:columns>
+	 	 	 	 <dataGridClasses:DataGridChooseColumn  sortable="true" chooseState="radioBox"
+	 	 	 	 	  width="25"/>
+	 	 	 	 <mx:DataGridColumn dataField="Subject" headerText="Thank you"/>
+	 	 	 </mx:columns> 
+		</mx:DataGrid>
+	</mx:VBox>
+</mx:Module>

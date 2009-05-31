@@ -1,0 +1,57 @@
+/* CSS file */
+/* global{
+	fontSize: 12pt;
+	color: #000000
+} */
+SearchInput
+{
+	textdefultColor : #AAB3B3;
+	textColor : #0B333C;
+	clearButtonStyleName : "clearButtonStyle";
+	inputStyleName : "inputStyle";
+	recordListStyleName: "recordListStyle";
+}
+
+.inputStyle
+{
+	borderStyle: solid;
+	borderColor: #8ef0ff;
+   	backgroundAlpha: 1;
+    backgroundColor: #eff6f8;
+    cornerRadius: 10;
+    themeColor: #2194c5;
+    paddingLeft: 2;
+    paddingRight: 2;
+}
+
+.clearButtonStyle
+{
+	upSkin: Embed(source="images/close_up.gif");
+	overSkin: Embed(source="images/close_down.gif");
+	downSkin: Embed(source="images/close_over.gif");
+}
+
+/* List
+{
+	borderThickness: 4;
+	borderColor: #70b9ea;
+	selectionColor: #148cc0;
+	cornerRadius: 5;
+	shadowDirection: center;
+	dropShadowEnabled: true;
+} */
+ButtonCanvas
+{
+	borderColor: #9dbbb3;
+    buttonHighlightAlphas: 0.72, 0.1;
+    buttonFillAlphas: 0.65, 0.76, 0.53, 0.65;
+    buttonFillColors: #000000, #555555, #fefefe, #e1f2ef;
+    themeColor: #9dbbb3;
+}
+/*LinkButton
+{
+	fontWeight:"normal";
+	color: #2c6c98;
+    textRollOverColor: #1b5075;
+    textSelectedColor: #0b3451;
+}*/

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:control="com.eto.phoenix.components.controls.*" 
+	layout="horizontal" width="100%" height="100%">
+	<mx:Script>
+		<![CDATA[
+		
+			import mx.controls.Alert;
+			
+			private function excuteQuery():void
+			{
+				Alert.show("执行了查询");
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:VBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="center"
+		backgroundColor="#5ec5f6"> 
+ 		<mx:Label text="一般搜索框"/>
+ 		<control:SearchInput width="150" 
+ 		icon="@Embed(source='images/scicon.png')"
+ 		excute="excuteQuery()"/> 
+ 	</mx:VBox> 
+ 	
+ 	<mx:VBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="center"
+ 		backgroundColor="#5ec5f6">
+ 		<mx:Label text="保存查询记录的搜索框"/>
+ 		<control:SearchInput width="150" useRecordInput="true" 
+	 		icon="@Embed(source='images/scicon.png')"
+	 		excute="excuteQuery()"/>
+ 	</mx:VBox>
+</mx:Module>

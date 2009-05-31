@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="vertical" width="100%" height="100%" horizontalAlign="center" 
+	xmlns:containers="com.eto.phoenix.components.containers.*" 
+	xmlns:dataStateLayout="com.eto.phoenix.components.containers.dataStateLayout.*">
+	
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+	 		private var ResultList:XMLList;
+		]]>
+	</mx:Script>
+	
+	<mx:XMLList id="xml">
+		 <Item name="大王" sex="男" age="1">
+		 	<Item name="大刘" sex="女" age="200"/>
+		 	<Item name="大刘" sex="女" age="1-1"/>
+		 	<Item name="大刘" sex="女" age="1-2"/>
+		 </Item>
+		 <Item name="大刘" sex="女" age="2">
+		 	<Item name="大刘" sex="女" age="2-1"/>
+		 	<Item name="大刘" sex="女" age="2-1"/>
+		 	<Item name="大刘" sex="女" age="2-3"/>
+		 </Item>
+		 <Item name="大张" sex="男" age="3"/>
+	 </mx:XMLList>
+	 
+	 <mx:XMLList id="xml2">
+		 <Item name="大王" sex="男" age="1"/>
+		 <Item name="大刘" sex="女" age="200"/>
+		 <Item name="大刘" sex="女" age="1-1"/>
+		 <Item name="大刘" sex="女" age="1-2"/>
+		 <Item name="大刘" sex="女" age="2"/>
+	 	 <Item name="大刘" sex="女" age="2-1"/>
+	 	 <Item name="大刘" sex="女" age="2-1"/>
+	 	 <Item name="大刘" sex="女" age="2-3"/>
+		 <Item name="大张" sex="男" age="3"/>
+	 </mx:XMLList>
+	 
+	<mx:TabNavigator width="500" height="100%">
+	
+ 		<containers:DataStateLayout id="dataStateLayout"
+	 	 		 label="Tree" width="100%" height="100%" dataProvider="{ResultList}">
+	 	 	
+	 	 	<containers:noResultComponent>
+	 	 		<dataStateLayout:NoResultPage width="100%"/>
+	 	 	</containers:noResultComponent>
+	 	 	
+	 	 	<containers:listView>
+	 	 		<mx:Tree width="100%" height="100%" labelField="@name"/>
+	 	 	</containers:listView>
+	 	 	
+	 	</containers:DataStateLayout>
+
+	 	<containers:DataStateLayout id="dataStateLayout2"
+	 	 		 label="List" width="100%" height="100%" dataProvider="{ResultList}">
+	 	 	
+	 	 	<containers:noResultComponent>
+	 	 		<dataStateLayout:NoResultPage width="100%"/>
+	 	 	</containers:noResultComponent>
+	 	 	
+	 	 	<containers:listView>
+	 	 		<mx:List width="100%" height="100%" labelField="@name"/>
+	 	 	</containers:listView>
+	 	 	
+	 	 </containers:DataStateLayout>
+	 	 
+	 	 <containers:DataStateLayout id="dataStateLayout3"
+	 	 		 label="DataGrid" width="100%" height="100%" dataProvider="{ResultList}">
+	 	 	
+	 	 	<containers:noResultComponent>
+	 	 		<dataStateLayout:NoResultPage width="100%"/>
+	 	 	</containers:noResultComponent>
+	 	 	
+	 	 	<containers:listView>
+	 	 		<mx:DataGrid width="100%" height="100%">
+	 	 			<mx:columns>
+	 	 				<mx:DataGridColumn dataField="@name"/>
+	 	 				<mx:DataGridColumn dataField="@sex"/>
+	 	 				<mx:DataGridColumn dataField="@age"/>
+	 	 			</mx:columns>
+	 	 		</mx:DataGrid>
+	 	 	</containers:listView>
+	 	 	
+	 	 </containers:DataStateLayout>
+	 	 
+ 	</mx:TabNavigator>
+ 	
+ 	<mx:HBox width="100%" height="30" horizontalAlign="center">
+ 	 	<mx:Button label="加载数据1" click="ResultList = xml"/>
+ 	 	<mx:Button label="加载数据2" click="ResultList = xml2"/>
+ 	 	<mx:Button label="没有数据" click="ResultList = null"/>
+ 	 </mx:HBox>
+</mx:Module>
