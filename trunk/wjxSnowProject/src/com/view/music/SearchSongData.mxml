@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"  backgroundColor="#ffffff"
+    creationComplete="initobj()" x="286" y="90" verticalAlign="middle">
+	<mx:Script>
+		<![CDATA[
+			import com.model.SongDataModel;
+			import mx.rpc.events.ResultEvent;
+			/* import utils.GBToUTF8;
+			import mx.containers.VBox;
+			private function initobj():void
+			{
+			flash.system.System.useCodePage=true;
+			var str:URLRequest=new  URLRequest("test.txt")
+			var loader:URLLoader = new URLLoader(str);
+				loader.addEventListener(Event.COMPLETE,lyricLoaded);
+				//loader.load();
+			}
+			private function lyricLoaded(e:Event):void
+			{
+				
+				test.text=escape(e.currentTarget.data);
+				test2.text=(unescape("%B6%A1%CF%E3%BB%A8"));
+				
+			} */
+			
+			//你得知道，歌曲数据都是在哪找的 ^_^
+			private var mp3_url:String = "http://mp3.zhongsou.com/";
+			//临时记录搜索结果
+			private var mp3Data:String;
+			//记录搜索所得的歌曲数量
+			private var now:Number = 1;
+		    [Bindable]
+            public var SongData:SongDataModel;
+            [Bindable]
+            private var url:String;
+			private function initobj():void
+			{
+				flash.system.System.useCodePage = true;
+				
+			}
+			 
+			//发送URL请求，得到搜索结果数据。参数(要搜索的内容)
+			private function jiaZai(sPost:String):void 
+			{
+				   iomes.text="";
+				    var my_lv:URLLoader=new URLLoader();
+				    //发送URL请求
+				    var urlrep:URLRequest=new URLRequest("http://127.0.0.1/TalkBook_asp/readHtml3.asp?url="+mp3_url+"m?w="+sPost+"@ty=16");
+				    my_lv.load(urlrep);
+				     //当数据加载时
+				    my_lv.addEventListener(ProgressEvent.PROGRESS,progress);
+				    my_lv.addEventListener(IOErrorEvent.IO_ERROR,ioerrorhandler);
+				    //当数据加载成功时
+				    my_lv.addEventListener(Event.COMPLETE,complete);
+			}
+			private function ioerrorhandler(e:IOErrorEvent):void
+			{
+				
+				iomes.text="无法连接到服务器!";
+			}
+			
+			
+			private function progress(e:ProgressEvent):void
+			{
+				
+				//SongName.text="正在加载数据 请稍等。。。。。。。。。。。。。。。"
+			}
+			
+			
+			//加载完后
+			private function complete(e:Event):void
+			{    
+				//
+				//SongName.text='';
+	            //转义十六进制序列字符串。将搜索结果转为小写，便于提取。
+	            var s:String = unescape(String(e.currentTarget.data).toLowerCase());
+	            trace(s);//去掉前面两斜杠可查看搜索结果原始数据
+	            //首先提取歌曲内容一块
+	            var ay:Array = s.split("<input name=aid");
+	            now = 1;
+	            //解析加载的数据
+	            jieXi(ay[1]);
+	            trace(ay.length);
+				
+			}
+			
+			
+			/** 通过代理来避免 安全沙箱
+			public function jiaZai(sPost:String):void
+			{
+				url=mp3_url+"m?w="+sPost+"&ty=16";
+				lrcread.send();
+			} 
+			private function resulthandler(e:ResultEvent):void
+			{
+				
+				//转义十六进制序列字符串。将搜索结果转为小写，便于提取。
+	            var s:String = unescape(e.result.toString().toLowerCase());
+	            trace(s);//去掉前面两斜杠可查看搜索结果原始数据
+	            //首先提取歌曲内容一块
+	            var ay:Array = s.split("<input name=aid");
+	            now = 1;
+	            //解析加载的数据
+	            jieXi(ay[1]);
+	            trace(ay.length);
+			}
+			 
+			 <mx:HTTPService url="http://localhost/TalkBook_asp/readHtml3.asp" 
+				result="resulthandler(event)"
+				resultFormat="text" useProxy="false" id="lrcread">
+			<mx:request xmlns="">
+				<url>{url}</url>
+			</mx:request>
+			</mx:HTTPService>
+			*/
+			//解析加载的数据
+			private function jieXi(s:String):void {
+			    mp3Data = s;
+			    //如果没找到与搜索内容相关的歌曲信息
+			    if (mp3Data.indexOf(".mp3")==-1) {
+			       iomes.text="没有找到与 ["+test.text+"] 相关的歌曲信息！";
+			        return;
+			    }
+			    var mes:String=qieChu(mp3Data,"<a href='#' onclick='openp(\"","\");return false;'>试听</a></td>")
+			    var a:Array=mes.split(',');
+			    SongData.songlist.addItem({label:a[2],person:a[3],url:a[0]});
+			  //=========================================================================================  
+			    //SongName.text+="歌名："+a[2]+'\n';
+			    //SongName.text+="歌手："+a[3]+'\n';
+			    //SongName.text+="mp3地址:"+a[0]+'\n';
+			    //切出歌曲名称
+			    //var sOne:String = qieChu(mp3Data, "&s=", "&");
+			    //切出歌手名称
+			   // var sTwo:String = qieChu(mp3Data, "g=", "&");
+			    //切出歌曲的url 
+			   // var sThree:String = qieChu(mp3Data, "surl=", "&url");
+			    //输出解析结果
+			   /*  trace("\t\t第 "+now+" 首歌");
+			    trace("歌名："+a[2]);
+			    trace("歌手："+a[3]);
+			    trace("mp3地址："+a[0]);
+			    trace("\n"); */
+			   //=========================================================================================
+			    //如果还有下一个地址，递归，继续解析
+			   /*  if (mp3Data.indexOf("surl=", 0) != -1) {
+			        now++;
+			        jieXi(mp3Data);
+			    } */
+			}
+			//切出s内 k-j 中间的一段，保存切出后的数据到mp3Data。(这个函数有不理解的地方请按F1看帮助查询)
+			private function qieChu(s:String, k:String, j:String):String {
+			    var nK:Number = s.indexOf(k);
+			    var sK:String = s.substr(nK+k.length);
+			    var nJ:Number = sK.indexOf(j);
+			    mp3Data = sK.substr(nJ+j.length);
+			    return (sK.substr(0, nJ));
+				}		   
+	
+		]]>
+	</mx:Script>
+	
+	<mx:TextInput id="test" x="10" y="136" text="吻别 张学友"/>
+	<mx:Button label="搜索" x="178" y="136" click="jiaZai(test.text)"/>
+	<mx:Label id="iomes" color="red"/>
+</mx:HBox>

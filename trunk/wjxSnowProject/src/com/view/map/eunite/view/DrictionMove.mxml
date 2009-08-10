@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"  creationComplete="init()" mouseDown="this.startDrag()" 	mouseUp="this.stopDrag()" >
+<mx:Blur id="blurOn" blurXFrom="0.0" blurXTo="10.0" blurYFrom="0.0" blurYTo="10.0"/>
+	<mx:Blur id="blurOut" blurXFrom="10.0" blurXTo="0.0" blurYFrom="10.0" blurYTo="0.0"/>
+<mx:Script>
+	<![CDATA[
+		import com.view.map.components.modle.MapXYPoint;
+		import mx.effects.Resize;
+		import mx.managers.PopUpManager;
+		import mx.effects.Zoom;
+			[Bindable]
+			private var model:MapXYPoint=MapXYPoint.getInstance();
+			private var _map:ImageMap;	
+			private var timer:Timer;
+			//private var _map:Image2;
+				
+			public function set map(m:ImageMap):void{
+				this._map = m;
+			}
+			
+			public function get map():ImageMap{
+				return this._map;
+			}	
+			private function init():void
+			{
+				_map.scrollJump=1;
+				timer = new Timer(_map.scrollSpeed);
+			}
+			/**
+			 * *向右移动
+			 *  */
+			private function MoveRight():void
+			{
+				
+				if(timer.running) {
+					timer.stop();
+				}
+				MoveFun(_map.scrollRight);
+			}
+			/**
+			 * *向左移动
+			 * */
+			private function MoveLeft():void
+			{
+				
+				if(timer.running) {
+					timer.stop();
+				}
+				MoveFun(_map.scrollLeft);
+			}
+			/**
+			 * *向上移动
+			 * */
+			private function MoveUp():void
+			{
+				
+				if(timer.running) {
+					timer.stop();
+				}
+				MoveFun(_map.scrollUp);
+			}
+			/**
+			 * *向下移动
+			 * */
+			private function MoveDown():void
+			{ 
+				if(timer.running) {
+					timer.stop();
+				}
+				MoveFun(_map.scrollDown);
+			}
+			/**
+			 * *用于鼠标放开后停止移动
+			 * **
+			 * */
+			private function StopMoveDown(e:MouseEvent):void
+			{	
+			if(timer.running)
+			     {
+					timer.stop();
+				}
+			}	
+			/**
+			 * *公共时间函数用于控制移动距离 
+			 * */
+			private function MoveFun(scrollFunction:Function):void
+			{
+				timer = new Timer(_map.scrollSpeed);
+				timer.addEventListener(TimerEvent.TIMER, scrollFunction);
+				timer.start();
+			}	
+			private var _zoomLevel:Number =2;
+			/**  
+			 * 放大
+			 * **/
+			private var zoom:Zoom=new Zoom();		
+			private function onZoomIn():void{
+				   zoom.target=_map.image1
+				   zoom.zoomHeightFrom=1.0;
+				   zoom.zoomHeightTo=_zoomLevel;
+				   zoom.zoomWidthFrom=1.0;
+				   zoom.zoomWidthTo=_zoomLevel;
+				   zoom.end();
+				   zoom.play();		  
+					_zoomLevel += 1;
+					_zoomLevel = Math.max(_zoomLevel, 1);
+				//_map.zoomLevel = _zoomLevel;
+			}
+			 /** 
+			 * 缩小 
+			 * **/
+			private function onZoomOut():void{
+					zoom.target=_map.image1
+				    zoom.zoomHeightFrom=1.0;
+				    zoom.zoomHeightTo=_zoomLevel;
+				    zoom.zoomWidthFrom=1.0;
+				    zoom.zoomWidthTo=_zoomLevel;
+				    zoom.end();
+				    zoom.play();		  
+					_zoomLevel -= 1;
+					_zoomLevel = 1+(Math.min(_zoomLevel, 2)/10);
+				//_map.zoomLevel = _zoomLevel;
+			}					 
+	]]>
+</mx:Script>
+	<mx:Image x="9" y="0" id="north" mouseDownEffect="{blurOn}"  mouseUpEffect="{blurOut}" source="@Embed(source='assets/images/map/north-mini.png')" buttonMode="true"  mouseDown="MoveUp()" mouseUp="StopMoveDown(event)"/>
+	<mx:Image x="9" y="36" id="south" mouseDownEffect="{blurOn}" mouseUpEffect="{blurOut}" source="@Embed(source='assets/images/map/south-mini.png')" buttonMode="true" mouseDown="MoveDown()" mouseUp="StopMoveDown(event)" />
+	<mx:Image x="18" y="18" id="east" mouseDownEffect="{blurOn}" mouseUpEffect="{blurOut}" source="@Embed(source='assets/images/map/east-mini.png')" buttonMode="true" mouseDown="MoveRight()" mouseUp="StopMoveDown(event)"/>
+	<mx:Image x="0" y="18" id="west" mouseDownEffect="{blurOn}"  mouseUpEffect="{blurOut}" source="@Embed(source='assets/images/map/west-mini.png')" buttonMode="true" mouseDown="MoveLeft()" mouseUp="StopMoveDown(event)"/>
+	<mx:Image x="9" y="65" id="zoomin" mouseDownEffect="{blurOn}" mouseUpEffect="{blurOut}" source="@Embed(source='assets/images/map/zoom-plus-mini.png')" buttonMode="true" height="18"  mouseDown="onZoomIn();"/>
+	<mx:Image x="9" y="91" id="zoomout" mouseDownEffect="{blurOn}" mouseUpEffect="{blurOut}" source="@Embed(source='assets/images/map/zoom-minus-mini.png')" buttonMode="true"   mouseDown="onZoomOut();" />
+</mx:Canvas>

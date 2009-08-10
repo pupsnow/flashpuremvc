@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"  showCloseButton="true" close="close();" title="搜索结果" layout="absolute" width="400" height="300" borderThicknessTop="50" paddingTop="50">
+	<mx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			private function close():void{
+				PopUpManager.removePopUp(this);
+			}
+		]]>
+	</mx:Script>
+	<mx:Text y="30" text="共有0项查询结果"/>
+	<mx:List y="50"  width="100%" height="70%">
+		
+	</mx:List>
+	
+</mx:TitleWindow>

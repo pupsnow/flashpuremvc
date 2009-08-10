@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<oh:ObjectHandles xmlns:oh="components.roguedevelopment.objecthandles.*"  minWidth="100"
+	 xmlns:mx="http://www.adobe.com/2006/mxml"  resizeHandleImage="resize_handle.png"
+	  rotateHandleImage="rotate_handle.png"
+	  mouseCursors="{new ObjectHandlesMouseCursors()}"  allowRotate="false" allowHResize="false"  allowVResize="false"
+	 >
+	<mx:Script>
+		<![CDATA[
+			import components.roguedevelopment.objecthandles.ObjectHandlesMouseCursors;
+			[Bindable]
+			public var resitext:String;
+		]]>
+	</mx:Script>
+	<mx:Text id="ResizeText"  width="100%"  height="100%" text="{resitext}"/>
+</oh:ObjectHandles>

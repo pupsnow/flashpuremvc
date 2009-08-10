@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ApplicationControlBar xmlns:mx="http://www.adobe.com/2006/mxml" 
+	width="400" height="250"
+	 backgroundAlpha="0.9" 
+	mouseOut="mouseHandler(event)" mouseUp="mouseHandler(event)" 
+	mouseMove="mouseHandler(event)" mouseDown="mouseHandler(event)"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off" >
+	
+	<mx:Script>
+	<![CDATA[
+		import mx.controls.Button;
+		import mx.controls.SWFLoader;
+		import mx.controls.List;
+		import mx.controls.Image;
+		import mx.controls.Text;
+		import mx.collections.ArrayCollection;
+		import mx.controls.Label;
+		import mx.events.ItemClickEvent;
+		import mx.core.Container;
+		import mx.controls.Alert;		
+		import flash.events.MouseEvent;
+		public var target:Container;		
+		[Bindable]
+		private var textMode:Boolean = true;
+		[Bindable]
+		public var textArray:ArrayCollection;
+		[Bindable]
+		public var imageArray:ArrayCollection;
+		
+		private var dragging:Boolean;
+		private var x1:int;
+		private var y1:int;
+		
+		public var img:AddImage;
+		public var text:AddText;
+		
+		public function setTextMode(idx:Boolean):void{			
+			textMode = idx;
+			if(textMode){
+				height = 130;
+				attachType.selectedIndex = 0;
+				if(text_ipt != null){
+					text_ipt.setFocus();
+				}
+			}else{
+				height = 65;
+				attachType.selectedIndex = 1;
+				if(media_url != null){
+					media_url.setFocus();
+				}
+			}
+			this.visible = true;
+		}	
+		
+		private function mouseHandler(evt:MouseEvent):void{					
+			if(evt.type == MouseEvent.MOUSE_DOWN){
+				dragging = true;
+				x1 = mouseX;
+				y1 = mouseY;
+			}else if(evt.type == MouseEvent.MOUSE_MOVE && dragging){				
+				x += mouseX-x1;
+				y += mouseY-y1;
+				x1 = mouseX;
+				y1 = mouseY;		
+			}else if(evt.type == MouseEvent.MOUSE_UP){
+				dragging = false;
+			}else if(evt.type == MouseEvent.MOUSE_OUT){
+				dragging = false;			
+			}
+			evt.stopPropagation();
+		}
+		
+		private function mouseTextHandler(evt:MouseEvent):void{								
+			evt.stopPropagation();
+		}		
+		public function cmdHandler(evt:ItemClickEvent):void{
+			 text = new AddText();
+			if(evt.index == 0){
+				if(textMode){
+					text_ipt.text = "";				
+				}else{
+					media_url.text = "";
+				}
+			}else if(evt.index == 1){
+				visible = false;
+			}else if(evt.index == 2){				
+				if(target!=null && text_ipt.text.length >0 && textMode){	
+					
+					text.setStyle("fontSize", sizePicker.value);
+					text.setStyle("color",colorPicker.selectedColor);
+					text.x = this.x;
+					text.y = this.y;
+			/* 	 text.addEventListener(MouseEvent.MOUSE_DOWN,text.startDrag);
+					text.addEventListener(MouseEvent.MOUSE_UP,text.stopDrag);	 */							
+					
+					text.resitext= text_ipt.text;
+					trace("text.ResizeText.text")
+					target.addChild(text);
+					textArray.addItem(text);								
+										
+					text_ipt.text = "";
+					visible = false;					
+					
+				}else if(target!=null && media_url.text.length >0 && !textMode){	
+					img = new AddImage();										
+					img.x = this.x;
+					img.y = this.y;
+					img.maxHeight = 400;
+					img.maxWidth = 400;
+					img.addEventListener( IOErrorEvent.IO_ERROR , mediaLoaded);
+					img.ResizeImage.load(media_url.text);
+					target.addChild(img);
+				    imageArray.addItem(img);								
+					media_url.text = "";
+					visible = false;	
+				}
+			}
+			evt.stopPropagation();
+		}
+		
+		private function mediaLoaded(evt:IOErrorEvent):void{
+			Alert.show( "Wrong media to load!");
+			target.removeChild(img);
+		    imageArray.removeItemAt(imageArray.getItemIndex(img));		
+		}
+	]]>		
+	</mx:Script>
+<mx:ViewStack id="attachType" width="100%" height="100%" right="5" bottom="5" left="5" top="10" >	
+	<mx:VBox id="textBox" verticalAlign="middle" horizontalAlign="right">			
+		<mx:TextArea id="text_ipt" width="100%" height="100%"  fontSize="12" maxChars="999"
+			mouseOut="mouseTextHandler(event)" mouseUp="mouseTextHandler(event)" 
+			mouseMove="mouseTextHandler(event)" mouseDown="mouseTextHandler(event)"/>	
+		<mx:HBox width="100%" horizontalAlign="right">	
+		<mx:ColorPicker id="colorPicker" change="text_ipt.setStyle('color',colorPicker.selectedColor)"/>
+		<mx:NumericStepper id="sizePicker" minimum="12" maximum="22" stepSize="1" change="text_ipt.setStyle('fontSize',sizePicker.value)" />
+		<mx:ButtonBar itemClick="cmdHandler(event)" 
+				borderStyle="solid" horizontalGap="5">			
+        	<mx:dataProvider >
+				<mx:Array>
+					<mx:String>清空</mx:String>
+        			<mx:String>取消</mx:String>
+        			<mx:String>添加</mx:String>                	              	
+				</mx:Array>
+			</mx:dataProvider>
+	    </mx:ButtonBar>	   
+	    </mx:HBox>
+	</mx:VBox>
+	<mx:VBox id="imageBox" verticalAlign="middle" horizontalAlign="right">					
+		<mx:TextInput id="media_url" width="100%" text="http://......jpg"
+			mouseOut="mouseTextHandler(event)" mouseUp="mouseTextHandler(event)" 
+			mouseMove="mouseTextHandler(event)" mouseDown="mouseTextHandler(event)"  />
+			<mx:HBox width="100%" horizontalAlign="right">	
+			<mx:Button label="本地上传"/>
+			<mx:Button label="URL地址"/>
+		<mx:ButtonBar itemClick="cmdHandler(event)" borderStyle="solid" horizontalGap="5">			
+        	<mx:dataProvider>
+           		<mx:Array> 
+           			<mx:String>清空</mx:String>              	
+               		<mx:String>取消</mx:String>
+               		<mx:String>添加</mx:String>                	              	
+	           	</mx:Array>
+    		</mx:dataProvider>
+	    </mx:ButtonBar>	  
+	   </mx:HBox> 
+	</mx:VBox>
+</mx:ViewStack>
+</mx:ApplicationControlBar>

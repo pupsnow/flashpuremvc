@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	width="100%" height="100%" 
+	xmlns:flowControl="org.wjx.controls.workFlow.*" 
+	initialize="init()">
+	<mx:Script>
+		<![CDATA[
+		//拖运进入事件
+		import flash.events.Event;
+		import mx.core.*;
+		import mx.events.DragEvent;
+		import mx.managers.DragManager;
+		import org.wjx.controls.workFlow.Tools;
+		import org.wjx.controls.workFlow.WorkFlowDesign;
+		import org.wjx.controls.workFlow.workFlowClasses.LineData;
+		import org.wjx.controls.workFlow.workFlowClasses.NodeData;
+		import org.wjx.controls.workFlow.workFlowClasses.WorkFlowDataProvider;
+		import org.wjx.controls.workFlow.workFlowEvent.MenuEvent;
+		import org.wjx.controls.workFlow.workFlowEvent.WrokFlowDesignEvent;
+		
+		private var firstNodeNum:int=0;
+		private var firstLineNum:int=0;
+		private var isBaind:Boolean=false;
+		
+		private var _workFlowDataProvider:WorkFlowDataProvider;
+		[Bindable]
+		public function set workFlowDataProvider(value:WorkFlowDataProvider):void
+		{
+			this._workFlowDataProvider=value;
+		}
+		public function get workFlowDataProvider():WorkFlowDataProvider
+		{
+			return this._workFlowDataProvider;
+		}
+		[Bindable]
+		public function set dataProvider(value:XML):void
+		{
+			this._workFlowDataProvider.dataProvider=value;
+		}
+		public function get dataProvider():XML
+		{
+			return this._workFlowDataProvider.dataProvider;
+		}
+		
+		private function init():void
+		{
+			this.workFlowDataProvider=new WorkFlowDataProvider(this);
+		}
+		
+		private function dragEnterHandler(event:DragEvent):void
+		{
+		    var dropTarget:Canvas=event.currentTarget as Canvas;{
+		    	dropTarget.setStyle("borderThickness", 5);
+		        DragManager.acceptDragDrop(dropTarget);
+		    }
+		}
+		//拖运退出事件
+		private function dragExitHandler(event:DragEvent):void
+		{
+		    var dropTarget:Canvas=event.currentTarget as Canvas;
+			revertBoxBorder();
+		}
+		private function revertBoxBorder():void
+		{
+		  	euniteWorkFlow.setStyle("borderThickness", 1);
+		
+		}
+		/**拖运放下事件*/
+		private function dragDropHandler(event:DragEvent):void
+		{
+			var nodeType:String = event.dragSource.dataForFormat('value') as String;
+			var icon:Class = event.dragSource.dataForFormat('icon') as Class;
+			var lable:String = event.dragSource.dataForFormat('lable') as String;
+			var typename:String=event.dragSource.dataForFormat('typename') as String;
+			var typeId:String=event.dragSource.dataForFormat('typeId') as String;
+			var x:Number=event.stageX-euniteWorkFlow.x;
+			var y:Number=event.stageY-euniteWorkFlow.y;
+			euniteWorkFlow.newNode(lable,nodeType,x,y,typeId);
+		}
+		/**点击工具事件*/
+		private function selectTool(event:Event):void
+		{
+			var toolsEvent:Tools=event.currentTarget as Tools;
+			euniteWorkFlow.toolSelectValue=toolsEvent.selectTool;
+			event.stopPropagation();
+		}
+		/**添加一个新节点事件*/
+		private function workFlowNodeComplete(event:WrokFlowDesignEvent):void
+		{
+		    if(this.firstNodeNum==0)
+		    {
+				var nodeDate:NodeData=event.nodeData
+				this.workFlowDataProvider.addNode(nodeDate.id,nodeDate.name,nodeDate.type,nodeDate.x,nodeDate.y,nodeDate.TypeId);
+		 	}
+		 	else
+		 	{
+				this.firstNodeNum--;
+				if(this.firstNodeNum==0)
+				{
+					this.bindLine();
+				}
+			}
+		  
+		}
+		
+		/**添加两个节点的连接*/
+		private function workFlowLineComplete(event:WrokFlowDesignEvent):void
+		{
+			if(this.firstLineNum==0)
+			{
+				var lineDate:LineData=event.lineData;
+				this.workFlowDataProvider.linkNode(lineDate.fromNodeId,lineDate.toNodeId,lineDate.lineType);
+			}
+			else
+			{
+				this.firstLineNum--;
+			}
+			
+		}
+		/**删除节点*/
+		private function workFlowNodeDel(event:WrokFlowDesignEvent):void
+		{
+			var nodeId:String=event.nodeId;
+			this.workFlowDataProvider.delNode(nodeId);
+		} 
+		/**节点移动*/
+		private function workFlowNodeMove(event:WrokFlowDesignEvent):void
+		{
+			var nodeData:NodeData=event.nodeData;
+			if(nodeData!=null)
+			{
+				var NodeXml:XML=workFlowDataProvider.selectNodeXml(nodeData.id);
+				if(NodeXml!=null)
+				{
+					NodeXml.@x=nodeData.x;
+					NodeXml.@y=nodeData.y;
+				}
+			}
+		}        
+		/**删除连接线*/
+		private function workFlowLineDel(event:WrokFlowDesignEvent):void
+		{
+			var lineDate:LineData=event.lineData;
+			this.workFlowDataProvider.unLink(lineDate.fromNodeId,lineDate.toNodeId);
+		}
+		
+		/**绑定节点xml到节点*/
+		private function bindNode():void
+		{
+			var nodeDatas:Array=this.workFlowDataProvider.getALLNodeData();
+			this.firstNodeNum=nodeDatas.length;
+			euniteWorkFlow.inFrist=true;
+			for(var i:int=0;i<nodeDatas.length;i++)
+			{
+				var nodeData:NodeData=nodeDatas[i];
+				if(euniteWorkFlow.newNodeChild(nodeData))
+				{
+					
+				}
+			}
+			euniteWorkFlow.inFrist=false;
+			
+		}
+		/**  */
+		private function bindLine():void
+		{
+			var lineDatas:Array=this.workFlowDataProvider.getAllLineData();
+			this.firstLineNum=lineDatas.length;
+			for(var i:int=0;i<lineDatas.length;i++)
+			{
+				var lineData:LineData=lineDatas[i];
+				euniteWorkFlow.newLineChild(lineData);
+			}
+			
+		}
+		
+		/**绑定数据xml*/
+		private function baindDataXml(value:XML):void
+		{
+			if(value!=null)
+			{
+				this.workFlowDataProvider.dataBind(value);
+				this.bindNode();
+			}
+			
+		}
+		
+		/**点击的 节点右键属性  */
+		private function workFlowNodeProperty(event:WrokFlowDesignEvent):void
+		{
+			var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.nodeProperty);
+		    wrokFlowDesignEvent.nodeId=event.nodeId;
+		    this.dispatchEvent(wrokFlowDesignEvent); 
+		}
+		/**点击的 线右键属性  */
+		private function workFlowLineProPerty(event:WrokFlowDesignEvent):void
+		{
+			var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.lineProPerty);
+		    wrokFlowDesignEvent.lineData=event.lineData;
+		    this.dispatchEvent(wrokFlowDesignEvent); 
+		    
+		}
+		
+		/**设置节点的值*/
+		private function setNodeLabel(nodeId:String,label:String):void
+		{
+			euniteWorkFlow.setNodeLabel(nodeId,label);
+		}
+		/**设置线上的文字  */
+		private function setLineLabel(lineId:String,label:String):void
+		{
+			euniteWorkFlow.setLineLabel(lineId,label);
+		}
+		/** 点击  保存或其他菜单*/
+		private function menuClick(event:MenuEvent):void
+		{
+		 var menuEvent:MenuEvent=new MenuEvent("menuClick");
+			menuEvent.menuType=event.menuType;
+			this.dispatchEvent(menuEvent);
+		}
+		]]>
+	</mx:Script>
+	<mx:Metadata>
+	[Event (name="menuClick", type="org.wjx.controls.workFlow.workFlowEvent.MenuEvent")]
+	[Event (name="nodeProperty", type="org.wjx.controls.workFlow.workFlowEvent.WrokFlowDesignEvent")]
+	[Event (name="lineProPerty", type="org.wjx.controls.workFlow.workFlowEvent.WrokFlowDesignEvent")]
+	</mx:Metadata>
+	<mx:VBox width="100%" height="100%"  verticalGap="1" 
+		horizontalGap="1" horizontalAlign="right">
+	<flowControl:menu width="100%" height="25" horizontalAlign="right" 
+		menuClick="menuClick(event)">		
+	</flowControl:menu>
+	<mx:HBox width="100%" height="100%">
+		<flowControl:Tools  select="selectTool(event)"   
+			id="tools"   width="140" height="100%"  horizontalAlign="center" title="工具">
+		</flowControl:Tools>		
+		<mx:VBox id="flowVbox" width="100%"  height="100%" verticalGap="0" 
+			horizontalGap="0" backgroundImage="images/BG.png" >		
+			<mx:VBox id="flowPrentVbox" width="{flowVbox.width}" verticalGap="0" 
+				horizontalGap="0"  alpha="1.0" height="{flowVbox.height}"      borderStyle="inset">
+					<flowControl:WorkFlowDesign  id="euniteWorkFlow" verticalScrollPolicy="off" 
+						 horizontalScrollPolicy="off"   width="99.8%" height="100%"
+					     dragEnter="dragEnterHandler(event);"
+				         dragExit="dragExitHandler(event);"
+				         dragDrop="dragDropHandler(event);"
+				         nodeComplete="workFlowNodeComplete(event)"
+				         lineCpmplete="workFlowLineComplete(event)" 
+				         nodeDel="workFlowNodeDel(event)" 
+				         nodeMove="workFlowNodeMove(event)"
+				         lineDel="workFlowLineDel(event)"
+				         nodeProperty="workFlowNodeProperty(event)"
+				         lineProPerty="workFlowLineProPerty(event)"
+						 borderStyle="none" cornerRadius="20"  >
+					</flowControl:WorkFlowDesign> 
+			</mx:VBox>
+		</mx:VBox>
+	</mx:HBox>	
+	<mx:HBox width="100%" height="20" backgroundColor="#C4DFFA" borderStyle="outset" 
+		horizontalAlign="right" >
+        <mx:Label id="proidd" text="" visible="false"/>
+		<mx:Label id="mousex" text=""/>
+		<mx:Label id="mousey" text=""/>	
+	</mx:HBox>
+	</mx:VBox>
+</mx:Canvas>
