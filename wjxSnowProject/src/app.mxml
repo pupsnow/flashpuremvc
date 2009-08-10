@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>    
+<!-- Demo of the DragPanel and Reflector components. Author: Narciso Jaramillo, nj_flex@rictus.com -->    
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"       
+layout="absolute"  width="674" height="548" 
+xmlns:util="basecom.util.*"
+xmlns:view="basecom.view.*" xmlns:local="*">    
+  
+     
+<local:MultilineButton label="好吃" id="img" width="25" height="151" 
+     paddingLeft="0" paddingRight="0" x="548" y="153"/>
+<!-- verticalCenter horizontalCenter 这两个属性一定要有-->   
+<mx:Button label="change" click="img.label='11111111111111111';myReflector.invalidateDisplayList();"
+	 styleName="overskin" x="137" y="11" 
+	borderColor="#1197F5" cornerRadius="0"/>
+    <mx:HSlider id="alphaSlider" x="346" y="10" liveDragging="true" showDataTip="false"    
+    width="159" minimum="0.0" maximum="1.0" value="0.6" snapInterval="0.01" borderColor="#F63509"/>    
+       
+    <mx:HSlider id="falloffSlider" x="346" y="44" liveDragging="true" showDataTip="false"    
+    width="159" minimum="0.0" maximum="1.0" value="0.7" snapInterval="0.01" borderColor="#5DF60A"/>    
+       
+    <mx:HSlider id="blurSlider" x="346" y="70" liveDragging="true" showDataTip="false"    
+    width="159" minimum="0.0" maximum="1.0" value="0.4" snapInterval="0.01" borderColor="#0A34E7"/>    
+       
+    <mx:Label x="269" y="10" text="alpha值" color="#FAFCFC" fontSize="13"/>   
+    <mx:Label x="267" y="40" text="falloff值" color="#FAFCFC" fontSize="13"/>   
+    <mx:Label x="280" y="66" text="blur值" color="#FAFCFC" fontSize="13"/>   
+	<view:DragPanel id="panel" width="280" height="90" layout="absolute" title="Live Reflection Panel - Drag Me"
+        color="#FFFFFF" horizontalCenter="17" verticalCenter="133">
+        <mx:Label x="10" y="7" text="Alpha:" color="#000000"/>
+        <mx:HSlider id="alphaSlider1" x="61" y="3" liveDragging="true" showDataTip="false" 
+            width="159" minimum="0.0" maximum="1.0" value="0.3" snapInterval="0.01"/>
+        <mx:Label x="217" y="6" text="{alphaSlider.value}" color="#000000" width="36"/>
+        <mx:Label x="10" y="28" text="Falloff:" color="#000000"/>
+        <mx:HSlider id="falloffSlider1" x="61" y="24" liveDragging="true" showDataTip="false" 
+            width="159" minimum="0.0" maximum="1.0" value="0.7" snapInterval="0.01"/>
+        <mx:Label x="217" y="30" text="{falloffSlider.value}" color="#000000" width="36"/>
+    </view:DragPanel>
+
+<util:Reflector target="{panel}" alpha="{alphaSlider1.value}" falloff="{falloffSlider1.value}"/>
+<util:Reflector id="myReflector" target="{img}" alpha="{alphaSlider.value}" 
+	falloff="{falloffSlider.value}" blurAmount="{blurSlider.value}"/>    
+<mx:Label width="98" x="0" y="30" height="50">
+	<mx:htmlText>
+		<![CDATA[
+			ahah
+			<br><font color="#ff0000">asdfa</font>
+		]]>
+	</mx:htmlText>
+</mx:Label>
+	<mx:Style source="style/test.css">
+		
+	</mx:Style>
+	<mx:TabNavigator x="21" y="130" width="439" height="200">
+		<mx:Canvas label="Tab 1" width="100%" height="100%" backgroundColor="0xeaeaea">
+			<mx:DataGrid x="35" y="10" width="100%" height="100%">
+				<mx:columns>
+					<mx:DataGridColumn headerText="ceshi" dataField="a"/>
+					<mx:DataGridColumn headerText="啊说得来" dataField="b"/>
+					<mx:DataGridColumn headerText="啊斯蒂芬" dataField="c"/>
+				</mx:columns>
+			</mx:DataGrid>
+			
+		</mx:Canvas>
+		<mx:Canvas label="hahah" width="100%" height="100%" backgroundColor="0xe3e3e3">
+			<mx:LinkButton textAlign="center" width="80" label="测试哈哈"/>
+		</mx:Canvas>
+	</mx:TabNavigator>
+</mx:Application>  

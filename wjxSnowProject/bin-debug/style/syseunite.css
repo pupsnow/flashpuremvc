@@ -1,0 +1,649 @@
+/* CSS file
+//blueforsys
+ */
+
+/*
+//------------------------------
+//  global
+//------------------------------
+*/
+/* global
+{
+   
+
+} */
+/*
+//------------------------------
+//  Application
+//------------------------------
+*/
+Application
+{
+	
+	 themeColor:#7FCDFE;	
+    backgroundColor:#68aded;
+    backgroundRepeat:repeat;	
+     backgroundImage:Embed(source="../images/3.swf"); 
+     color: #4d4d4d;
+   fontFamily: myFontFamily;
+   fontSize: 13px;
+    themeColor: #7FCDFE;	
+	rollOverColor: #d4f3f6;
+	selectionColor: #AADEFF;
+}
+
+/*
+//------------------------------
+//  ApplicationControlBar
+//------------------------------
+*/
+ApplicationControlBar{ 
+    fillColors: #e9ecf1, #6aafec;  
+}
+.barApplicationControlBar{
+highlightAlphas: 0.72, 0.1;
+ fillAlphas: 1, 1;
+ shadowDistance: 1;
+ dropShadowEnabled: false;
+ cornerRadius: 5;
+}
+.topApplicationControlBar
+{
+highlightAlphas: 0.72, 0.1; 
+   fillAlphas: 1, 1;
+   cornerRadius: 5;
+}
+.workflowApplicationControlBar {
+   highlightAlphas: 0, 1;
+   fillAlphas: 1, 1;
+   fillColors: #dedede, #ffffff;
+   fontSize: 13;
+   paddingLeft: 0;
+   paddingRight: 0;
+   paddingBottom: 0;  
+}
+
+.myApplicationControlBar {   
+   highlightAlphas: 0.66, 0.57;
+   fillAlphas: 0, 0.86;
+}
+
+/*
+//------------------------------
+//  Alert
+//------------------------------
+*/
+Alert{
+   borderColor:#6bb9ff;
+   backgroundColor:#ebf4f6;
+  backgroundAlpha: 0.9;
+   borderThicknessLeft:0;
+   borderThicknessRight:0;
+   borderThicknessTop:0;
+   borderThicknessBottom:0;
+   headerHeight: 25;
+   borderAlpha: 1.0;
+   color:#000000;
+   highlightAlphas: 0, 0.15;
+}
+/*
+//------------------------------
+//  AdvancedDataGrid
+//------------------------------
+*/
+/* AdvancedDataGrid{
+	 horizontalGridLineColor:#dddada;
+    verticalGridLineColor: #dddada;
+    useRollOver: true;
+    borderColor: #666666;
+    headerColors: #f1f8fe, #cfe8fd;
+    alternatingItemColors: #ffffff, #f8f8f8;
+   defaultLeafIcon: Embed(source="eunite.swf",symbol="AdvancedDataGrid_defaultLeafIcon");
+	disclosureClosedIcon: Embed(source="eunite.swf",symbol="AdvancedDataGrid_disclosureClosedIcon");
+	disclosureOpenIcon: Embed(source="eunite.swf",symbol="AdvancedDataGrid_disclosureOpenIcon");
+	folderClosedIcon: Embed(source="eunite.swf",symbol="AdvancedDataGrid_folderClosedIcon");
+	folderOpenIcon: Embed(source="eunite.swf",symbol="AdvancedDataGrid_folderOpenIcon");
+} */
+/*
+//------------------------------
+//  Button
+//------------------------------
+*/
+Button {   
+   
+  cornerRadius: 10;
+   highlightAlphas: 0.79, 0.2;
+   fillColors: #94c2ed, #d6e6fc, #ffb91d, #ffb91d;
+   fillAlphas: 1, 1, 1, 1;  
+   dropShadow: true;
+   shadowDistance: 1;
+   fontWeight: normal;
+   themeColor: #adbece;
+   borderColor: #adbece;
+   color:#1d3468;
+   disabledSkin: Embed(source="eunite.swf", symbol="Button_disabledSkin");
+	downSkin: Embed(source="eunite.swf", symbol="Button_downSkin");
+	overSkin: Embed(source="eunite.swf", symbol="Button_overSkin");
+	upSkin: Embed(source="eunite.swf", symbol="Button_upSkin");
+  /* upSkin: Embed(source="../images/buttonover.png",scaleGridLeft=10, scaleGridRight=11, scaleGridTop=10,scaleGridBottom=11);
+	disabledSkin:Embed(source="../images/buttonup.png",scaleGridLeft=10, scaleGridRight=11, scaleGridTop=10,scaleGridBottom=11);
+	downSkin: Embed(source="../images/buttondown.png",scaleGridLeft=10, scaleGridRight=11, scaleGridTop=10,scaleGridBottom=11);
+	overSkin:Embed(source="../images/buttonup.png",scaleGridLeft=10, scaleGridRight=11, scaleGridTop=10,scaleGridBottom=11);    */
+  }
+/*
+//------------------------------
+//  CheckBox
+//------------------------------
+*/
+CheckBox
+{
+	disabledIcon: Embed(source="eunite.swf", symbol="CheckBox_disabledIcon");
+	downIcon: Embed(source="eunite.swf", symbol="CheckBox_downIcon");
+	overIcon: Embed(source="eunite.swf", symbol="CheckBox_overIcon");
+	selectedDisabledIcon: Embed(source="eunite.swf", symbol="CheckBox_selectedDisabledIcon");
+	selectedDownIcon: Embed(source="eunite.swf", symbol="CheckBox_selectedDownIcon");
+	selectedOverIcon: Embed(source="eunite.swf", symbol="CheckBox_selectedOverIcon");
+	selectedUpIcon: Embed(source="eunite.swf", symbol="CheckBox_selectedUpIcon");
+	upIcon: Embed(source="eunite.swf", symbol="CheckBox_upIcon");
+}	
+
+/*
+//------------------------------
+//  ComboBox
+//------------------------------
+*/
+ComboBox
+{
+	 highlightAlphas: 1, 0.32;
+   fillAlphas: 1, 1, 1, 1;
+   fillColors: #cccccc, #ffffff, #ffb91d, #ffb91d;
+   borderColor: #999999;
+	/* disabledSkin: Embed(source="eunite.swf", symbol="ComboBoxArrow_disabledSkin");
+	downSkin: Embed(source="eunite.swf", symbol="ComboBoxArrow_downSkin");
+	editableDisabledSkin: Embed(source="eunite.swf", symbol="ComboBoxArrow_editableDisabledSkin");
+	editableDownSkin: Embed(source="eunite.swf", symbol="ComboBoxArrow_editableDownSkin");
+	editableOverSkin: Embed(source="eunite.swf", symbol="ComboBoxArrow_editableOverSkin");
+	editableUpSkin: Embed(source="eunite.swf", symbol="ComboBoxArrow_editableUpSkin");
+	overSkin: Embed(source="eunite.swf", symbol="ComboBoxArrow_overSkin");
+	upSkin: Embed(source="eunite.swf", symbol="ComboBoxArrow_upSkin");
+	dropDownStyleName: "myComboBoxDropDowns"; */
+}
+.myComboBoxDropDowns {
+   cornerRadius: 4;
+}
+	
+/*
+//------------------------------
+//  DateChooser
+//------------------------------
+*/
+DateChooser
+{
+	nextMonthDisabledSkin: Embed(source="eunite.swf", symbol="DateChooser_nextMonthDisabledSkin");
+	nextMonthDownSkin: Embed(source="eunite.swf", symbol="DateChooser_nextMonthDownSkin");
+	nextMonthOverSkin: Embed(source="eunite.swf", symbol="DateChooser_nextMonthOverSkin");
+	nextMonthUpSkin: Embed(source="eunite.swf", symbol="DateChooser_nextMonthUpSkin");
+	prevMonthDisabledSkin: Embed(source="eunite.swf", symbol="DateChooser_prevMonthDisabledSkin");
+	prevMonthDownSkin: Embed(source="eunite.swf", symbol="DateChooser_prevMonthDownSkin");
+	prevMonthOverSkin: Embed(source="eunite.swf", symbol="DateChooser_prevMonthOverSkin");
+	prevMonthUpSkin: Embed(source="eunite.swf", symbol="DateChooser_prevMonthUpSkin");
+	
+	nextYearDisabledSkin: Embed(source="eunite.swf", symbol="DateChooser_nextYearDisabledSkin");
+	nextYearDownSkin: Embed(source="eunite.swf", symbol="DateChooser_nextYearDownSkin");
+	nextYearOverSkin: Embed(source="eunite.swf", symbol="DateChooser_nextYearOverSkin");
+	nextYearUpSkin: Embed(source="eunite.swf", symbol="DateChooser_nextYearUpSkin");
+	prevYearDisabledSkin: Embed(source="eunite.swf", symbol="DateChooser_prevYearDisabledSkin");
+	prevYearDownSkin: Embed(source="eunite.swf", symbol="DateChooser_prevYearDownSkin");
+	prevYearOverSkin: Embed(source="eunite.swf", symbol="DateChooser_prevYearOverSkin");
+	prevYearUpSkin: Embed(source="eunite.swf", symbol="DateChooser_prevYearUpSkin");
+
+	todayIndicatorSkin: Embed(source="eunite.swf", symbol="DateChooser_selectionIndicatorSkin");	
+	
+	rollOverIndicatorSkin: Embed(source="eunite.swf", symbol="DateChooser_rollOverIndicatorSkin");
+	selectionIndicatorSkin: Embed(source="eunite.swf", symbol="DateChooser_todayIndicatorSkin");
+	todayColor: #0C0C0C;
+	
+}	
+
+/*
+//------------------------------
+//  DateField
+//------------------------------
+*/
+/* DateField
+{
+	disabledSkin: Embed(source="eunite.swf",symbol="DateField_disabledSkin"); 
+	downSkin: Embed(source="eunite.swf",symbol="DateField_downSkin"); 
+	overSkin: Embed(source="eunite.swf",symbol="DateField_overSkin"); 
+	upSkin: Embed(source="eunite.swf",symbol="DateField_upSkin"); 
+} */
+
+/*
+//------------------------------
+//  DataGrid
+//------------------------------
+*/
+
+DataGrid{
+    themeColor: #7AA4B9;	
+	rollOverColor:  #d4f3f6;
+	selectionColor:#AADEFF;
+	backgroundAlpha: 1;
+	headerColors: #f1f8fe, #cfe8fd;
+   alternatingItemColors: #ffffff, #f8f8f8; 
+}
+
+/*
+//------------------------------
+//  Form
+//------------------------------
+*/
+Form{
+color:#13427d;
+/* backgroundColor:#eff5f6; */
+/* borderSkin: Embed(source="../images/titskin.png"); */
+}
+/*
+//------------------------------
+//  Panel
+//------------------------------
+*/
+ Panel
+{
+  cornerRadius:10;
+   headerColors:#c1d9f3, #c0d8f2; 
+   titleStyleName: "panelTitle";
+   borderAlpha: 1;
+   backgroundAlpha: 1.0;
+   paddingLeft:0;
+   paddingRight:0;
+   paddingTop:0;
+   paddingBottom:0; 
+   borderThicknessRight:2;
+   borderThicknessBottom:2;
+   borderThicknessLeft:2;
+   shadowDistance:1; 
+   shadowDirection: right;
+   dropShadowColor: #cbcdd2;
+}
+.panelTitle {
+   fontSize: 16;
+	fontWeight: bold;
+} 
+
+/* SuperPanel{
+	  paddingTop:30;
+	     borderAlpha: 0;
+	   highlightAlphas:0,0;
+	borderSkin: Embed(source="eunite.swf", symbol="TitPanel_borderSkin");
+	
+	borderThicknessLeft: 11;
+	borderThicknessRight: 11;
+	borderThicknessTop: 2;
+	borderThicknessBottom: 12;
+	headerHeight: 32;
+	titleStyleName: "panelTitle";
+} */
+.logoPanel{
+	
+	  paddingTop:30;
+	    borderAlpha: 0;
+	borderSkin: Embed(source="eunite.swf", symbol="TitPanel_borderSkin");
+	/* titleBackgroundSkin: Embed(source="eunite.swf", symbol="Panel_titleBackgroundSkin"); */
+	borderThicknessLeft: 11;
+	borderThicknessRight: 11;
+	borderThicknessTop: 2;
+	borderThicknessBottom: 12;
+	headerHeight: 32;
+	titleStyleName: "panelTitle";
+}
+/*   MenuPanel{ */
+   /*  borderColor: #c1d9f3;  */
+/*  highlightAlphas:  0.8, 0.0;  */
+/*   highlightAlphas: 0.56, 0.27;  
+   headerColors:#b8deff, #91c8fe; 
+ */     
+/* titleBackgroundSkin:Embed(source="../images/menubar.gif", scaleGridLeft=10, scaleGridRight=11, scaleGridTop=10,scaleGridBottom=11); */
+/* } */
+
+/*
+//------------------------------
+//  PopUpButton
+//------------------------------
+*/
+/* PopUpButton
+{ */
+	
+/* upSkin: Embed(source="eunite.swf", symbol="BeginButton_upSkin");
+downSkin:Embed(source="eunite.swf", symbol="BeginButton_upSkin");
+overSkin: Embed(source="eunite.swf", symbol="BeginButton_upSkin");
+	popUpOverSkin: Embed(source="eunite.swf", symbol="BeginButton_upSkin");
+	popUpDownSkin:Embed(source="eunite.swf", symbol="BeginButton_upSkin"); */
+	
+/* } */
+/*
+//------------------------------
+//  PopResizeWindow
+//------------------------------
+*/
+PopResizeWindow{
+   color: #4d4d4d;
+   fontFamily: myFontFamily;
+   fontSize: 13px;
+   themeColor: #7FCDFE;	
+   rollOverColor: #d4f3f6;
+  selectionColor: #AADEFF;
+  borderColor: #2C55B1;
+  headerColors: #609ee7,#2C55B1; 
+  dropShadowColor: #000000;
+  newresStyleName:newresStyleName;
+  newmaxStyleName:newmaxStyleName;
+  newminStyleName:newminStyleName;
+  closeButtonDisabledSkin: Embed(source="eunite.swf", symbol="closeButton_disabledSkin");
+  closeButtonDownSkin: Embed(source="eunite.swf", symbol="closeButton_downSkin");
+  closeButtonOverSkin:Embed(source="eunite.swf", symbol="closeButton_overSkin");
+  closeButtonUpSkin: Embed(source="eunite.swf", symbol="closeButton_upSkin");
+}
+.newmaxStyleName{
+upIcon: Embed(source="eunite.swf", symbol="Newres_upIcon");
+downIcon:Embed(source="eunite.swf", symbol="Newres_downIcon");
+overIcon: Embed(source="eunite.swf", symbol="Newres_overIcon");
+}
+.newresStyleName
+{
+upIcon:Embed(source="eunite.swf", symbol="Newmax_upIcon");
+overIcon:Embed(source="eunite.swf", symbol="Newmax_overIcon");
+downIcon: Embed(source="eunite.swf", symbol="Newmax_downIcon");
+}
+.newminStyleName
+{
+upIcon: Embed(source="eunite.swf", symbol="Newmin_upIcon");
+downIcon: Embed(source="eunite.swf", symbol="Newmin_downIcon");
+overIcon: Embed(source="eunite.swf", symbol="Newmin_overIcon");
+}
+
+/*
+//------------------------------
+//  RadioButton
+//------------------------------
+*/
+RadioButton
+{
+
+	disabledIcon: Embed(source="eunite.swf", symbol="RadioButton_disabledIcon");
+	downIcon: Embed(source="eunite.swf", symbol="RadioButton_downIcon");
+	overIcon: Embed(source="eunite.swf", symbol="RadioButton_overIcon");
+	selectedDisabledIcon: Embed(source="eunite.swf", symbol="RadioButtonSelected_disabledIcon");
+	selectedDownIcon: Embed(source="eunite.swf", symbol="RadioButtonSelected_downIcon");
+	selectedOverIcon: Embed(source="eunite.swf", symbol="RadioButtonSelected_overIcon");
+	selectedUpIcon: Embed(source="eunite.swf", symbol="RadioButtonSelected_upIcon");
+	upIcon: Embed(source="eunite.swf", symbol="RadioButtonIcon");
+
+}
+
+
+/*  -------------------------------------------------------------------
+//SupTabButton
+//---------------------------------------------------------------------
+*/	
+SupTabButton{
+   fillAlphas: 0, 0, 0, 0;
+   highlightAlphas: 0, 0;
+   tabCloseButtonStyleName:tabCloseButtonStyleName;
+   /* upSkin:ClassReference(null);
+   overSkin:ClassReference(null);
+   downSkin:ClassReference(null); */
+     
+}
+.tabCloseButtonStyleName{
+	upSkin: Embed(source="eunite.swf", symbol="firefox_close_up");
+	overSkin: Embed(source="eunite.swf", symbol="firefox_close_over");
+	downSkin: Embed(source="eunite.swf", symbol="firefox_close_down");
+}
+/*
+//------------------------------
+//  Slider
+//------------------------------
+*/
+Slider
+{
+	thumbDisabledSkin: Embed(source="eunite.swf", symbol="SliderThumb_disabledSkin");
+	thumbDownSkin: Embed(source="eunite.swf", symbol="SliderThumb_downSkin");
+	thumbOverSkin: Embed(source="eunite.swf", symbol="SliderThumb_overSkin");
+	thumbUpSkin: Embed(source="eunite.swf", symbol="SliderThumb_upSkin");
+	trackHighlightSkin: Embed(source="eunite.swf", symbol="SliderHighlight_Skin");
+	trackSkin: Embed(source="eunite.swf", symbol="SliderTrack_Skin");
+	thumbOffset: 8;
+}
+
+HSlider
+{
+	thumbDisabledSkin: Embed(source="eunite.swf", symbol="SliderThumb_disabledSkin");
+	thumbDownSkin: Embed(source="eunite.swf", symbol="SliderThumb_downSkin");
+	thumbOverSkin: Embed(source="eunite.swf", symbol="SliderThumb_overSkin");
+	thumbUpSkin: Embed(source="eunite.swf", symbol="SliderThumb_upSkin");
+	trackHighlightSkin: Embed(source="eunite.swf", symbol="SliderHighlight_Skin");
+	trackSkin: Embed(source="eunite.swf", symbol="SliderTrack_Skin");
+}
+
+/* VSlider
+{
+	thumbDisabledSkin: Embed(source="eunite.swf", symbol="SliderThumb_disabledSkin");
+	thumbDownSkin: Embed(source="eunite.swf", symbol="SliderThumb_downSkin");
+	thumbOverSkin: Embed(source="eunite.swf", symbol="SliderThumb_overSkin");
+	thumbUpSkin: Embed(source="eunite.swf", symbol="SliderThumb_upSkin");
+	trackHighlightSkin: Embed(source="eunite.swf", symbol="SliderHighlight_Skin");
+	trackSkin: Embed(source="eunite.swf", symbol="SliderTrack_Skin");
+} */
+
+
+/*
+//------------------------------
+//  HorizontalScrollBar
+//------------------------------
+*/
+HScrollBar
+{
+	
+	downArrowDisabledSkin: Embed(source="eunite.swf", symbol="HScrollArrowRight_disabledSkin");
+	downArrowDownSkin: Embed(source="eunite.swf", symbol="HScrollArrowRight_downSkin");
+	downArrowOverSkin: Embed(source="eunite.swf", symbol="HScrollArrowRight_overSkin");
+	downArrowUpSkin: Embed(source="eunite.swf", symbol="HScrollArrowRight_upSkin");
+	thumbDownSkin: Embed(source="eunite.swf", symbol="HScrollThumb_downSkin");
+	thumbIcon: Embed(source="eunite.swf", symbol="HScrollBar_thumbIcon");
+	thumbOverSkin: Embed(source="eunite.swf", symbol="HScrollThumb_overSkin");
+	thumbUpSkin: Embed(source="eunite.swf", symbol="HScrollThumb_upSkin");
+	trackSkin: Embed(source="eunite.swf", symbol="HScrollTrack_Skin");
+	upArrowDisabledSkin: Embed(source="eunite.swf", symbol="HScrollArrowLeft_disabledSkin");
+	upArrowDownSkin: Embed(source="eunite.swf", symbol="HScrollArrowLeft_downSkin");
+	upArrowOverSkin: Embed(source="eunite.swf", symbol="HScrollArrowLeft_overSkin");
+	upArrowUpSkin: Embed(source="eunite.swf", symbol="HScrollArrowLeft_upSkin");
+
+}
+
+
+/*
+//------------------------------
+//  VerticalScrollBar
+//------------------------------
+*/
+VScrollBar
+{
+
+	downArrowDisabledSkin: Embed(source="eunite.swf", symbol="ScrollArrowDown_disabledSkin");
+	downArrowDownSkin: Embed(source="eunite.swf", symbol="ScrollArrowDown_downSkin");
+	downArrowOverSkin: Embed(source="eunite.swf", symbol="ScrollArrowDown_overSkin");
+	downArrowUpSkin: Embed(source="eunite.swf", symbol="ScrollArrowDown_upSkin");
+	thumbDownSkin: Embed(source="eunite.swf", symbol="ScrollThumb_downSkin");
+	thumbIcon: Embed(source="eunite.swf", symbol="ScrollBar_thumbIcon");
+	thumbOverSkin: Embed(source="eunite.swf", symbol="ScrollThumb_overSkin");
+	thumbUpSkin: Embed(source="eunite.swf", symbol="ScrollThumb_upSkin");
+	trackSkin: Embed(source="eunite.swf", symbol="ScrollTrack_Skin");
+	upArrowDisabledSkin: Embed(source="eunite.swf", symbol="ScrollArrowUp_disabledSkin");
+	upArrowDownSkin: Embed(source="eunite.swf", symbol="ScrollArrowUp_downSkin");
+	upArrowOverSkin: Embed(source="eunite.swf", symbol="ScrollArrowUp_overSkin");
+	upArrowUpSkin: Embed(source="eunite.swf", symbol="ScrollArrowUp_upSkin");
+
+}
+
+/*
+//------------------------------
+//  Menu
+//------------------------------
+*/
+/* Menu{
+   backgroundColor: #182f67;
+   color: #f1f1f1;
+	
+  rollOverColor: #3c74ff;
+   selectionColor: #ffffff;
+   textRollOverColor: #3c74ff;
+   textSelectedColor: #3c74ff;
+   borderColor: #000000;	 
+} */
+
+/*
+//------------------------------
+//  Tab
+//------------------------------
+*/
+/* TabBar
+{
+	firstButtonStyleName: "tabStyle";
+	tabStyleName: "tabStyle";
+	lastButtonStyleName: "tabStyle";
+}
+
+.tabStyle {
+	disabledSkin: Embed(source="eunite.swf", symbol="Tab_disabledSkin");
+	downSkin: Embed(source="eunite.swf", symbol="Tab_downSkin");
+	overSkin: Embed(source="eunite.swf", symbol="Tab_overSkin");
+	selectedDisabledSkin: Embed(source="eunite.swf", symbol="TabSelected_disabledSkin");
+	selectedDownSkin: Embed(source="eunite.swf", symbol="TabSelected_upSkin");
+	selectedOverSkin: Embed(source="eunite.swf", symbol="TabSelected_upSkin");
+	selectedUpSkin: Embed(source="eunite.swf", symbol="TabSelected_upSkin");
+	upSkin: Embed(source="eunite.swf", symbol="Tab_upSkin");
+} */
+/*
+//------------------------------
+//  TabNavigator
+//------------------------------
+*/
+TabNavigator {
+	
+   tabStyleName: "myTabs";
+   firstTabStyleName: "myTabs";
+   lastTabStyleName: "myTabs";
+   /* selectedTabTextStyleName: "mySelectedTabs"; */
+}
+ 
+.myTabs {
+	borderColor: #a3a3a3;
+	cornerRadius: 4;
+    backgroundColor: #ffcc00;
+
+}
+
+/* .mySelectedTabs {
+ fillColors: #cccccc, #ffffff;	
+} */
+
+
+/*
+
+//------------------------------
+//  TitleWindow
+//------------------------------
+*/
+TitleWindow{
+	color: #4d4d4d;
+   fontFamily: myFontFamily;
+   fontSize: 13px;
+    themeColor: #7FCDFE;	
+	rollOverColor: #d4f3f6;
+	selectionColor: #AADEFF;
+		titleStyleName: "titleStyleName";
+		borderColor: #2C55B1;
+		headerColors: #609ee7,#2C55B1; 
+		  dropShadowColor: #000000;
+       /* borderSkin: Embed(source="eunite.swf", symbol="TitWindow_borderSkin"); */
+      /*  borderSkin: Embed(source="windows/bluepanelskin.png", scaleGridTop=34, scaleGridBottom=44, scaleGridLeft=9, scaleGridRight=38); */
+}
+.titleStyleName
+{
+   color: #ffffff;
+   fontWeight: bold;
+    fontSize: 14;
+}
+
+/*
+
+//------------------------------
+//  ToolTip
+//------------------------------
+*/
+ToolTip
+{
+
+	borderSkin: Embed(source="eunite.swf", symbol="ToolTip_borderSkin");
+	fontSize: 12;
+
+}
+/*
+//------------------------------
+//  Tree
+//------------------------------
+*/
+Tree
+{
+	defaultLeafIcon: Embed(source="eunite.swf",symbol="Tree_defaultLeafIcon");
+	disclosureClosedIcon: Embed(source="eunite.swf",symbol="Tree_disclosureClosedIcon");
+	disclosureOpenIcon: Embed(source="eunite.swf",symbol="Tree_disclosureOpenIcon");
+	folderClosedIcon: Embed(source="eunite.swf",symbol="Tree_folderClosedIcon");
+	folderOpenIcon: Embed(source="eunite.swf",symbol="Tree_folderOpenIcon");
+}
+.menuTree{
+   defaultLeafIcon: Embed(source="eunite.swf",symbol="menuTree_defaultLeafIcon");
+	disclosureClosedIcon: Embed(source="eunite.swf",symbol="menuTree_disclosureClosedIcon");
+	disclosureOpenIcon: Embed(source="eunite.swf",symbol="menuTree_disclosureOpenIcon");
+	folderClosedIcon: Embed(source="eunite.swf",symbol="menuTree_folderClosedIcon");
+	folderOpenIcon: Embed(source="eunite.swf",symbol="menuTree_folderOpenIcon");
+
+}
+/*
+//------------------------------
+//  buttomHBox
+//------------------------------
+*/
+
+SupTabButton{ 
+ /*  highlightAlphas: 0.79, 0.2; */
+   fillColors: #000000,#000000, #000000,#000000; 
+   fillAlphas: 0, 0, 0.5, 0.5;
+   borderColor:#000000; 
+   dropShadow: true;
+   shadowDistance: 1;
+   fontSize: 13;
+   fontWeight: normal;
+   themeColor:#2C55B1;
+   color:#ffffff;
+	textRollOverColor: #FFFFFF;
+	textSelectedColor: #FFFFFF;
+	cornerRadius:3;
+
+}
+
+
+/*
+//------------------------------------------------------------------------
+//  @font-face
+//----------------------------------------------------------------------------
+*/
+/* @font-face {
+    src: url("SIMKAI.TTF");
+    fontFamily: myFontFamily;
+    	
+  
+}
+ */
+

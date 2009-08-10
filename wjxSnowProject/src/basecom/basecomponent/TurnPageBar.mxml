@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" horizontalGap="0"
+     height="30" verticalAlign="middle" horizontalAlign="right"
+     backgroundImage="images/system2_40.png" backgroundSize="100%"
+     >
+	<mx:Script>
+		<![CDATA[
+			//[Bindable]
+			//public var model:PageCalculateModel;
+			
+			private function turntxtChange():void
+			{
+				/* var num:Number=Number(truntxt.text);
+				if(num>model.coutPage)
+				{
+					truntxt.text=model.coutPage.toString();
+				}
+				if(num<1)
+				{
+					truntxt.text="1";
+				} */
+			}
+			private function trunPage():void
+			{/* 
+				turntxtChange()
+				model.turnPage(Number(truntxt.text)); */
+			}
+		]]>
+	</mx:Script>
+	<mx:Label text="总记录"/>
+	<mx:Label />
+	<mx:Label text="当前页"/>
+	<mx:Label />
+	<mx:Label text="/" width="11"/>
+	<mx:Label />
+	
+	<mx:Canvas width="28" height="20" >	
+		<mx:LinkButton 
+			toolTip="首页" width="28" height="20"
+			/>
+		<mx:Image width="28" height="20"   source="com/images/system_59.png"/>
+	</mx:Canvas>
+	
+	<mx:Spacer width="10"/>
+	
+	<mx:Canvas width="28" height="20" >
+		<mx:LinkButton toolTip="上一页" 
+			 width="28" height="20"
+		   />
+		<mx:Image width="28" height="20"  source="com/images/system_61.png"/>
+	</mx:Canvas>
+	
+	<mx:Spacer width="10"/>
+	
+	<mx:Canvas width="28" height="20" >	
+		<mx:LinkButton  width="28" height="20"
+			toolTip="下一页"    
+		  />
+		<mx:Image width="28" height="20"  source="com/images/system_65.png"/>
+	</mx:Canvas>
+	
+	<mx:Spacer width="10"/>
+	
+	<mx:Canvas width="28" height="20" >
+		<mx:LinkButton width="28" height="20" toolTip="尾页" />
+		<mx:Image width="28" height="20" source="com/images/system_63.png"/>
+	</mx:Canvas>	
+	<mx:Spacer width="15"/>	
+	<mx:Label text="转至"/>
+	<mx:TextInput id="truntxt" width="35" restrict="0-9" />
+	<mx:Label text="页"/>
+	<mx:LinkButton label="GO" color="#f19647" width="35" />
+</mx:HBox>

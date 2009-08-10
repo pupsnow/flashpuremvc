@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"  creationComplete="init();">
+  <mx:Button label="成都茶馆" click="SearchSelf(347,401)" y="50"/>
+  <mx:Button label="成都休闲所" click="SearchSelf(513,206)" y="100"/>
+  <mx:Button label="成都毅联" click="SearchSelf(365,126)" y="150"/>
+  <mx:Script>
+  	<![CDATA[
+  		import com.view.map.components.modle.MapXYPoint;
+  		import mx.containers.HBox;
+  		import mx.controls.Button;
+ 		import mx.core.Application;
+ 		import mx.managers.PopUpManager;
+ 		import mx.events.FlexEvent;
+
+  	 		 [Bindable]
+	 	     private var model:MapXYPoint=MapXYPoint.getInstance();
+	 	     private var _map:ImageMap;
+	 	     public var  hs:mapController;
+	 	    
+	 	    /**
+	 		 * 初始化
+	 		 *   */
+	 		private function init():void
+	 		{
+	 			this.addEventListener(MouseEvent.MOUSE_DOWN,mousedownHander);
+	 			this.addEventListener(MouseEvent.MOUSE_UP,mouseupHander);
+	 		 	this.createComplete();		 
+	 		}
+	 	    private function createComplete():void{
+	 			_map.oldx=_map.width/2;
+	 		 	_map.oldy=_map.height/2;
+				_map.centerX=_map.width/2;
+				_map.centerY=_map.height/2;
+	 		}
+
+	 	    
+	 	    /**
+	 	    * 定义变量
+	 	    *   */
+	 	     public function set map(m:ImageMap):void
+	 	     {
+				this._map = m;
+			 }
+			
+			public function get map():ImageMap
+			{
+				return this._map;
+			}
+			
+					
+	 	    private var oldx:Number;
+			private var oldy:Number;
+			private var centerX:Number;
+			private var centerY:Number;
+  			private function SearchSelf(x:Number,y:Number):void
+	 		{
+	 			
+	 			model.CenterX=x;
+	 			model.CenterY=y;
+	 			this.moveImagePosition(x,y);
+	 		   _map.image1.MarkMove(x,y); 
+	 		}	
+	 		/**
+	 		 * 开始移动
+	 		 *   */
+	 		private function mousedownHander(event:MouseEvent):void{
+	 			if(event.target==this)
+	 			{
+	 				this.startDrag()
+	 			}	 			
+	 		}
+	 		/**
+	 		 * 停止移动
+	 		 *   */
+	 		private function mouseupHander(event:MouseEvent):void{
+	 			if(event.target==this)
+	 			{
+	 				this.stopDrag()
+	 			}
+	 		}
+	 		private function moveImagePosition(X:Number,Y:Number):void
+	 		{
+				_map.image1.x=model.zoomX;
+				_map.image1.y=model.zoomY;
+				this.createComplete();
+				if(_map.width<_map.image1.width||_map.height<_map.image1.height){
+					if(X>=_map.centerX&&X<=_map.image1.width-_map.centerX){
+						_map.image1.x=_map.image1.x-(X-_map.oldx)
+					}if(X>=0&&X<_map.centerX){
+						_map.image1.x=model.zoomX;
+					}if(X>_map.image1.width-_map.centerX&&X<=_map.image1.width){
+						_map.image1.x=-(_map.image1.width-_map.width);
+					}if(Y>=_map.centerY&&X<=_map.image1.height-_map.centerY){
+						_map.image1.y=_map.image1.y-(Y-_map.oldy)
+					}if(Y>=0&&Y<_map.centerY){
+						_map.image1.y=model.zoomY;
+					}if(Y>(_map.image1.height-_map.centerY)&&Y<=_map.image1.height){
+						_map.image1.y=-(_map.image1.height-_map.height);
+					}
+					_map.oldx=_map.image1.x;
+					_map.oldy=_map.image1.y;
+				}
+			} 
+			
+			/* internal function moveTarget(x:Number,y:Number):void
+			{
+				_map.image1.MarkMove(x,y);
+				var num1:Number=x*hs.hSlider.value;
+				var num2:Number=y*hs.hSlider.value;
+				if(num1>401||num2>321)
+				{
+				
+				_map.verticalScrollPosition=num2-200;
+				_map.horizontalScrollPosition=num1-400;
+				}	
+			}
+			 */
+			 /**
+			 * 定位块移动
+			 *   */
+			internal function moveTarget2(x:Number,y:Number):void
+			{
+				
+				_map.image1.MarkMove(Number(xnum.text),Number(ynum.text));
+				
+				_map.verticalScrollPosition=Number(ynum.text)*hs.hSlider.value-200;
+				_map.horizontalScrollPosition=Number(xnum.text)*hs.hSlider.value-400;
+			
+			}
+			
+  	]]>
+  </mx:Script>
+  
+  <mx:TextInput text="x坐标" id="xnum"/>
+  <mx:TextInput text="y坐标" id="ynum"/>
+  <mx:Button id="move_btn" label="定位" click="moveTarget2(Number(xnum.text),Number(ynum.text))"/>
+</mx:VBox>

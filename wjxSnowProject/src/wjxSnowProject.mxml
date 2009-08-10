@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+    layout="vertical"    initialize="InitApp();"    backgroundColor="#000000"
+    horizontalScrollPolicy="off" verticalScrollPolicy="off" 
+    creationComplete="complete()" paddingBottom="0" paddingLeft="0" paddingRight="0" paddingTop="0"
+ 	backgroundImage="@Embed(source='images/3.swf')"
+ 	xmlns:containers="basecom.sjd.containers.*" 
+ 	xmlns:controls="basecom.sjd.controls.*"
+    xmlns:myComponents="com.myComponents.*"
+    xmlns:view="com.view.*"
+    preloader="basecom.basecomponent.progress.Progress" 
+    xmlns:containers1="basecom.basecomponent.containers.*"
+    xmlns:controls1="basecom.basecomponent.controls.*">
+	<mx:Style source="style/syseunite.css"/>
+	<mx:Script>
+		<![CDATA[
+			 import mx.controls.TabBar;
+			import mx.core.IFlexDisplayObject;
+			import mx.controls.PopUpButton;			
+			import mx.managers.FocusManager;			
+			import mx.managers.PopUpManager;		
+			import mx.collections.ArrayCollection;
+			import mx.containers.VBox;	
+			import mx.controls.Alert;
+			import mx.controls.Label;
+			import mx.containers.VBox;
+			import mx.containers.Canvas;
+			import com.view.Map;
+			import com.view.Music;
+			import com.view.FileUpdateLoad;
+			import com.view.TalkBook;
+			
+			import basecom.sjd.controls.tabBarClasses.*;
+			import basecom.sjd.controls.SuperTabBar;
+			import basecom.sjd.events.TabReorderEvent;
+			import basecom.sjd.events.TabReorderEvent;
+			import basecom.sjd.events.CloseEvent;
+			import com.model.ManiModel;
+			import com.view.*;
+			 [Bindable]
+		     private var model:ManiModel=ManiModel.getInstance();
+		     private function tabsReordered(event:TabReorderEvent):void {
+				var tabBar:SuperTabBar = event.currentTarget as SuperTabBar;
+				tabBar.setChildIndex(tabBar.getChildAt(event.oldIndex), event.newIndex);
+			}
+			/** 
+			 * 点击图标。显示页面
+			 *  */
+			private function itemclick():void
+			{
+				var num:Number=showlab.selectedIndex;
+				if(this.app.getChildByName(model.arrayData[num]['data']).visible==false)
+				{
+					this.app.getChildByName(model.arrayData[num]['data']).visible=true;						
+				}
+				this.app.setChildIndex(this.app.getChildByName(model.arrayData[num]['data']),this.app.numChildren-1);		
+				
+			}
+			 private function close(event:CloseEvent):void
+			{
+				var index:int=event.index;
+			//	var arrar:Array=this.app.getChildByName(model.arrayData[index]['label']).toString().split(".");
+				this.app.removeChild(this.app.getChildByName(model.arrayData[index]['data']));
+				
+			} 
+			private function addapp(e:MouseEvent):void
+			{
+				var mycomputer:DisplayObject=new(e.target.target_name)();
+     			mycomputer.x=(this.width-mycomputer.width)/2;
+     			mycomputer.y=(this.height-mycomputer.height)/2;
+     			this.app.addChild(mycomputer);
+     			mycomputer.name=e.target.label_name;
+     			model.arrayData.addItem({label:mycomputer.name});
+			}
+			private function datachangeevent(e:CloseEvent):void
+			{
+				
+				
+				//trace(model.arrayData.getItemIndex(e.name_str).toString());
+				var j:Number;
+				
+				for(var i:Number=0;i<model.arrayData.length;i++)
+				{
+					if(model.arrayData[i]['data']==e.name_str)
+					{
+						j=i;
+						break;
+					}
+				}
+				if(SupTabButton(showlab.getChildAt(j)).selected=true)
+				{
+					SupTabButton(showlab.getChildAt(j)).selected=false;
+				}
+					
+
+			}
+		/**公告滚动条
+        **/
+            private function complete():void
+            {
+             /*    move_up.yFrom = cs.height+1;    //"加6减6是为了首尾连接更加自然"
+                move_up.yTo = 0 - tt.height + 1;  //同上
+                move_up.repeatCount = 0; //无限次重复
+                move_up.repeatDelay = 0; //重复时间，毫秒
+                move_up.duration = 20000; //滚动一次的时间，毫秒
+                move_up.play(); */
+            }           
+           /*  private function move_pause():void
+            {
+                move_up.pause();  //暂停
+            }          
+            private function move_resume():void
+            {
+                move_up.resume(); //从暂停位置开始
+            } */
+		
+		    
+		/** 
+		 * 桌面右键菜单。
+		 *  */	
+		private var myContextMenu:ContextMenu;
+        //新增右键菜单
+		private var item2 : ContextMenuItem = new ContextMenuItem("排列图标");
+		private var item3 : ContextMenuItem = new ContextMenuItem("刷新");
+		private var item4 : ContextMenuItem = new ContextMenuItem("属性");
+		private var item5 : ContextMenuItem = new ContextMenuItem("样式");
+		private function InitApp():void{
+		 	 var myContextMenu : ContextMenu = new ContextMenu();
+		 	     myContextMenu.hideBuiltInItems();
+		     var defaultItems:ContextMenuBuiltInItems = myContextMenu.builtInItems;
+		         defaultItems.print = true; 
+		     item2.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,item2Click);
+			     myContextMenu.customItems.push(item2);     
+			 item3.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,item3Click);
+			     myContextMenu.customItems.push(item3);
+			 item4.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,item4Click);
+			     myContextMenu.customItems.push(item4);
+			 item5.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,item5Click);
+		         myContextMenu.customItems.push(item5);        
+		     this.contextMenu = myContextMenu; 
+		    
+				//添加阴影效果。
+		}
+		//右键排列图标    
+		private  function item2Click(event:ContextMenuEvent):void{
+		 	//this.buJobAddClick();
+		}   
+		//右键刷新           
+		private  function item3Click(event:ContextMenuEvent):void{
+		 	//this.buJobAddClick();
+		}
+		//右键属性
+		private  function item4Click(event:ContextMenuEvent):void{
+			//this.buJobEditClick();
+		}
+		//右键样式
+		 private  function item5Click(event:ContextMenuEvent):void{
+		 	var poptit:IFlexDisplayObject=mx.managers.PopUpManager.createPopUp(this,RightMenu,false);
+				PopUpManager.centerPopUp(poptit);
+		} 
+		]]>
+	</mx:Script>
+	 <!--视图区-->
+	 	<containers1:MyCanvas
+          horizontalScrollPolicy="off" verticalScrollPolicy="off" id="app" 
+		width="100%" height="100%" backgroundAlpha="0">
+			<containers1:MyBaseSignButton dataProvider="{model.arrayData}"
+				 signName="学习平台" imageUrl="images/study.png" 
+				 min="datachangeevent(event)" tabbar="{showlab}"
+				 targetName="{com.view.Network}" x="20" y="121"/>			 
+			<containers1:MyBaseSignButton dataProvider="{model.arrayData}"
+				 signName="生活娱乐" imageUrl="images/life.png" 
+				 min="datachangeevent(event)" tabbar="{showlab}"
+				 targetName="{com.view.MyComputer}" x="20" y="21"/>						
+			<containers1:MyBaseSignButton  dataProvider="{model.arrayData}"
+				 signName="留言本" imageUrl="images/png-1601.png" 
+				 min="datachangeevent(event)" tabbar="{showlab}"
+				 targetName="{com.view.TalkBook}" x="20" y="237"/>
+			<containers1:MyBaseSignButton dataProvider="{model.arrayData}"
+				 signName="作品展示" imageUrl="images/work.png" 
+				 min="datachangeevent(event)" tabbar="{showlab}"
+				 targetName="{com.view.MyProject}" x="110" y="21"/> 
+			 <containers1:MyBaseSignButton dataProvider="{model.arrayData}"
+				 signName="自我简介" imageUrl="images/self.png" 
+				 min="datachangeevent(event)" tabbar="{showlab}"
+				 targetName="{com.view.Myin}" x="20" y="362"/>
+			
+			<containers1:MyBaseSignButton dataProvider="{model.arrayData}"
+				 signName="歌曲欣赏"  imageUrl="images/music.png" 
+				 min="datachangeevent(event)" tabbar="{showlab}"
+				 targetName="{com.view.Music}" x="20" y="492"/>	 	 
+			
+			<containers1:MyBaseSignButton dataProvider="{model.arrayData}"
+				 signName="地图" imageUrl="images/map.png" 
+				 min="datachangeevent(event)" tabbar="{showlab}"
+				 targetName="{com.view.Map}" x="110" y="121"/>	
+				 
+			<containers1:MyBaseSignButton dataProvider="{model.arrayData}"
+				 signName="流程设计" imageUrl="images/workflow.png" 
+				 min="datachangeevent(event)" tabbar="{showlab}"
+				 targetName="{com.view.WorkFlow}" x="110" y="237"/>		 
+				 					
+			<mx:SWFLoader id="clock" 
+				mouseDown="{clock.startDrag()};clock.parent.setChildIndex(clock,clock.parent.numChildren-1)"
+				 mouseUp="{clock.stopDrag();}"  y="10" 
+				 source="images/clock.swf" x="657"/>
+			<view:callborad   y="17" x="388">
+			</view:callborad>
+			<view:Weather  y="10"  borderSkin="@Embed(source='images/bar.png',scaleGridTop=15, 				
+		    scaleGridLeft=15, 
+		    scaleGridBottom=20, 
+		    scaleGridRight=20)" x="803"/>
+	</containers1:MyCanvas>
+	<!--状态栏-->	
+	<mx:ApplicationControlBar  paddingTop="1" width="100%" height="30">
+		<containers1:MyHBox verticalAlign="middle" width="100%"  paddingTop="1" height="29"  backgroundSize="100%">
+			<controls1:MyLabel text="欢迎你来的到来"  color="#ffffff"/>
+			<containers:ButtonScrollingCanvas verticalScrollPolicy="off" 
+				leftButtonStyleName="leftButton" buttonWidth="20" 
+				rightButtonStyleName="rightButton" 
+				width="100%" height="29" horizontalScrollPolicy="auto">
+				<controls:SuperTabbuttonBar id="showlab"  close="close(event)"
+					dragEnabled="false" dropEnabled="false"   
+					height="29"  mouseDown="itemclick()" tabsReordered="tabsReordered(event);"
+					tabStyleName="firefoxLikeTabs"  dataProvider="{model.arrayData}" labelField="label" 
+					textAlign="left" tabWidth="100" > 
+				</controls:SuperTabbuttonBar>
+			</containers:ButtonScrollingCanvas>
+			<containers1:MyHBox  verticalAlign="middle">
+				<controls1:MyLabel text="当前时间"/>
+			</containers1:MyHBox>
+		</containers1:MyHBox>
+	</mx:ApplicationControlBar>
+</mx:Application>

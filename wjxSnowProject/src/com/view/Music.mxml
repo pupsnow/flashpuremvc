@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="utf-8"?>
+<containers:PopResizeWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="horizontal" 
+     horizontalAlign="center" showCloseButton="true" width="800" height="600"
+     xmlns:local="*" creationComplete="initComponent()" close="stop()" 
+     xmlns:components="components.*" xmlns:components1="com.view.music.components.*" 
+     xmlns:music="com.view.music.*" xmlns:containers="basecom.sjd.containers.*">
+	<mx:Script>
+		<![CDATA[
+			import com.view.music.components.LyricFactory;
+			import com.view.music.components.LyricTimeState;
+			import com.model.SongDataModel;
+			import com.view.music.components.LyricSyncEvent;
+			import com.view.music.components.LyricModel;
+			import mx.rpc.events.ResultEvent;
+			import mx.events.SliderEvent;
+			import mx.events.SliderEventClickTarget;
+			import mx.formatters.NumberFormatter;
+			import mx.events.ListEvent;
+			import mx.controls.Alert;
+			
+			/**
+			*储存声音对象
+			**/
+			private var loadSong:Sound;
+			
+			/**
+			*定时器对象用于在播放中执行实时监听
+			**/
+			private var time:Timer
+			
+			/**
+			*声音当前播放对象
+			**/
+			private var song:SoundChannel
+			
+			/**
+			*暂停的地方
+			**/
+			private var pausePosition:Number;
+			/**
+			**总时间
+			 **/
+			 private var TotalTime:String;
+			 
+			 /**
+			 **是否按顺序循环播发
+			 **/
+			 private var playOrder:Boolean=false;
+			 
+			 [Bindable]
+			 private var lyric:LyricModel=new LyricModel();
+			 
+			 private var Songurl:String;
+			 /**
+			   此module的参数用来帮定歌词和歌来源
+			   */
+			 [Bindable]
+			 private var Songmodel:SongDataModel=SongDataModel.getInstance();
+			/**
+			声音参数
+			  */
+			 private var SoundValue:String;
+			 /**
+			  httpservice的url;
+			 **/
+			 [Bindable]
+			 private var Httpurl:String;
+			/**
+			  此函数是初始化函数,作用是监听歌词搜索后派发出来的事件,同时让次工程用useCodePage为默认的,不需要转换.
+			  同时开始定义 time用来监听歌曲播放, 如果歌词列表中没歌  则不做播放.
+			** */
+			private function initComponent():void
+			{   //Security.allowDomain("*");
+				//Security.loadPolicyFile("http://localhost/TalkBook_asp/crossdomain.xml");
+				LyricFactory.getInstace().addEventListener("complete",go);
+				lrc.addEventListener("complete",goto);
+				lrc.addEventListener("noresult",noresult);
+				lrc.addEventListener("lrcioerror",lrcioerrorhandler);
+				flash.system.System.useCodePage=true;
+				time=new Timer(20);
+			  if(XMLList(musicDg.dataProvider).length()>0)
+			      {  
+			     // musicListChoose();
+			      }
+			}
+			/**
+			*选择歌曲后先是去搜索此歌的歌词,
+			 等歌词搜索的结果出来后再执行goto函数(此函数只监听歌词搜索分析结束后的监听函数,可看initcomponent函数),
+			**/
+			private function musicListChoose():void
+			{
+				if(loadSong!=null)
+				loadSong.close();
+				controlPanel.status="";
+				if(song!=null&&this.currentState!="")
+				   stop();
+				Songurl=musicDg.selectedItem.url;
+				loadSong=null;
+				lrc.jiaZai(musicDg.selectedItem['label']+' '+musicDg.selectedItem['person']);
+			}
+			
+			/**把歌词的url分析出来后执行*/
+			private function goto(e:Event):void
+			{
+				var url2:String=
+				Songmodel.songlrcurl;				
+				if(url2!=""&&url2.substr(0,4)=="http")
+				{
+				url2=url2.replace("&","@");
+				var loader:URLLoader = new URLLoader(new URLRequest("http://127.0.0.1/TalkBook_asp/readHtml3.asp?url="+url2));
+				loader.addEventListener(Event.COMPLETE,lyricLoaded);
+				loader.addEventListener(ProgressEvent.PROGRESS,loadlrc);
+				loader.addEventListener(IOErrorEvent.IO_ERROR,ioerrorhandler); 
+				//Httpurl=url2;
+				//lrcread.send();
+				}
+				else
+				{
+					load(Songurl);
+				}
+			}
+			
+			/**
+			*加载
+			**/
+			private function load(url:String):void
+			{
+				var urlrequest:URLRequest=new URLRequest(
+				//"http://localhost/TalkBook_asp/readHtml3.asp?url="+
+				url);
+				trace("http://localhost/TalkBook_asp/readHtml3.asp?url="+
+				url);
+				if(loadSong==null)
+				{
+				   loadSong=new Sound();
+				   loadSong.addEventListener(ProgressEvent.PROGRESS,propgress);
+				   loadSong.addEventListener(IOErrorEvent.IO_ERROR,Songioerrorhandler);
+				   loadSong.addEventListener(Event.COMPLETE,loadSongComplete);
+				}
+				//var s:SoundLoaderContext=new SoundLoaderContext(1000,true);
+				loadSong.load(urlrequest)
+			}
+			/**==========================================================
+			 监听加载歌词时的函数
+			  */
+			 
+			  /***
+			 **加载中 同时让鼠标点击无效
+			 **/
+			 private  function propgress(e:ProgressEvent):void
+			 {
+			 	 songTimeLb.text="已加载"+Math.floor((e.bytesLoaded/e.bytesTotal*10000))/100+"%";
+			 	 //this.mouseChildren=false;
+			 }
+			 /***
+			   io错误处理
+			   */
+			private function Songioerrorhandler(e:IOErrorEvent):void
+			{
+				controlPanel.status="无法连接到服务器!";
+				 this.mouseChildren=true;
+			}
+			
+			/**
+			*加载完成事件 计算音乐长度和获取音乐的名称
+			**/
+			private function loadSongComplete(event:Event):void
+			{   
+			    
+				playBtn.enabled=true;
+				var formartSongLength:Number=loadSong.length/60000;//计算分钟
+				var nformat:NumberFormatter=new NumberFormatter();
+				nformat.precision=2;			
+				var pointArr:Array=nformat.format(formartSongLength).split(".");
+				var secoundNum:String=String(Number(pointArr[1])*60/100);//计算秒
+				var minNum:String=pointArr[0];
+				if(minNum.length==1)
+					minNum="0"+	minNum;
+				TotalTime=minNum+":"+secoundNum.substring(0,2);
+				play(playOrder);
+				playtitle.text=musicDg.selectedItem['label']+"("+musicDg.selectedItem['person']+")";
+			}
+			/**==================================================================  */
+			
+			
+			/****===================================================================
+			  按钮控制事件
+			*/
+			  
+			 /**
+			* 播放 有2个参数
+			* Auto是判断是否定为循环播放。 startTime为播放的开始时间。
+			**/
+			private function play(Auto:Boolean=false,startTime:Number=0.0):void
+			{
+		      
+		      		this.mouseChildren=true;
+					this.playOrder=Auto;
+					this.currentState="playing";
+					song=loadSong.play(startTime);
+					song.addEventListener(Event.SOUND_COMPLETE,soundComplete);
+					time.addEventListener(TimerEvent.TIMER,playProgress);
+					time.start();
+			}
+			 
+			/**
+			*播放控制按钮 播放/暂停/继续
+			**/
+			private function playControl():void
+			{
+				
+				if(this.currentState==null||this.currentState=="")
+				{
+					play(playOrder);
+				}
+				else if(this.currentState=="playing")
+				{
+					pause();
+				}
+				else if(this.currentState=="goOnPlaying")
+				{
+					goOnPlaying()
+				}
+			}
+			/**
+			*暂停
+			**/
+			private function pause():void
+			{
+				this.currentState="goOnPlaying";
+				pausePosition=song.position
+				song.stop();
+				timerStop();
+			}
+			/**
+			*继续播放
+			**/
+			private function goOnPlaying():void
+			{
+				play(playOrder,pausePosition)
+			}
+			
+			/**
+			*停止
+			**/
+			private function stop():void
+			{
+				
+				if(song!=null)
+				{
+				songTimeLb.text="0"+'/'+TotalTime;
+				this.currentState="";
+				song.stop();
+				timerStop();
+				hs.value=0;
+				waveCv.graphics.clear();
+				}
+			}
+			/**
+			**下一首
+			**/
+			private function Next():void
+			{
+			  musicDg.selectedIndex++;
+			  musicListChoose();
+			 
+			}
+			/**
+			**上一首
+			**/
+			private function Pre():void
+			{
+				if(musicDg.selectedIndex>0)
+				{
+				  musicDg.selectedIndex--;
+				  musicListChoose()
+				}
+			}
+			
+			/**
+			*这是点循环播放时执行，有2个参数，其实就'auto'需写。
+			* 如果当前是播放状态的时候点了 循环播放 那么就直接包全局变量 playOrder改为true;
+			*如果当前不是播放状态那么就重新开始当前歌 并且是循环播放
+			**/
+			private function isPlay(Auto:Boolean=false,startTime:Number=0.0):void
+			{
+				if(this.currentState!="playing")
+				{
+					play(Auto,startTime);
+				}
+				else if(this.currentState=="playing")
+				  this.playOrder=Auto;
+				
+			}
+			
+			/**
+			*自动播放完毕执行
+			**/
+			private function soundComplete(event:Event):void
+			{
+				if(song.hasEventListener(Event.SOUND_COMPLETE))
+				song.removeEventListener(Event.SOUND_COMPLETE,soundComplete);
+				stop();
+			if(this.playOrder)//如果点了循环播放才会继续播放
+				PlaySelf();
+			}
+			/**
+			**循环播放随机
+			 **/
+			 private function PlaySelf():void
+			 {
+		 	 
+		 		musicDg.selectedIndex=int(Math.random()*(XMLList(musicDg.dataProvider).length()))
+		 		musicListChoose();
+			 }
+			
+			/**
+			*Timer进度监听停止
+			**/
+			private function timerStop(event:*=null):void
+			{
+				time.stop();
+			}
+			
+			/**
+			*播放过程中执行
+			**/
+			private function playProgress(event:TimerEvent):void
+			{
+				var playMM:Number=song.position/60000;
+				var nformat:NumberFormatter=new NumberFormatter();
+				nformat.precision=2;
+				var pointArr:Array=nformat.format(playMM).split(".");
+				
+				var secoundNum:String=String(Number(pointArr[1])*60/100);//计算秒
+				
+				var minNum:String=pointArr[0];
+				if(minNum.length==1)
+					minNum="0"+	minNum;
+				var playSS:String=minNum+":"+secoundNum.substring(0,2);
+			
+				songTimeLb.text=playSS+'/'+TotalTime;
+				    var time2:int = song.position;
+				if(Songmodel.songlrcurl!="")
+				{	
+					var state:LyricTimeState = new LyricTimeState(time2);
+					var event2:LyricSyncEvent = new LyricSyncEvent(LyricSyncEvent.Sync,state);
+					this.panel_lyric.onLyricSync(event2);
+				}
+					hs.value=song.position/loadSong.length;
+					graphicsSongWave();
+			}
+			/**
+			**让进度条移动的时候不会颤抖 就是在track点鼠标的时候 
+			**/
+			private function HSMove(e:MouseEvent):void
+			{
+				if(e.target.name=='UIComponent17')//根据调试找的  这个不可信 需要想办法
+				{
+				time.removeEventListener(TimerEvent.TIMER,playProgress);//移除这个监听就不会颤抖了
+				}		
+			}
+			
+			
+			/**
+			*操作播放器进度条位置改变时执行
+			**/
+			private function playProgressChange():void
+			{
+				timerStop();
+				song.stop();
+				play(playOrder,hs.value*loadSong.length);
+			}
+			
+			
+			/**
+			*改变音量
+			**/
+			private function changeVolume():void
+			{
+				if(song!=null)
+				{
+					var song_transform:SoundTransform = song.soundTransform;
+					
+					song_transform.volume = volume_hs.value; 
+					song.soundTransform = song_transform;
+				}
+			}
+			
+			/**========================================================================  */
+			
+			/**================================歌词相关函数===========================*/
+			/** 通过baidu查询当前歌的歌词,当无法连接网络时或连接不上时执行此函树 * */
+			private function lrcioerrorhandler(e:IOErrorEvent):void
+			{
+				panel_lyric.panel_scorll.removeAllChildren();
+				panel_lyric.panel_scorll.verticalScrollPosition=0;
+				var noLabel:Label=new Label();
+				noLabel.text="无法连接到服务器";
+				panel_lyric.panel_scorll.addChild(noLabel);
+				
+			}
+			/** 没有找到歌词 */
+			private function noresult(e:Event):void
+			{
+				panel_lyric.panel_scorll.removeAllChildren();
+				panel_lyric.panel_scorll.verticalScrollPosition=0;
+				var noLabel:Label=new Label();
+				noLabel.text="很抱歉没有找到歌词";
+				panel_lyric.panel_scorll.addChild(noLabel);
+				
+			}
+			
+			/**
+			**
+			**歌词同步 歌词加载完后加载mp3
+			***/
+			//此是对于urlloader的complete	
+			private function lyricLoaded(evt:Event):void
+			{
+				var loader:URLLoader = URLLoader(evt.target);
+				var str:String = loader.data;				
+				lyric =LyricFactory.getInstace().create(str);
+				this.panel_lyric.setLyric(lyric);			
+			}
+			/**此是在 create(str)结束后执行 */
+			private function go(e:Event):void
+			{
+				load(Songurl);
+				mvb.title="加载结束"
+			}
+			
+			/**
+			**加载歌词中 
+			*/
+			private function loadlrc(e:ProgressEvent):void
+			{
+				mvb.title=Math.floor((e.bytesLoaded/e.bytesTotal*10000))/100+"%";
+			}
+			/**io错误处理 */
+			private function ioerrorhandler(e:IOErrorEvent):void
+			{
+				panel_lyric.panel_scorll.removeAllChildren();
+				panel_lyric.panel_scorll.verticalScrollPosition=0;
+				var noLabel:Label=new Label();
+				noLabel.text="无法找到服务器!";
+				panel_lyric.panel_scorll.addChild(noLabel);
+			}
+			/**=====================================================================*/
+			private static const padx1:int=11;     //起点位置x坐标
+			private static const pady1:int=35;    //起点位置y坐标
+			private static const padx2:int=135;  //终点位置x坐标
+			private static const pady2:int=35; 
+			/**
+			*绘制波形图
+			**/
+			private var bytes:ByteArray=new ByteArray;
+				
+			private function graphicsSongWave():void
+			{
+				SoundMixer.computeSpectrum(bytes, true, 0);
+				var EQline:Graphics = waveCv.graphics;
+				EQline.clear()
+				//////////////左声道 绘制波形
+				EQline.lineStyle(1,0xaadeff,0.9,true)
+				EQline.beginFill(0xaadeff)
+				EQline.moveTo(padx1,pady1)
+				var n:Number=0
+				for (var i:int=padx1;i<padx2;i++){
+					n=Math.abs((bytes.readFloat()*500))
+					EQline.lineTo(i,pady1-n/3)								  
+				 }
+				 EQline.lineTo(padx2,pady2)
+				 EQline.endFill()
+				 ///////////右声道 绘制波形
+				 EQline.lineStyle(1,0x7fcdfe,1.0,true)
+				 EQline.beginFill(0x7fcdfe)
+				 EQline.moveTo(padx2,pady2)
+				 for (i=padx2;i>padx1;i--){
+					 n=Math.abs((bytes.readFloat()*100))
+					 EQline.lineTo(i,pady1-n*0.25)
+					 }
+					 EQline.lineTo(padx1,pady1)
+					 EQline.endFill()
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<containers:states>
+		<mx:State name="playing">
+			<mx:SetProperty target="{playBtn}" name="label" value="暂停"/>
+			<mx:SetProperty target="{playstateLb}" name="text" value="正在播放:"/>
+		</mx:State>
+		<mx:State name="goOnPlaying">
+			<mx:SetProperty target="{playBtn}" name="label" value="继续"/>
+			<mx:SetProperty target="{playstateLb}" name="text" value="等待播放:"/>
+		</mx:State>
+	</containers:states>
+	<mx:VBox width="100%" height="100%">
+		<mx:Panel id="controlPanel" title="播放控制" width="100%" height="100%" verticalGap="1">
+			<mx:HBox width="100%" height="23">
+				<mx:Label id="playstateLb" text="等待播放:" fontWeight="bold"/>
+				<mx:Label id="playtitle" text=""/>
+			</mx:HBox>
+			<mx:Spacer height="100%"/>
+			<mx:Canvas id="waveCv" width="100%" height="100"/>
+			<mx:HBox width="100%" height="20" verticalAlign="middle">
+				<mx:HSlider width="100%" id="hs" minimum="0" maximum="1"  click="HSMove(event)" 
+			    		change="playProgressChange()"  height="15" liveDragging="true"/>
+			    <mx:Label id="songTimeLb" fontSize="14" fontWeight="bold" fontFamily="Terminal"/>
+			</mx:HBox>
+			
+			<mx:ControlBar height="43">
+				<mx:LinkButton id="playBtn" label="播放" click="playControl()" enabled="false"/>
+				<mx:LinkButton label="停止" click="stop()"/>
+				<mx:LinkButton label="下一首" click="Next()"/>
+				<mx:LinkButton label="上一首" click="Pre()"/>
+				<mx:LinkButton label="随机播放" click="isPlay(true)"/>
+				<mx:Spacer width="100%"/>
+				
+				<mx:Label text="音量"/>
+				<mx:HSlider id="volume_hs"  minimum="0" maximum="1" liveDragging="true" value="0.8" 
+					change="changeVolume()" width="100%"/>
+			</mx:ControlBar>
+		</mx:Panel>
+		<mx:Panel title="播放列表" width="100%" height="100%">
+			<music:SearchSongData width="100%" height="32" SongData="{Songmodel}"/>
+			<mx:DataGrid id="musicDg" width="100%" height="100%"
+			    doubleClickEnabled="true" editable="true"
+				dataProvider="{Songmodel.songlist}" selectedIndex="0" 
+				itemDoubleClick="musicListChoose()">
+				<mx:columns>
+					<mx:DataGridColumn dataField="label" headerText="歌曲名" editable="false"/>
+					<mx:DataGridColumn dataField="person" headerText="艺术家" editable="false"/>
+					<mx:DataGridColumn dataField="url" headerText="地址" editable="true"/>
+				</mx:columns>
+			</mx:DataGrid>
+		</mx:Panel>
+	</mx:VBox>
+	<mx:VRule height="100%"/>
+	<mx:Panel id="mvb" title="歌词秀"  verticalAlign="middle" horizontalAlign="center"
+		width="100%" height="100%" backgroundColor="#ffffff" >
+		<music:SearchLRC id="lrc" SonglrcurlModel="{Songmodel}"/>
+		<components1:LyricPanel width="100%" height="100%" id="panel_lyric"/>
+	</mx:Panel>
+</containers:PopResizeWindow>

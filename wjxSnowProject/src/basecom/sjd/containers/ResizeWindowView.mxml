@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Siae:PreResizeWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
+	     xmlns:Siae="basecom.sjd.containers.*" width="100%" height="100%"   	    
+	        creationComplete="inia()"      horizontalScrollPolicy="auto"   verticalScrollPolicy="auto"
+	     showCloseButton="true"    
+	     close="closeme()" >
+	     <!-- doubleClickEnabled="true" doubleClick="changeSize()" titleIcon="@Embed(source='../../images/titleicon.png')" -->
+	<mx:Script>
+		<![CDATA[
+			import mx.core.Application;
+
+			import mx.effects.*;
+			import mx.core.UIComponent;
+			import mx.containers.TitleWindow
+			import mx.managers.PopUpManager
+		    private var fade:Fade=new Fade(this);
+		   // private  var zrs:Zoom=new Zoom(this);
+		   
+
+		    private var myRestoreHeight:Number;
+		   private var myRestoreWidth:Number;
+		    /**
+			*指定需要创建的列表
+			**/
+			[Bindable]
+			public var childComponent:UIComponent;
+        	// private  var zrs:Zoom=new Zoom();
+        	use namespace mx_internal;
+		private function inia():void
+			{
+				this.closeButton.width=42;
+				this.closeButton.height=17;
+			/* 	this.parent.closeButton.move(x-15, y+1); */
+				
+				
+				//PopUpManager.centerPopUp(this);
+			  /*  zrs.duration=400;
+				zrs.zoomHeightFrom=0.01;
+				zrs.zoomWidthFrom=0.01 ;
+				zrs.zoomHeightTo=1.0;
+				zrs.zoomWidthTo=1.0;
+				zrs.captureRollEvents=true;	
+		 			  */
+			  
+			  /*   fade.alphaFrom=0;
+			    fade.alphaTo=1;
+			    fade.duration=500;			  
+			   var transition:Parallel = new Parallel(); */
+				//transition.addChild(zrs);
+				/* transition.addChild(fade);
+				transition.play(); */
+								
+					
+			}
+          
+		public function closeme():void
+		{
+	       /*  zrs.target=this;
+			zrs.duration=500;
+			zrs.zoomHeightFrom=1.0;
+			zrs.zoomWidthFrom=1.0 ;
+			zrs.zoomHeightTo=0.0 ;
+			zrs.zoomWidthTo=0.0;	
+			zrs.end();
+			zrs.play();   */
+			/* fade.target=this;
+			fade.alphaFrom=0;
+			fade.alphaTo=1;
+			fade.duration=400;
+			fade.end();
+			fade.play();	
+			var time:Timer=new Timer(400,1)
+			time.addEventListener(TimerEvent.TIMER_COMPLETE,timer)
+ 			time.start(); */
+ 			 PopUpManager.removePopUp(this);		   
+ 
+		}//closeWindow
+	/*  private function timer(e:TimerEvent):void
+
+	{
+		 PopUpManager.removePopUp(this);		   
+		 
+	}
+ */
+
+	]]>
+	</mx:Script>
+<!--	    
+<mx:HBox  width="100%" id="hit" left="0" top="-30" height="30"/>	
+<mx:Canvas id="vb">
+	
+</mx:Canvas> -->
+
+</Siae:PreResizeWindow>

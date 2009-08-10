@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<containers:PopResizeWindow xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()"  showCloseButton="true"
+	width="400" height="300" xmlns:containers="basecom.sjd.containers.*">
+	<mx:Script>
+         <![CDATA[
+             
+             import flash.net.FileReference;
+            import flash.net.URLRequest;
+            import flash.net.FileFilter;
+            import flash.net.URLVariables;
+            
+            import flash.events.ProgressEvent;
+            
+            import mx.managers.CursorManager;
+             //
+             private var file:FileReference;
+                          
+             internal function init():void{
+
+                 file = new FileReference();   
+                 file.addEventListener(Event.SELECT, onSelect);  
+                file.addEventListener(ProgressEvent.PROGRESS, processHandler);  
+                file.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA,uploadDataHandler);
+               // file.addEventListener(Event.OPEN
+             }
+             
+             internal function doSelect():void{
+                 var imageTypes:FileFilter = new FileFilter("Images (*.jpg, *.jpeg, *.png)", "*.jpg;*.jpeg;*.png");  
+                var allTypes:Array = new Array(imageTypes);  
+                 file.browse(allTypes);
+             }
+             internal function onSelect(evt:Event):void{
+                 trace(evt.target.name);
+                 pic_txt.text = file.name;
+             }
+             internal function doUpload():void{
+                 var request:URLRequest = new URLRequest("http://localhost/TalkBook_asp/SaveFile.asp?file=");
+                     request.method=URLRequestMethod.POST;             
+                //request.data = new URLVariables();
+                    request.contentType = "application/octet-stream";
+                file.upload(request);
+                CursorManager.setBusyCursor();
+             }
+             internal function processHandler(evt:ProgressEvent):void{
+                //
+                //evt.bytesTotal;
+             }        
+             internal function uploadDataHandler(evt:DataEvent):void{
+                 CursorManager.removeBusyCursor(); 
+                 
+                 img.source = evt.data.toString();
+             }
+         ]]>
+     </mx:Script>
+
+    <mx:Image id="img" width="377" height="108" x="10" y="59"/>    
+    <mx:TextInput id="pic_txt" width="150" x="109" y="10"/>
+    <mx:Button label="选择文件" click="doSelect()" x="10" y="10"/>
+    <mx:Button label="开始上传" click="doUpload()" x="295" y="10"/>
+</containers:PopResizeWindow>

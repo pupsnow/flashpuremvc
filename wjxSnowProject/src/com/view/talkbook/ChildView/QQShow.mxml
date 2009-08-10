@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" width="500"
+	  horizontalGap="0" height="380" verticalAlign="middle" backgroundColor="0xaaeeaa">
+	<mx:Script>
+		<![CDATA[
+			import com.model.ContentModel;
+			import mx.managers.PopUpManager;
+			import mx.messaging.channels.StreamingAMFChannel;
+		public static const HEADURL:String="images/qqshow/head/";
+		public static const TOPURL:String="images/qqshow/top/";
+		public static const MIDDILEURL:String="images/qqshow/middile/";
+		public static const BOTTOMURL:String="images/qqshow/bottom/";
+		private var head_layer:String;//头发
+		private var top_layer:String;//头部
+		private var mind_layer:String;//中部
+		private var bot_layer:String;//下部
+		   [Bindable]
+		   public var model:ContentModel;
+		   public var show_fun:Function;
+			private function changeshow(layer:String,source:String):void
+			{
+				switch(layer)
+				{
+					case "head":
+					     head.source=HEADURL+source+'.gif'
+					     head_layer=source;
+					     break;
+					case "top":
+					     top.source=TOPURL+source+'.gif'
+					     top_layer=source;
+					      break;
+					case "middile":
+					     mid.source=MIDDILEURL+source+'.gif'
+					     mind_layer=source;
+					      break;
+					case "bottom":
+					     bot.source=BOTTOMURL+source+'.gif'
+					     bot_layer=source;
+					      break;
+				   case "old":
+				         head.source=HEADURL+source+'.gif'
+				         top.source=TOPURL+source+'.gif'
+				         mid.source=MIDDILEURL+source+'.gif'
+					     bot.source=BOTTOMURL+source+'.gif'
+					     bot_layer=head_layer=top_layer=top_layer=source;
+					      break;
+				   
+				   
+				    default:break;
+				}
+			}
+			private function close():void
+			{
+				model.qqshowData=new Array(head_layer,top_layer,bot_layer,bot_layer);
+				callLater(show_fun);
+				PopUpManager.removePopUp(this);
+			}
+		]]>
+	</mx:Script>
+	<mx:VBox width="140" height="100%">
+		<mx:Canvas width="140" height="226">
+		    <mx:Image id="bot" source="images/qqshow/bottom/df.gif"/>
+		    <mx:Image id="mid" source="images/qqshow/middile/df.gif"/>
+		    <mx:Image id="top" source="images/qqshow/top/df.gif"/>
+			<mx:Image id="head" source="images/qqshow/head/df.gif"/>
+		</mx:Canvas>
+		<mx:ControlBar>
+			<mx:Button label="应用" click="close();"/>
+			<mx:Button label="还原" click="changeshow('old','df')"/>
+		</mx:ControlBar> 
+	</mx:VBox>
+	<mx:Tile>
+	    <mx:Image source="images/qqshow/head/1x.gif" click="changeshow('head','1')"/>
+		<mx:Image source="images/qqshow/head/2x.gif" click="changeshow('head','2')"/>
+		<mx:Image source="images/qqshow/head/3x.gif" click="changeshow('head','3')"/>
+		<mx:Image source="images/qqshow/head/4x.gif" click="changeshow('head','4')"/>
+		
+		<mx:Image source="images/qqshow/top/1x.gif"  click="changeshow('top','1')"/>
+		<mx:Image source="images/qqshow/top/2x.gif"  click="changeshow('top','2')"/>
+		<mx:Image source="images/qqshow/top/3x.gif"  click="changeshow('top','3')"/>
+		<mx:Image source="images/qqshow/top/4x.gif"  click="changeshow('top','4')"/>
+		
+		<mx:Image source="images/qqshow/middile/1x.gif"  click="changeshow('middile','1')"/>
+		<mx:Image source="images/qqshow/middile/2x.gif" click="changeshow('middile','2')"/>
+		<mx:Image source="images/qqshow/middile/3x.gif"  click="changeshow('middile','3')"/>
+		<mx:Image source="images/qqshow/middile/4x.gif" click="changeshow('middile','4')"/>
+		
+		<mx:Image source="images/qqshow/bottom/1x.gif" click="changeshow('bottom','1')"/>
+		<mx:Image source="images/qqshow/bottom/2x.gif" click="changeshow('bottom','2')"/>
+		<mx:Image source="images/qqshow/bottom/3x.gif" click="changeshow('bottom','3')"/>
+		<mx:Image source="images/qqshow/bottom/4x.gif" click="changeshow('bottom','4')"/>
+	</mx:Tile>
+</mx:HBox>

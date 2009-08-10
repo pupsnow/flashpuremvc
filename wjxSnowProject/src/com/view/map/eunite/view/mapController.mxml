@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:filters="flash.filters.*" alpha=".8" width="90%"
+	creationComplete="init();" >
+<mx:Script>
+	<![CDATA[
+		import com.view.map.components.modle.MapXYPoint;
+		import mx.effects.Resize;
+		import mx.managers.PopUpManager;
+		import mx.effects.Zoom;
+			
+			[Bindable]
+			private var model:MapXYPoint=MapXYPoint.getInstance();
+			private var _map:ImageMap;	
+			private var timer:Timer;
+			
+			/**
+			 * 初始化 
+			 *  */	
+			private function init():void
+			{   
+				this.addEventListener(MouseEvent.MOUSE_DOWN,mousedownHander);
+	 			this.addEventListener(MouseEvent.MOUSE_UP,mouseupHander);
+	 		 	
+				_map.scrollJump=1;
+				timer = new Timer(_map.scrollSpeed);
+			}
+			
+			/**
+			 * 开始移动  
+			 * */
+	 		private function mousedownHander(event:MouseEvent):void{
+	 			if(event.target==this)
+	 			{
+	 				this.startDrag()
+	 			}	 			
+	 		}
+	 		/**
+	 		 * 停止移动 
+	 		 * */
+	 		private function mouseupHander(event:MouseEvent):void{
+	 			if(event.target==this)
+	 			{
+	 				this.stopDrag()
+	 			}
+	 		}
+			/**
+			 * 定义变量
+			 *   */	
+			public function set map(m:ImageMap):void{
+				this._map = m;
+			}			
+			public function get map():ImageMap{
+				return this._map;
+			}
+			
+           private function dragContinue(event: MouseEvent):void 
+            {	 	
+			 	 var x:Number=_map.image1.mouseX;
+			     var y:Number=_map.image1.mouseY;
+			     my.label=x.toString();
+			     my1.label=y.toString();
+			 }//显示x,y坐标..
+			 
+			 
+			 /**
+	         * 滑快控制放大缩小. 
+	         * * */ 
+		    private  var zoom:Zoom=new Zoom();
+			private var resize:Resize=new Resize();
+			
+			private function ZoomOut():void
+			{																
+			   for(var i:Number=1;i<=4;i++)
+			   {
+			   	zoom.duration=400;
+			   	var image:String='image'+i;			   
+			   	trace(_map.getChildByName(image))
+	           zoom.target=_map.getChildByName(image);	
+			   zoom.zoomHeightFrom=1.0;
+			   zoom.zoomHeightTo=hSlider.value;
+			   zoom.zoomWidthFrom=1.0;
+			   zoom.zoomWidthTo=hSlider.value;
+			   zoom.end();
+			   zoom.play();		  
+			   model.zoomX=_map.image1.x;
+			   model.zoomY=_map.image1.y;			   	
+			   }			  
+			}		
+		  /**
+		 * *搜索.弹出窗口。
+		 * */
+		private function seach():void
+		{
+			var sea:Seach=new Seach();
+		    PopUpManager.addPopUp(sea,this,false);
+		    sea.y=70;			
+		}		 
+	]]>
+</mx:Script>
+<mx:ApplicationControlBar width="100%">
+    <mx:Button id="my"  label="{model.x}"/>
+	<mx:Button id="my1"  x="0" y="58" label="{model.y}"/>
+	<mx:Button  label="标记"/>
+	<mx:TextInput />
+	<mx:Button label="搜索" click="seach();"/>
+	<mx:Button label="高级搜索"/>
+	<mx:HSlider id="hSlider"
+	        dataTipPlacement="top" 
+	        tickColor="black"        
+	        labels="['0%','1000%']" 
+	        allowTrackClick="true" 
+	        liveDragging="true"  value="1"
+	        change="ZoomOut();" x="211" y="0"/>
+	<mx:filters>
+		<filters:DropShadowFilter alpha=".6" />
+	</mx:filters>
+</mx:ApplicationControlBar>	
+</mx:Canvas>

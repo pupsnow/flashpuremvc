@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:containers="sjd.containers.*"
+	xmlns:controls="sjd.controls.*" 
+    paddingBottom="0" paddingLeft="0" 
+    paddingRight="0" paddingTop="0"
+ 	width="100%" height="100%"
+ 	backgroundImage="@Embed(source='../../images/25.jpg')" 
+ 	xmlns:htmlas="com.htmlas.*" 
+ 	xmlns:ns1="flexlib.baseClasses.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.core.UIComponent;
+			import com.event.CloseEvent;
+			import mx.managers.FocusManager;
+			import com.view.Network;
+			import com.view.IeRead;
+			import mx.managers.PopUpManager;
+			import com.view.MyComputer;
+			import mx.collections.ArrayCollection;
+			import mx.containers.VBox;
+			import flexlib.events.TabReorderEvent;
+			import mx.controls.Alert;
+			import flexlib.controls.SuperTabBar;
+			import flexlib.events.TabReorderEvent;
+			import mx.controls.Label;
+			import mx.containers.VBox;
+			import mx.containers.Canvas;
+			import flexlib.controls.tabBarClasses.SuperTab;
+			import com.model.ManiModel;
+			 [Bindable]
+		     private var model:ManiModel=ManiModel.getInstance();
+		     private var num1:Number=0;
+		     private var num2:Number=0;
+		     private var num3:Number=0;
+		     [Bindable]
+		     public var obj:UIComponent;
+		  override protected function childrenCreated():void
+		  {
+		  	if(obj!=null)
+		  	{
+		  		  app.addChild(obj);
+		  	}
+		  	  super.childrenCreated();
+		  }  
+		    
+		]]>
+	</mx:Script>
+		 <mx:Canvas id="app" width="100%" height="100%">
+		
+	    </mx:Canvas>
+	
+		<mx:Canvas bottom="0" width="100%" height="40"  backgroundSize="100%"
+			backgroundImage="@Embed(source='../../images/icon/bottom.jpg')">
+			<containers:ButtonScrollingCanvas  verticalScrollPolicy="off" 
+				leftButtonStyleName="leftButton" buttonWidth="20" 
+				rightButtonStyleName="rightButton" 
+				width="100%" height="40" horizontalScrollPolicy="auto">
+				<controls:SuperTabBar id="showlab"
+					dragEnabled="false" dropEnabled="false"  
+					height="40" tabStyleName="firefoxLikeTabs"  
+					dataProvider="{model.arrayData}" labelField="label" 
+					textAlign="left" tabWidth="100" > 
+				</controls:SuperTabBar>
+			</containers:ButtonScrollingCanvas>
+		</mx:Canvas>
+	
+</mx:Canvas>
