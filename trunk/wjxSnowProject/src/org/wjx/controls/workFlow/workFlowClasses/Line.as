@@ -619,16 +619,25 @@ package  org.wjx.controls.workFlow.workFlowClasses{
            	this._lineChild.graphics.moveTo(this.startX,this.startY);
            	if(this.lineType==1){
            		if(getCenterXY()){
-           		this._lineChild.graphics.lineStyle(15,drawColor,0);
-          		this._lineChild.graphics.curveTo(this.middleX,this.middleY,this.endX,this.endY);
-           	   
-           	   	this._lineChild.graphics.lineStyle(this.lineWidth,drawColor)
-           	    
-           	    this._lineChild.graphics.moveTo(this.startX,this.startY);
-           	    this.drawArrowhead(this._lineChild);
-           	    
-           	   	this._lineChild.graphics.moveTo(this.startX,this.startY);
-           	    this._lineChild.graphics.curveTo(this.middleX,this.middleY,this.endX,this.endY);
+           		
+	           		trace(this.startX+"this.startY:"+this.startY);
+	           		this._lineChild.graphics.lineStyle(1,this.lineColor,1);
+	           		this._lineChild.graphics.moveTo(this.startX,this.startY);
+	          		
+	          		this._lineChild.graphics.lineTo(this.startX,this.middleY);
+	          		
+	          		this._lineChild.graphics.lineTo(this.endX,this.middleY);
+	          		this._lineChild.graphics.lineTo(this.endX,this.endY);
+//           		this._lineChild.graphics.lineStyle(15,drawColor,0);
+//          		this._lineChild.graphics.curveTo(this.middleX,this.middleY,this.endX,this.endY);
+//           	   
+//           	   	this._lineChild.graphics.lineStyle(this.lineWidth,drawColor)
+//           	    
+//           	    this._lineChild.graphics.moveTo(this.startX,this.startY);
+//           	    this.drawArrowhead(this._lineChild);
+//           	    
+//           	   	this._lineChild.graphics.moveTo(this.startX,this.startY);
+//           	    this._lineChild.graphics.curveTo(this.middleX,this.middleY,this.endX,this.endY);
            	 }
            	}else{
          		this._lineChild.graphics.lineStyle(15,drawColor,0);
