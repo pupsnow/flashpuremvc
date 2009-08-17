@@ -17,9 +17,6 @@ package  org.flowDesign.layout
 				w = Math.abs(w); //switch to positive number;
 				h = Math.abs(h); //switch to positive number;
 				
-				//WE NEED TO OVER RIDE THE WIDTH AND HEIGHT IF THEY ARE DRAGGING AND UP/lEFT OF THE STARTX OR STARTY... 
-				//if mouse is top left of startX then set both w/h to the MINIMUM
-				//get our ending mouse position by using endX, and endY
 				if( endX < startX && endY < startY){
 					w = MINIMUM_WIDTH;
 					h = MINIMUM_HEIGHT;
@@ -36,14 +33,26 @@ package  org.flowDesign.layout
 				w = unscaledWidth;
 				h = unscaledHeight;
 			}
-			//trace('[endX]  '+endX+'   [endY]  '+endY);
-			//trace('[startX]'+startX+'   [startY]'+startY);
-			//trace('[w]'+w+'[h]'+h);
+			
 			graphics.clear();
 			graphics.lineStyle(1, 0x000000, 1);
-			graphics.beginFill(0xFFFFFF,.5);
-			graphics.drawRect(startX,startY,w,h);
-			graphics.endFill();
+			graphics.moveTo(startX,startY);
+			if(this.endY<this.startY)
+			{
+				graphics.lineTo(startX,startY-20);
+				graphics.lineTo(this.endX,this.startY-20);
+			}
+			else
+			{
+			    graphics.lineTo(startX,startY+20);
+			    graphics.lineTo(this.endX,this.startY+20);
+			}
+			
+			graphics.lineTo(this.endX,this.endY);
+			
+//			graphics.beginFill(0xFFFFFF,.5);
+//			graphics.drawRect(startX,startY,w,h);
+//			graphics.endFill();
 		}
 	}
 }

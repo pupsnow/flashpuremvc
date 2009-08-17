@@ -231,6 +231,8 @@ package  org.flowDesign.data
 			if(keys!=null){
 				for(var i:int=0;keys.length;i++){
 					var lineData:LineData=this.lineDatas.getKey(keys[i]);;
+					if(lineData==null)
+					 break;
 					var lineId:String=lineData.id;
 					if(lineDataId==lineId){
 						result=lineData;
