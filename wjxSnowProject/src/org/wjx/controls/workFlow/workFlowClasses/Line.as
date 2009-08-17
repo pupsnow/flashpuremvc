@@ -13,61 +13,18 @@ package  org.wjx.controls.workFlow.workFlowClasses{
         * //线对像
         */       
        private var _lineChild:UIComponent;
-       
-       /**
-        * //开始点对像
-        */     
-       private var _startPoint:UIComponent;
-      
-      
-       /**
-        * //中间点对像
-        */      
-       private var _middlePoint:UIComponent;
-       
-       
-      
-       /**
-        *  //结束点对像
-        */       
-       private var _endPoint:UIComponent;
+        
      
        
       
        public function Line() {
            //线对像
            	_lineChild = new UIComponent();
-           	
            	_lineChild.addEventListener(MouseEvent.MOUSE_OVER,lineMouseOver);
            	_lineChild.addEventListener(MouseEvent.MOUSE_OUT,lineMouseOut);
             _lineChild.addEventListener(MouseEvent.MOUSE_UP,lineMouseDown);
           	this.addEventListener(FlexEvent.CREATION_COMPLETE,creationComplete);
-           
-           	//开始点对像
-         	_startPoint = new UIComponent();
-         	_startPoint.width=6;
-         	_startPoint.height=6;
-          //  _startPoint.addEventListener(MouseEvent.MOUSE_DOWN, startMouseDownHandler);
-          //  _startPoint.addEventListener(MouseEvent.MOUSE_UP, startMouseUpHandler);
-           
-           
-           	//中间点对像
-           	_middlePoint = new UIComponent();
-         //    _middlePoint.addEventListener(MouseEvent.MOUSE_DOWN, middleMouseDownHandler);
-         //   _middlePoint.addEventListener(MouseEvent.MOUSE_UP, middleMouseUpHandler);
-           
-           
-           	//结束点对像
-           	_endPoint = new UIComponent();
-           _endPoint.width=6;
-           _endPoint.height=6;
-          //  _endPoint.addEventListener(MouseEvent.MOUSE_DOWN, endMouseDownHandler);
-          //  _endPoint.addEventListener(MouseEvent.MOUSE_UP, endMouseUpHandler);
-           	drawLine();
             addChild(_lineChild);
-            addChild(_startPoint);
-            addChild(_middlePoint);
-            addChild(_endPoint);
             initMenu();
         }
        private var	deleteMenuItem:ContextMenuItem;
@@ -143,9 +100,6 @@ package  org.wjx.controls.workFlow.workFlowClasses{
          		var childNum:int=this.parent.numChildren;
          	    this.parent.setChildIndex(this,childNum-1);
          	}
-         	drawStartPoint();
-        	drawMiddlePoint();
-        	drawEndPoint();
         	drawLine();
          }
        public function get lineSelect():Boolean{
@@ -388,9 +342,6 @@ package  org.wjx.controls.workFlow.workFlowClasses{
        		this.endX=MoveX;
        		this.endY=MoveY;
        		}
-       		drawStartPoint();
-        	drawMiddlePoint();
-        	drawEndPoint();
         	drawLine();
        }
         
@@ -415,11 +366,6 @@ package  org.wjx.controls.workFlow.workFlowClasses{
 	  {
 			if(!this._select){
 	        	this._select=true;
-	        	 drawStartPoint();
-	        	 if(_lineType==1){
-	        	 drawMiddlePoint();
-	        	 }
-	        	drawEndPoint();
 	        	drawLine();
 	        	}
 	        	event.stopPropagation();
@@ -434,9 +380,6 @@ package  org.wjx.controls.workFlow.workFlowClasses{
         {
         	if(this._select && selectPoint=="null"){
         	this._select=false;
-        	drawStartPoint();
-        	drawMiddlePoint();
-        	drawEndPoint();
         	drawLine();
         	event.stopPropagation();
         	}	
@@ -451,123 +394,7 @@ package  org.wjx.controls.workFlow.workFlowClasses{
        {
        	//this.lineSelect=true;
       }
-       
-        /**
-        * 开始节点对像事件
-        * */
-      private function startMouseDownHandler(event:MouseEvent):void {
-       	var sprite:Sprite = Sprite(event.target);
-        this._select=true;
-        this.isDrage=true;
-        sprite.startDrag(true);
-        this.selectPoint="start";
-    	}
-   
-        private function startMouseUpHandler(event:MouseEvent):void {
-            
-           	var selectUi:UIComponent=event.currentTarget as UIComponent;
-         	 selectUi.stopDrag();
-         	  this.isDrage=false;
-            this.startX=selectUi.x;
-        	this.startY=selectUi.y;
-        	drawLine();
-            this.selectPoint="null";
-        }
-
-         
-        /**
-        * 中间点对像事件
-        * */
         
-         private function middleMouseDownHandler(event:MouseEvent):void {
-           var sprite:Sprite = Sprite(event.target);
-           sprite.startDrag(true);
-            this.isDrage=true;
-            this.selectPoint="middle";
-        	}
-
-        private function middleMouseUpHandler(event:MouseEvent):void {
-            
-           	var selectUi:UIComponent=event.currentTarget as UIComponent;
-            selectUi.stopDrag();
-             this.isDrage=false;
-           	this.middleX=selectUi.x;
-        	this.middleY=selectUi.y;
-        	drawLine();
-            this.selectPoint="null";
-        }
-
-       
-        /**
-        * 结束点对像事件
-        * */
-         private function endMouseDownHandler(event:MouseEvent):void {
-           
-            var sprite:Sprite = Sprite(event.target);
-          	sprite.startDrag(true);
-          	 this.isDrage=true;	
-             this.selectPoint="end";
-        	}
-
-        private function endMouseUpHandler(event:MouseEvent):void {
-            var selectUi:UIComponent=event.currentTarget as UIComponent;
-           	selectUi.stopDrag();
-           	 this.isDrage=false;
-          	this.endX=selectUi.x;
-        	this.endY=selectUi.y;
-        	drawLine();
-            this.selectPoint="null";
-        }
-
-       
-       
-        /**
-         * 
-         * 画开始点
-         */       
-        public function drawStartPoint():void{
-        	if(this.lineState==null ||this.lineState==nodeStateConstants.defaultState){
-        		this._startPoint.graphics.clear();
-        	 	if(this.lineSelect){
-        			this._startPoint.graphics.beginFill(this.pointColor);
-           			this._startPoint.graphics.drawCircle(3,3,6);
-           			this._startPoint.move(this._startX,this._startY);
-           			this._startPoint.graphics.endFill();
-          		}
-         	}
-        }
-        /**
-         * 画中间点
-         * 
-         */       
-        public function drawMiddlePoint():void{
-        	if(this.lineState==null ||this.lineState==nodeStateConstants.defaultState){
-         		if(this._lineType==1){
-         			this._middlePoint.graphics.clear();
-         			if(this.lineSelect ){
-         				this._middlePoint.graphics.beginFill(this.pointColor);
-           				this._middlePoint.graphics.drawCircle(3,3,6);
-           				this._middlePoint.move(this.middleX,this.middleY);
-           				this._middlePoint.graphics.endFill();	
-           			}
-          		}
-         	}
-        } 
-        /**
-         * 画结束点
-         * 
-         */        
-        public function drawEndPoint():void{
-        	if(this.lineState==null ||this.lineState==nodeStateConstants.defaultState){
-        		this._endPoint.graphics.clear();
-         		if(this.lineSelect){
-        			this._endPoint.graphics.beginFill(this.pointColor);
-        			this._endPoint.graphics.drawCircle(3,3,6);
-     				this._endPoint.move(this._endX,this._endY);  
-        			this._endPoint.graphics.endFill();	
-         		}
-        	}
-        }
         
         public function lineRefash():void
         {
@@ -611,33 +438,64 @@ package  org.wjx.controls.workFlow.workFlowClasses{
         	if(this.lineSelect || this._select){
         		drawColor=this.getDrawColor();
           	}else{
-          		this._startPoint.graphics.clear();
-           		this._middlePoint.graphics.clear();
-           		this._endPoint.graphics.clear();
            		drawColor=this.getDrawColor();
          	}
            	this._lineChild.graphics.moveTo(this.startX,this.startY);
            	if(this.lineType==1){
            		if(getCenterXY()){
+          		/****画折线1****/
+          		this._lineChild.graphics.lineStyle(15,this.lineColor,0);
+          		this._lineChild.graphics.moveTo(this.startX,this.startY);
+           		this._lineChild.graphics.lineTo(this.startX,this.startY+20);
+          		this._lineChild.graphics.lineTo(this.endX,this.startY+20);
+          		this._lineChild.graphics.lineTo(this.endX,this.endY);
            		
-	           		trace(this.startX+"this.startY:"+this.startY);
-	           		this._lineChild.graphics.lineStyle(1,this.lineColor,1);
-	           		this._lineChild.graphics.moveTo(this.startX,this.startY);
-	          		
-	          		this._lineChild.graphics.lineTo(this.startX,this.middleY);
-	          		
-	          		this._lineChild.graphics.lineTo(this.endX,this.middleY);
-	          		this._lineChild.graphics.lineTo(this.endX,this.endY);
-//           		this._lineChild.graphics.lineStyle(15,drawColor,0);
-//          		this._lineChild.graphics.curveTo(this.middleX,this.middleY,this.endX,this.endY);
-//           	   
-//           	   	this._lineChild.graphics.lineStyle(this.lineWidth,drawColor)
-//           	    
-//           	    this._lineChild.graphics.moveTo(this.startX,this.startY);
-//           	    this.drawArrowhead(this._lineChild);
-//           	    
-//           	   	this._lineChild.graphics.moveTo(this.startX,this.startY);
-//           	    this._lineChild.graphics.curveTo(this.middleX,this.middleY,this.endX,this.endY);
+          		this._lineChild.graphics.lineStyle(this.lineWidth,drawColor);
+          		this._lineChild.graphics.moveTo(this.startX,this.startY);
+           		this._lineChild.graphics.lineTo(this.startX,this.startY+20);
+          		this._lineChild.graphics.lineTo(this.endX,this.startY+20);
+          		this._lineChild.graphics.lineTo(this.endX,this.endY);
+          		
+          		
+          		
+          		
+          		
+          		
+          		
+          		/****画折线2****/
+          		
+          		/* this._lineChild.graphics.lineStyle(15,this.lineColor,0);
+          		
+          		this._lineChild.graphics.moveTo(this.startX,this.startY);
+          		
+          		this._lineChild.graphics.lineTo(this.startX,this.middleY);
+          		
+          		this._lineChild.graphics.lineTo(this.endX,this.middleY);
+          		this._lineChild.graphics.lineTo(this.endX,this.endY);
+          		
+          		
+          		this._lineChild.graphics.lineStyle(this.lineWidth,drawColor);
+          		this._lineChild.graphics.moveTo(this.startX,this.startY);
+          		
+          		this._lineChild.graphics.lineTo(this.startX,this.middleY);
+          		
+          		this._lineChild.graphics.lineTo(this.endX,this.middleY);
+          		this._lineChild.graphics.lineTo(this.endX,this.endY); */
+          		
+          		
+          		
+          		
+          		/****画曲线****/
+           		/* this._lineChild.graphics.lineStyle(15,drawColor,0);
+          		this._lineChild.graphics.curveTo(this.middleX,this.middleY,this.endX,this.endY);
+           	   
+           	   	this._lineChild.graphics.lineStyle(this.lineWidth,drawColor)
+           	    
+           	    this._lineChild.graphics.moveTo(this.startX,this.startY);
+           	    this.drawArrowhead(this._lineChild);
+           	    
+           	   	this._lineChild.graphics.moveTo(this.startX,this.startY);
+           	    this._lineChild.graphics.curveTo(this.middleX,this.middleY,this.endX,this.endY); */
            	 }
            	}else{
          		this._lineChild.graphics.lineStyle(15,drawColor,0);
@@ -677,11 +535,6 @@ package  org.wjx.controls.workFlow.workFlowClasses{
 		    var ya:int=this.endY+10*((fromY-this.endY)-(fromX-this.endX)/2)/dd;
 		    var xb:int=this.endX+10*((fromX-this.endX)-(fromY-this.endY)/2)/dd;
 		    var yb:int=this.endY+10*((fromY-this.endY)+(fromX-this.endX)/2)/dd;
-			/* if(this.lineSelect || this._select){
-			child.graphics.beginFill(this.selectColor);
-			}else{
-			child.graphics.beginFill(lineColor);	
-			} */
 			child.graphics.beginFill(this.getDrawColor());
 			child.graphics.moveTo(this.endX, this.endY);
 			child.graphics.lineTo(xa, ya);

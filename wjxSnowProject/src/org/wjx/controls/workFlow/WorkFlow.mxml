@@ -261,5 +261,6 @@
 		<mx:Label id="mousex" text=""/>
 		<mx:Label id="mousey" text=""/>	
 	</mx:HBox>
+	
 	</mx:VBox>
 </mx:Canvas>
