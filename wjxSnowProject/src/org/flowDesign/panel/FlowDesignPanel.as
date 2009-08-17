@@ -188,6 +188,7 @@ package org.flowDesign.panel
 				if(newSelectName!=oldSelectName)
 				{
 				var oldSelectedUI:IFlowUI = this.getChildByName(oldSelectName) as IFlowUI;
+					if(oldSelectedUI!=null)
 					oldSelectedUI.uiSelect = false;
 				var newSelectedUI:IFlowUI = this.getChildByName(newSelectName) as IFlowUI;
 					newSelectedUI.uiSelect = true;
@@ -342,7 +343,17 @@ package org.flowDesign.panel
 		 */		
 		protected function mouseOut_Event_Handler(event:MouseEvent):void
 		{
-			
+			if(this.contentMouseX<5||this.contentMouseX>this.width-5||
+			   this.contentMouseY<5||this.contentMouseY>this.height-5)
+			{
+				if(this.currentTool!=null&&this.temporaryLine!=null)
+				{
+					this.drawLine=false;
+					this.temporaryLine.clear();
+					this.removeChild(this.temporaryLine);
+					this.temporaryLine = null;
+				}
+			}
 		}
 		
 		/**
@@ -543,6 +554,12 @@ package org.flowDesign.panel
 	   		event.stopPropagation();
 	   }
 	   
+	   
+	   /**
+	    * 鼠标在节点上放开 
+	    * @param event
+	    * 
+	    */	   
 	   protected function nodeMouseUp(event:MouseEvent):void
 	   {
 	   		
@@ -552,7 +569,8 @@ package org.flowDesign.panel
 		   		node.isSelect=false;
 		   		this.drawLine=false;
 		   		this.drawLineEnd = false;
-		   		if(event.target==this.getChildByName(this.temporaryLine.startName))
+		   		var linedata1:LineData = this.workFlowData.getLineData(this.temporaryLine.startName+this.temporaryLine.endName);
+		   		if(event.target==this.getChildByName(this.temporaryLine.startName)||linedata1!=null)
 		   		{
 		   			 this.temporaryLine.clear();
 		   			 this.removeChild(this.temporaryLine);
@@ -607,18 +625,16 @@ package org.flowDesign.panel
 		 */		
 		protected function nodeRightClick(event:NodeEvent):void
 		{
-			
-//	   		if(this.toolSelectValue=="line" || this.toolSelectValue=="curveLine" )
-//	   		{
-//	   			var eventWfNode:WfNode=event.currentTarget as  WfNode;
-//	   			eventWfNode.isSelect=false;
-//	   			
-//	   		}
-//	   		else
-//	   		{
-//	   			var eventWfNode2:WfNode=event.currentTarget as  WfNode;
-//	   			setSelectState(eventWfNode2.name,"node");
-//	   		}
+			var node:Node =event.currentTarget as  Node;
+	   		if(this.currentTool!=null)
+	   		{
+	   			node.isSelect=false;
+	   			
+	   		}
+	   		else
+	   		{
+	   			setSelectState(node.name,"node");
+	   		}
 		}
 		
 		
@@ -631,49 +647,49 @@ package org.flowDesign.panel
 		protected function nodeDeleteClick(event:NodeEvent):void
 		{
 			
-//		  	var eventWfNode:WfNode=event.currentTarget as  WfNode;
-//		    var eventWfNodeName:String=event.currentTarget.name;
-//			var fromNodeLineDatas:Array=this.workFlowData.qryLineDataByFromNodeId(eventWfNodeName);
-//			var toNodeLineDatas:Array=this.workFlowData.qryLineDataByToNodeId(eventWfNodeName);
-//			for(var i:int=0;i<fromNodeLineDatas.length;i++)
-//			{
-//				var formLineData:LineData=fromNodeLineDatas[i];
-//				var formLineDataId:String=formLineData.id;
-//				var getFromLine:Line=Line(this.getChildByName(formLineDataId));
-//				if(getFromLine!=null)
-//				{
-//					this.removeChild(getFromLine);
+		  	var node:Node=event.currentTarget as  Node;
+		    var eventWfNodeName:String=event.currentTarget.name;
+			var fromNodeLineDatas:Array=this.workFlowData.qryLineDataByFromNodeId(eventWfNodeName);
+			var toNodeLineDatas:Array=this.workFlowData.qryLineDataByToNodeId(eventWfNodeName);
+			for(var i:int=0;i<fromNodeLineDatas.length;i++)
+			{
+				var formLineData:LineData=fromNodeLineDatas[i];
+				var formLineDataId:String=formLineData.id;
+				var getFromLine:DrawingTool=DrawingTool(this.getChildByName(formLineDataId));
+				if(getFromLine!=null)
+				{
+					this.removeChild(getFromLine);
 //					var fromLineLabel:LineLabel=LineLabel(this.getChildByName(formLineData.lineLabelId)); 
 //					if(fromLineLabel!=null)
 //					{
 //						this.removeChild(fromLineLabel);
 //					}
-//				}
-//			}
-//			for(var j:int=0;j<toNodeLineDatas.length;j++)
-//			{
-//				var toLineData:LineData=toNodeLineDatas[j];
-//				var toLineDataId:String=toLineData.id;
-//				var getToLine:Line=Line(this.getChildByName(toLineDataId));
-//				if(getToLine!=null)
-//				{
-//					this.removeChild(getToLine);
+				}
+			}
+			for(var j:int=0;j<toNodeLineDatas.length;j++)
+			{
+				var toLineData:LineData=toNodeLineDatas[j];
+				var toLineDataId:String=toLineData.id;
+				var getToLine:DrawingTool=DrawingTool(this.getChildByName(toLineDataId));
+				if(getToLine!=null)
+				{
+					this.removeChild(getToLine);
 //					var toLineLabel:LineLabel=LineLabel(this.getChildByName(toLineData.lineLabelId)); 
 //					if(toLineLabel!=null)
 //					{
 //						this.removeChild(toLineLabel);
 //					}
-//				}
-//			}
-//			
-//			if(eventWfNode!=null)
-//			{
-//				this.removeChild(eventWfNode);
-//			}
-//			this.workFlowData.delNodeData(eventWfNodeName);
-//			var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.nodeDel);
-//          	wrokFlowDesignEvent.nodeId=eventWfNodeName;
-//          	this.dispatchEvent(wrokFlowDesignEvent);	//派发删除节点
+				}
+			}
+			
+			if(node!=null)
+			{
+				this.removeChild(node);
+			}
+			this.workFlowData.delNodeData(eventWfNodeName);
+			var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.nodeDel);
+          	wrokFlowDesignEvent.nodeId=eventWfNodeName;
+          	this.dispatchEvent(wrokFlowDesignEvent);	//派发删除节点
 		}
 		/**
 		 * 节点属性设置
@@ -683,10 +699,10 @@ package org.flowDesign.panel
 		 */		
 		protected function nodePropertyClick(event:NodeEvent):void
 		{
-//		  var wfNodeEvent:WfNode=event.currentTarget as  WfNode;
-//		  var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.nodeProperty);
-//          wrokFlowDesignEvent.nodeId=wfNodeEvent.name;
-//          this.dispatchEvent(wrokFlowDesignEvent);
+		  var node:Node=event.currentTarget as  Node;
+		  var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.nodeProperty);
+          wrokFlowDesignEvent.nodeId=node.name;
+          this.dispatchEvent(wrokFlowDesignEvent);
 		
 		}
 		
@@ -697,16 +713,16 @@ package org.flowDesign.panel
 		 */		
 		protected function nodeMouseDoubleClick(event:MouseEvent):void
 		{
-//			if(this.toolSelectValue=="line" || this.toolSelectValue=="curveLine" )
-//			{
-//			}
-//			else
-//			{
-//				var wfNodeEvent:WfNode=event.currentTarget as  WfNode;
-//		  		var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.nodeProperty);
-//          		wrokFlowDesignEvent.nodeId=wfNodeEvent.name;
-//          		this.dispatchEvent(wrokFlowDesignEvent);
-//			}
+			if(this.currentTool!=null)
+			{
+			}
+			else
+			{
+				var node:Node=event.currentTarget as  Node;
+		  		var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.nodeProperty);
+          		wrokFlowDesignEvent.nodeId=node.name;
+          		this.dispatchEvent(wrokFlowDesignEvent);
+			}
 		}
 		
 		
@@ -768,8 +784,6 @@ package org.flowDesign.panel
 		 */		
 		public function nodeDrageStart(event:NodeEvent):void
 		{
-			trace("nodeDrageStart");
-			trace(event.currentTarget.name);
 			this.drageName=event.currentTarget.name;
 		}
 		
@@ -780,13 +794,10 @@ package org.flowDesign.panel
 		 */		
 		public function nodeDrageStop(event:NodeEvent):void
 		{
-			trace("nodeDrageStop");
 			if(this.drageName!=null)
 			{
 				this.drageName=null;
 			}
-			
-			
 			
 		}
 
