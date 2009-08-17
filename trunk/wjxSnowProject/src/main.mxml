@@ -1,6 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
-	layout="vertical" xmlns="*" 
-	xmlns:containers="basecom.sjd.containers.*">
-    <mx:ModuleLoader/>
+	width="100%" height="100%" 
+	xmlns:flowControl="org.wjx.controls.workFlow.*" 
+	initialize="init()" xmlns:panel="org.flowDesign.panel.*">
+	<mx:Script>
+		<![CDATA[
+			import org.flowDesign.layout.LineTool;
+			import org.flowDesign.layout.RectangleTool;
+		//拖运进入事件
+		
+		
+		private var firstNodeNum:int=0;
+		private var firstLineNum:int=0;
+		private var isBaind:Boolean=false;
+		
+		/**点击工具事件*/
+		private function selectTool(event:Event):void
+		{
+			var toolsEvent:Tools=event.currentTarget as Tools;
+			switch(toolsEvent.selectTool)
+			{
+				case "node":fl.currentTool = null; break;
+				case "line": fl.currentTool = org.flowDesign.layout.LineTool;break;
+				case "curveLine":fl.currentTool = org.flowDesign.layout.RectangleTool;break;
+				case "move":fl.currentTool = null;break;
+			}
+			event.stopPropagation();
+		}
+		
+		]]>
+	</mx:Script>
+	
+	<mx:VBox width="100%" height="100%"  verticalGap="1" 
+		horizontalGap="1" horizontalAlign="right">
+	<flowControl:menu width="100%" height="25" horizontalAlign="right" 
+		>		
+	</flowControl:menu>
+	<mx:HBox width="100%" height="100%">
+		<flowControl:Tools  select="selectTool(event)"   
+			id="tools"   width="140" height="100%"  horizontalAlign="center" title="工具">
+		</flowControl:Tools>		
+		<mx:VBox id="flowVbox" width="100%"  height="100%" verticalGap="0" 
+			horizontalGap="0" backgroundImage="images/BG.png" >		
+			<mx:VBox id="flowPrentVbox" width="{flowVbox.width}" verticalGap="0" 
+				horizontalGap="0"  alpha="1.0" height="{flowVbox.height}"      borderStyle="inset">
+					<panel:FlowDesignPanel  width="99.8%" height="100%"  id="fl" >
+						
+					</panel:FlowDesignPanel>
+			</mx:VBox>
+		</mx:VBox>
+	</mx:HBox>	
+	<mx:HBox width="100%" height="20" backgroundColor="#C4DFFA" borderStyle="outset" 
+		horizontalAlign="right" >
+        <mx:Label id="proidd" text="" visible="false"/>
+		<mx:Label id="mousex" text=""/>
+		<mx:Label id="mousey" text=""/>	
+	</mx:HBox>
+	
+	</mx:VBox>
 </mx:Application>

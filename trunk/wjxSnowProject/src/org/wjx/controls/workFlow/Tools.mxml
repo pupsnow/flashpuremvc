@@ -87,6 +87,8 @@
 				dragSource.addData(value, 'value');
 				dragSource.addData(icon,"icon");
 				dragSource.addData(dragInitiator.label,"lable");
+				dragSource.addData(dragInitiator.mouseX,"x");
+				dragSource.addData(dragInitiator.mouseY,"y");
 			    /**拖动代理  */
 			    var dragProxy:Button = new Button();
 			    dragProxy.label=dragInitiator.label;
