@@ -45,4 +45,9 @@
   	
   	}
   </mx:Style>
+  <mx:Glow id="glow1" blurXFrom="0" color="0xFF0000" 
+  	blurXTo="15" blurYFrom="0" blurYTo="15" />
+  <mx:Glow id="glow2" alphaFrom="50" alphaTo="0" 
+  	blurXFrom="15" color="0x00FF00" blurXTo="0" 
+  	blurYFrom="15" blurYTo="0" />
 </mx:Button>

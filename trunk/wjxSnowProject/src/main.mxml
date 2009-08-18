@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
 	width="100%" height="100%" 
-	xmlns:flowControl="org.wjx.controls.workFlow.*" 
 	initialize="init()" xmlns:panel="org.flowDesign.panel.*">
 	<mx:Script>
 		<![CDATA[
 			import org.flowDesign.layout.LineTool;
-			import org.flowDesign.layout.RectangleTool;
+			import org.flowDesign.layout.VBrokenLineTool;
 		//拖运进入事件
-		
-		
 		private var firstNodeNum:int=0;
 		private var firstLineNum:int=0;
 		private var isBaind:Boolean=false;
@@ -22,24 +19,29 @@
 			{
 				case "node":fl.currentTool = null; break;
 				case "line": fl.currentTool = org.flowDesign.layout.LineTool;break;
-				case "curveLine":fl.currentTool = org.flowDesign.layout.RectangleTool;break;
+				case "vcurveLine":fl.currentTool = org.flowDesign.layout.VBrokenLineTool;break;
+				case "hcurveLine":fl.currentTool = org.flowDesign.layout.HBrokenLineTool;break;
 				case "move":fl.currentTool = null;break;
 			}
 			event.stopPropagation();
 		}
 		
+		
+		private function showxml():void
+		{
+			var x:XML = fl.dataProvider;
+		}
 		]]>
 	</mx:Script>
 	
 	<mx:VBox width="100%" height="100%"  verticalGap="1" 
 		horizontalGap="1" horizontalAlign="right">
-	<flowControl:menu width="100%" height="25" horizontalAlign="right" 
-		>		
-	</flowControl:menu>
+	<mx:Button label="xml" click="showxml()"/>
 	<mx:HBox width="100%" height="100%">
-		<flowControl:Tools  select="selectTool(event)"   
+	
+		<panel:Tools  select="selectTool(event)"   
 			id="tools"   width="140" height="100%"  horizontalAlign="center" title="工具">
-		</flowControl:Tools>		
+		</panel:Tools>		
 		<mx:VBox id="flowVbox" width="100%"  height="100%" verticalGap="0" 
 			horizontalGap="0" backgroundImage="images/BG.png" >		
 			<mx:VBox id="flowPrentVbox" width="{flowVbox.width}" verticalGap="0" 

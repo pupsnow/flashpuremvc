@@ -1,206 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
-	layout="horizontal" width="100%" height="100%" creationComplete="initswf()">
-	<mx:Script>
-		<![CDATA[
-			import mx.managers.PopUpManager;
-			import test.testTitWin;
-			import mx.flash.UIMovieClip;
-			import mx.containers.Canvas;
-			import mx.controls.SWFLoader;
-			import flash.display.AVM1Movie
-			private var a:SWFLoader;
-			private function initswf():void
-			{ 
-//			
-//				    a = new SWFLoader();
-//					a.source =
-////					 "assets/fla/test.swf";
-//					"http://files2.17173.com/mvflash/2009012165432132132123.swf";
-//				a.addEventListener(Event.INIT,loadok);
-//				a.scaleContent = true;
-//				a.percentHeight = 100;
-//				a.percentWidth = 100;
-//				a.load();
+	layout="horizontal" width="100%" height="100%" creationComplete="creatui()">
+ 	<mx:Script>
+ 		<![CDATA[
+ 			import mx.core.UIComponent;
+ 			import mx.controls.Button
+ 		    private var xml:XML = <node>
+ 							<node id="node1" name="测试" x="100" y="100" type="mx.controls.Button"/>
+ 							<node id="node2" name="测试" x="200" y="200" type="mx.controls.Button"/>
+ 							<node id="node3" name="测试" x="300" y="300" type="mx.controls.Button"/>
+ 							</node>;
+ 							
+ 			private  function creatui():void
+ 			{
+ 				var x:XML = xml;
+ 				for(var i:int = 0;i<xml.length();i++)
+ 				{
+ 					var b:Class = xml[i].@type as Class;
+ 					var a:Object = new b();
+ 						a.x = xml[i].@x;
+ 						a.y = xml[i].@y;
+ 						a.id = xml[i].@id;
+ 						a.label = xml[i].@name;
+ 					this.addChild(a as DisplayObject );
+ 				}
+			}
 				
-				
-			}
-			
-			private function loadok(e:Event):void
-			{
-				var c:flash.display.AVM1Movie = e.currentTarget.content;
-//					c.width = con.width;
-//					c.height = con.height;
-				con.addChild(a);	
-			}
-			private function initHandler():void
-			{
-				
-				//var b:MovieClip = e.target.content;
-				var f:Canvas = new Canvas();
-					f.percentHeight = 100;
-					f.percentWidth = 100;
-				var g:Graphics = f.graphics;
-					g.beginFill(0xffffff,1);
-					g.drawRect(con.x,con.y,con.width,con.height);
-					g.endFill();
-					con.mask = f;
-					//con.addChild(f);
-					
-					
-			}
-			private function removeswf():void
-			{
-				con.removeChild(a);
-			}
-			
-			
-			private function pop():void
-			{
-				var a:testTitWin = new testTitWin();
-				PopUpManager.addPopUp(a,this);
-				PopUpManager.centerPopUp(a);
-			}
-		]]>
-	</mx:Script>
-	<!--<mx:Panel  width="400" height="400">
-		  <mx:SWFLoader source="http://files2.17173.com/mvflash/2009012165432132132123.swf" 
-   		  scaleContent="false" />
-	</mx:Panel>-->
-	<mx:Style  source="style/test.css"/>
- 	<mx:Panel id="con" width="268" height="300"  creationComplete="initHandler()"
- 		 paddingRight="0" paddingTop="0" paddingBottom="0">  
- 	</mx:Panel>
- 	<mx:Canvas width="572" height="322">
- 	 	<mx:Button click="pop()" label="remove" x="49" y="92"/>
- 	 	<mx:Button click="pop()" label="remove" x="65" y="38"/>
- 	 	<mx:Button click="pop()" label="remove" x="31" y="8"/>
- 	 	<mx:Button click="pop()" label="remove" x="49" y="158"/>
- 	 	<mx:DataGrid x="31" y="182">
- 	 	 	<mx:columns>
- 	 	 	 	<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
- 	 	 	</mx:columns>
- 	 	</mx:DataGrid>
- 	 	<mx:DataGrid x="168" y="34">
- 	 	 	<mx:columns>
- 	 	 	 	<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
- 	 	 	</mx:columns>
- 	 	</mx:DataGrid>
- 	 	<mx:DataGrid x="168" y="34">
- 	 	 	<mx:columns>
- 	 	 	 	<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
- 	 	 	</mx:columns>
- 	 	</mx:DataGrid>
- 	 	<mx:DataGrid x="168" y="34">
- 	 	 	<mx:columns>
- 	 	 	 	<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
- 	 	 	</mx:columns>
- 	 	</mx:DataGrid>
- 	 	<mx:DataGrid x="168" y="34">
- 	 	 	<mx:columns>
- 	 	 	 	<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
- 	 	 	</mx:columns>
- 	 	</mx:DataGrid>
- 	 	<mx:DataGrid x="90" y="68">
- 	 	 	<mx:columns>
- 	 	 	 	<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
- 	 	 	</mx:columns>
- 	 	</mx:DataGrid>
- 	 	<mx:DataGrid x="49" y="92">
- 	 	 	<mx:columns>
- 	 	 	 	<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
- 	 	 	</mx:columns>
- 	 	</mx:DataGrid>
- 	 	<mx:DataGrid x="168" y="34">
- 	 	 	<mx:columns>
- 	 	 	 	<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
- 	 	 	</mx:columns>
- 	 	</mx:DataGrid>
- 	 	<mx:DataGrid x="168" y="34">
- 	 	 	<mx:columns>
- 	 	 	 	<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
- 	 	 	</mx:columns>
- 	 	</mx:DataGrid>
- 	 	<mx:DataGrid x="168" y="34">
- 	 	 	<mx:columns>
- 	 	 	 	<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
- 	 	 	</mx:columns>
- 	 	</mx:DataGrid>
- 	 	<mx:DataGrid x="168" y="34">
- 	 	 	<mx:columns>
- 	 	 	 	<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
- 	 	 	</mx:columns>
- 	 	</mx:DataGrid>
- 	 	<mx:DataGrid x="168" y="34">
- 	 	 	<mx:columns>
- 	 	 	 	<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
- 	 	 	</mx:columns>
- 	 	</mx:DataGrid>
- 	 	<mx:DataGrid x="168" y="34">
- 	 	 	<mx:columns>
- 	 	 	 	<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
- 	 	 	</mx:columns>
- 	 	</mx:DataGrid>
- 	 	<mx:DataGrid x="168" y="34">
- 	 	 	<mx:columns>
- 	 	 	 	<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
- 	 	 	</mx:columns>
- 	 	</mx:DataGrid>
- 	 	<mx:DataGrid x="168" y="34">
- 	 	 	<mx:columns>
- 	 	 	 	<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
- 	 	 	</mx:columns>
- 	 	</mx:DataGrid>
- 	 	<mx:DataGrid x="168" y="34">
- 	 	 	<mx:columns>
- 	 	 	 	<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
- 	 	 	</mx:columns>
- 	 	</mx:DataGrid>
- 	 	<mx:DataGrid x="168" y="34">
- 	 	 	<mx:columns>
- 	 	 	 	<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
- 	 	 	</mx:columns>
- 	 	</mx:DataGrid>
- 	 	<mx:DataGrid x="168" y="34">
- 	 	 	<mx:columns>
- 	 	 	 	<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
- 	 	 	 	<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
- 	 	 	</mx:columns>
- 	 	</mx:DataGrid>
- 	</mx:Canvas>
+ 		]]>
+ 	</mx:Script>
 </mx:Application>

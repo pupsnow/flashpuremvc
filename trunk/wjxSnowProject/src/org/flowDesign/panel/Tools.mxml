@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" >
+	<mx:Script>
+		<![CDATA[
+			import flash.events.Event;
+			import flash.events.MouseEvent;
+			import mx.controls.Button;
+			import mx.core.DragSource;
+			import mx.events.ModuleEvent;
+			import mx.managers.DragManager;
+			import org.flowDesign.source.NodeStyleSource;
+			[Bindable]
+			private var instance:NodeStyleSource = NodeStyleSource.getInstace();
+			
+			/**记录所选工具的值 move line curveLine*/
+			private var _seletTool:String="move";
+			
+			public function set selectTool(tool:String):void
+			{
+				if(_seletTool==tool) return;
+				this._seletTool=tool;
+				this.dispatchEvent( new Event("select"));
+			}
+			public function get selectTool():String
+			{
+				return this._seletTool;
+			}
+			/**按钮被点中  */
+			public function toolClick(event:MouseEvent):void
+			{
+			  	var toolEvent:Button=event.currentTarget as Button
+				var selectEventName:String=toolEvent.name;
+				this.selectTool=selectEventName;
+				if(toolEvent.name=="node")
+				{
+					this.userToolName.text="移动";
+				}
+				else
+				{
+					this.userToolName.text=toolEvent.label;
+				}
+			}
+			
+			/**拖动相关节点到画图板  此页的关键代码*/
+			private function dragIt(event:MouseEvent, value:String,
+								 typename:String,typeId:String):void
+			{
+				/**初始化拖动  */
+				var dragInitiator:Button = event.currentTarget as Button;
+				/**拖动source  */
+				var dragSource:DragSource = new DragSource();
+				dragSource.addData(typename, 'typename');
+				dragSource.addData(typeId, 'typeId');
+				dragSource.addData(value, 'value');
+//				dragSource.addData(icon,"icon");
+				dragSource.addData(dragInitiator.label,"lable");
+				dragSource.addData(dragInitiator.mouseX,"x");
+				dragSource.addData(dragInitiator.mouseY,"y");
+			    /**拖动代理  */
+			    var dragProxy:Button = new Button();
+			    dragProxy.label=dragInitiator.label;
+			    dragProxy.width=dragInitiator.width;
+			    dragProxy.height=dragInitiator.height; 
+				dragProxy.setStyle("icon",event.currentTarget.getStyle("icon"));
+			    /**拖动管理  */
+			    DragManager.doDrag(dragInitiator, dragSource, event, dragProxy);
+			}
+		]]>
+	</mx:Script>
+	<mx:Metadata>
+		[Event(name="select",type="flash.events.Event")]
+	</mx:Metadata>
+	<mx:Button name="node" 	id="startNode"  width="50"		
+		icon="{instance.getIcon('start')}"  fontSize="12"  label="开始结点" 
+		mouseMove="dragIt(event,'start','开始结点','1');" 
+		mouseDown="toolClick(event)"/>
+	<mx:Button name="node"	id="endNode" icon="{instance.getIcon('end')}" 
+		width="110" label="结束结点" fontSize="12" 
+		mouseMove="dragIt(event,'end','结束结点','2');" 
+		mouseDown="toolClick(event)"/>
+	<mx:Button	name="node" id="manualNode" icon="{instance.getIcon('manual')}"
+		 width="110" label="人工结点" fontSize="12" 
+		 mouseMove="dragIt(event,'manual','人工结点','3');" 
+		 mouseDown="toolClick(event)"/>
+	<mx:Button name="node"	id="automatismNode" icon="{instance.getIcon('automatism')}" 
+		width="110" label="自动结点" fontSize="12" 
+		mouseMove="dragIt(event,'automatism','自动结点','4');" 
+		mouseDown="toolClick(event)"/>
+	<mx:Button name="node" label="子流程"  icon="{instance.getIcon('child')}" 
+		fontSize="12" width="110"  
+		mouseMove="dragIt(event,'child','子流程','6')" 
+		mouseDown="toolClick(event)"/>
+	<mx:Button name="line" label="连接线" icon="{instance.getIcon('transition')}"   
+		fontSize="12" width="110" click="toolClick(event)"/>
+	<mx:Button name="vcurveLine" label="竖折线"  icon="{instance.getIcon('curveLine')}"  
+		fontSize="12" width="110" click="toolClick(event)" />
+	<mx:Button name="hcurveLine" label="横折线"  icon="{instance.getIcon('curveLine')}"  
+		fontSize="12" width="110" click="toolClick(event)" />	
+	<mx:Button name="move" label="移动" icon="{instance.getIcon('movebutton')}"  
+		fontSize="12" width="110" click="toolClick(event)"/>
+	<mx:VBox width="100%" height="100%" label="工具状态" 
+		verticalAlign="bottom" horizontalAlign="center">
+		<mx:Label text="当前工具" fontSize="12"/>
+		<mx:Label id="userToolName" fontSize="12" fontWeight="bold"/>
+	</mx:VBox>
+</mx:Panel>

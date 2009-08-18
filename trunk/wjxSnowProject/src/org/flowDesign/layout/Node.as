@@ -13,26 +13,8 @@ package org.flowDesign.layout
 		
 		
 		public class Node extends  DrogButton implements IFlowUI
-	{
-		[Embed("../images/start.gif")]
-		[Bindable]
-		public var start:Class;
-
-		[Embed("../images/end.gif")]
-		[Bindable]
-		public var end:Class;
-
-		[Embed("../images/automatism.gif")]
-		[Bindable]
-		public var automatism:Class;
-
-		[Embed("../images/manual.gif")]
-		[Bindable]
-		public var manual:Class;
-
-		[Embed("../images/child.png")]
-		[Bindable]
-		public var child:Class;
+		{
+		
 		[Event (name="mouseRight", type="flash.events.Event")]
 		/**
 		 * 属性设置
@@ -58,6 +40,18 @@ package org.flowDesign.layout
 		{
 			this._uiSelect=value;
 			this.selected=value;
+			if(value)
+			{
+				this.glow1.target = this;
+				this.glow1.repeatCount = 0;
+				this.glow1.end();
+				this.glow1.play();
+			}
+			else
+			{
+				this.glow1.target = null;
+				this.glow1.end();
+			}
 		}
 		
 		public function get uiSelect():Boolean
@@ -69,7 +63,7 @@ package org.flowDesign.layout
 		/**
 		 * 节点类型
 		 */		
-		private var _type:String;
+		 private var _type:String;
 		 public function set type(type:String):void
 		 {
 			this.setStyle("icon",this.getNodeIcon(type));
@@ -79,7 +73,6 @@ package org.flowDesign.layout
 		{
 			return this._type;
 		}
-		
 		/**
 		 *是否可以选择
 		 */
@@ -108,12 +101,7 @@ package org.flowDesign.layout
 		{
 			return this._isDrage;
 		}
-		
-		/* private var FlowPanel:UIComponent;
-		private var FlowData:WorkFlowData;
-		flowpanel:UIComponent,flowdata:WorkFlowData
-		this.FlowPanel = flowpanel;
-	    this.FlowData = flowdata; */
+
 		public function Node()
 		{
 	    	super();
@@ -277,7 +265,7 @@ package org.flowDesign.layout
 		 {
 		 	this.styleName=NodeStyleSource.complete;
 		 }
-		if(this.nodeState==NodeStyleSource.execute)
+		 if(this.nodeState==NodeStyleSource.execute)
 		 {
 		 	this.styleName=NodeStyleSource.execute;
 		 }
@@ -297,19 +285,8 @@ package org.flowDesign.layout
 		 */		
 		private function getNodeIcon(nodeType:String):Class
 		{
-			if(nodeType=="start-启动活动"){
-				return start;
-			}else if(nodeType=="end-结束活动"){
-				return end;
-			}else if(nodeType=="human-人工活动"){
-				return manual;
-			}else if(nodeType=="tool-自动活动"){
-				return automatism;
-			}else if(nodeType=="sub_process-子流程"){
-				return child;
-			}else{
-			return null;
-			}
+			
+			return NodeStyleSource.getInstace().getIcon(nodeType);
 		}	
 	}
 }

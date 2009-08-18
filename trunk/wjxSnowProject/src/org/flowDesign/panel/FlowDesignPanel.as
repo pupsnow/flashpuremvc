@@ -21,6 +21,7 @@ package org.flowDesign.panel
 	import org.flowDesign.layout.DrawingToolManager;
 	import org.flowDesign.layout.IFlowUI;
 	import org.flowDesign.layout.Node;
+	import org.flowDesign.source.NodeStyleSource;
 
 	public class FlowDesignPanel extends Canvas
 	{
@@ -42,10 +43,10 @@ package org.flowDesign.panel
 		 * */
 		private var workFlowData:WorkFlowData;
 		
-		public function set dataProvider(dataProvider:XML):void
-		{
-			this.workFlowData.dataProvider=dataProvider;
-		}
+//		public function set dataProvider(dataProvider:XML):void
+//		{
+//			this.workFlowData.dataProvider=dataProvider;
+//		}
 		public function get dataProvider():XML
 		{
 			return this.workFlowData.dataProvider;
@@ -57,16 +58,16 @@ package org.flowDesign.panel
 		 * */
 		private var _workFlowDataProvider:WorkFlowDataProvider;
 		
-		[Bindable]
-		public function set DataProvider(value:XML):void
-		{
-			this._workFlowDataProvider.dataProvider=value;
-		}
-		
-		public function get DataProvider():XML
-		{
-			return	this._workFlowDataProvider.dataProvider;
-		}
+//		[Bindable]
+//		public function set DataProvider(value:XML):void
+//		{
+//			this._workFlowDataProvider.dataProvider=value;
+//		}
+//		
+//		public function get DataProvider():XML
+//		{
+//			return	this._workFlowDataProvider.dataProvider;
+//		}
 		 
 		 /**
 		  *记录当前所选对像的名称与类型 name type（画板中的）
@@ -261,11 +262,11 @@ package org.flowDesign.panel
 									*/				
 									if(mouseX+node.width>this.width)
 									{
-										this.width=this.width+node.width;
+										this.width=this.width+node.width+100;
 									}
 									if(mouseY+node.height>this.height)
 									{
-										this.height=this.height+node.height;	
+										this.height=this.height+node.height+100;	
 										
 									}
 									/**
@@ -388,7 +389,7 @@ package org.flowDesign.panel
 			var dragemouse:Point = new Point(event.dragSource.dataForFormat('x') as Number,
 								event.dragSource.dataForFormat('y') as Number)
 			var nodeType:String = event.dragSource.dataForFormat('value') as String;
-			var icon:Class = event.dragSource.dataForFormat('icon') as Class;
+			//var icon:Class = event.dragSource.dataForFormat('icon') as Class;
 			var lable:String = event.dragSource.dataForFormat('lable') as String;
 			var typename:String=event.dragSource.dataForFormat('typename') as String;
 			var typeId:String=event.dragSource.dataForFormat('typeId') as String;
@@ -462,11 +463,11 @@ package org.flowDesign.panel
           	  nodeData.y=nodeEvent.y;
           if(nodeEvent.x+nodeEvent.width>(this.x+this.width))
 		      {
-		      	this.width=this.width+(nodeEvent.x-this.width)+nodeEvent.width+10;//增加画布宽
+		      	this.width=this.width+(nodeEvent.x-this.width)+nodeEvent.width+100;//增加画布宽
 		      }
           if(nodeEvent.y+nodeEvent.height>(this.y+this.height))
             {
-          	this.height=this.height+(nodeEvent.y-this.height)+nodeEvent.height+10;//增加画布宽
+          	this.height=this.height+(nodeEvent.y-this.height)+nodeEvent.height+100;//增加画布宽
             }
           var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.nodeComplete);
          	  wrokFlowDesignEvent.nodeData=nodeData;
@@ -564,7 +565,7 @@ package org.flowDesign.panel
 	   {
 	   		
 	       var node:Node=event.currentTarget as Node;
-	   	   if(currentTool!=null)
+	   	   if(currentTool!=null&&this.temporaryLine!=null)
 	   	   {
 		   		node.isSelect=false;
 		   		this.drawLine=false;
@@ -583,9 +584,9 @@ package org.flowDesign.panel
 		   			var linedata:LineData = new LineData();
 		   				linedata.fromNodeId = this.temporaryLine.startName;
 		   				linedata.toNodeId = this.temporaryLine.endName;
-		   				linedata.lineLabelText = "111";
-		   				linedata.lineType = "line";
+		   				linedata.lineType = this.currentTool;
 		   			this.temporaryLine.addNewLine(linedata);
+		   			this.temporaryLine=null;
 		   		}
 	   	  }
 	   		event.stopPropagation();
@@ -659,11 +660,6 @@ package org.flowDesign.panel
 				if(getFromLine!=null)
 				{
 					this.removeChild(getFromLine);
-//					var fromLineLabel:LineLabel=LineLabel(this.getChildByName(formLineData.lineLabelId)); 
-//					if(fromLineLabel!=null)
-//					{
-//						this.removeChild(fromLineLabel);
-//					}
 				}
 			}
 			for(var j:int=0;j<toNodeLineDatas.length;j++)
@@ -674,11 +670,6 @@ package org.flowDesign.panel
 				if(getToLine!=null)
 				{
 					this.removeChild(getToLine);
-//					var toLineLabel:LineLabel=LineLabel(this.getChildByName(toLineData.lineLabelId)); 
-//					if(toLineLabel!=null)
-//					{
-//						this.removeChild(toLineLabel);
-//					}
 				}
 			}
 			
@@ -700,6 +691,7 @@ package org.flowDesign.panel
 		protected function nodePropertyClick(event:NodeEvent):void
 		{
 		  var node:Node=event.currentTarget as  Node;
+		  	  node.nodeState = NodeStyleSource.complete;
 		  var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.nodeProperty);
           wrokFlowDesignEvent.nodeId=node.name;
           this.dispatchEvent(wrokFlowDesignEvent);

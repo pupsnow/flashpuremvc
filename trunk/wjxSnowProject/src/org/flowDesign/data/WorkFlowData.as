@@ -1,6 +1,6 @@
 package  org.flowDesign.data
 {
-	import mx.containers.Canvas;
+	import mx.utils.StringUtil;
 	/**
 	 * 主要储存操作面板上 线和节点的数据。包括线的hashmap，节点的hashmap，以及
 	 * 各数据的增加删除，查找。 
@@ -54,13 +54,37 @@ package  org.flowDesign.data
 		 *存储数据的xml
 		 */		
 		private var _dataProvider:XML;
-		public function set dataProvider(value:XML):void
-		{
-			this._dataProvider=value;
-		}
+//		public function set dataProvider(value:XML):void
+//		{
+//			this._dataProvider=value;
+//		}
 		public function get dataProvider():XML
 		{
-			return this._dataProvider;
+			var hashmap:HashMap = this.nodeDatas;
+			var linehap:HashMap = this.lineDatas;
+			var xml:XML = <result></result>;
+			var nodexml:XML = <node/>;
+			var linexml:XML = <line/>;
+			var nodearr:Array = hashmap.keys();
+			var linearr:Array = linehap.keys();
+			for(var i:int = 0;i<nodearr.length;i++)
+			{
+			var c:NodeData =hashmap.getKey(nodearr[i]);
+			var xml1:String=StringUtil.substitute("<node id='{0}' name='{1}' nodeState='{2}' type='{3}' TypeId='{4}'/>",c.id,c.name,c.nodeState,c.type,c.TypeId);
+			nodexml.appendChild(xml1);
+			
+			}
+			for(var j:int = 0;j<linearr.length;j++)
+			{
+			var d:LineData =linehap.getKey(linearr[j]);
+			var xml2:String=StringUtil.substitute("<node id='{0}' name='{1}' fromNodeId='{2}' toNodeId='{3}' lineType='{4}'/>",d.id,d.name,d.fromNodeId,d.toNodeId,d.lineType);
+			linexml.appendChild(xml2);
+			
+			}
+			 xml.appendChild(nodexml);
+			 xml.appendChild(linexml);
+			 trace(xml);
+			return xml;
 		}
 		
 		/**
@@ -202,13 +226,12 @@ package  org.flowDesign.data
 		 * 线数据操作
 		 * 产生一个连接线的数据             
 		 **/
-		public function newLineData(fromNodeId:String,toNodeId:String,lineText:String,lineType:String):LineData{
+		public function newLineData(fromNodeId:String,toNodeId:String,lineType:Class):LineData{
 			var lineData:LineData=new LineData();
 			lineData.id=fromNodeId+toNodeId;
+			lineData.name = fromNodeId+toNodeId;
 			lineData.fromNodeId=fromNodeId;
 			lineData.toNodeId=toNodeId;
-			lineData.lineLabelId="label_"+fromNodeId+"_"+toNodeId;
-			lineData.lineLabelText=lineText;
 			lineData.lineType=lineType;
 			var fromNodeData:NodeData=this.nodeDatas.getKey(fromNodeId);
 			var toNodeData:NodeData=this.nodeDatas.getKey(toNodeId);
@@ -243,26 +266,7 @@ package  org.flowDesign.data
 			return result;
 		}
 		
-		/**
-		 * 查找直线 （根据线上文字控件id）
-		 * @param lineLableId
-		 * @return 
-		 * 
-		 */		
-		public function qryLineDataByLineLable(lineLableId:String):LineData{
-			var keys:Array=this.lineDatas.keys();
-			var lineData:LineData;
-			if(keys!=null){
-				for(var i:int=0;i<keys.length;i++){
-					var key:String=keys[i];
-					lineData=this.lineDatas.getKey(key);
-					if(lineData.lineLabelId==lineLableId){
-						return lineData;
-					}
-				}
-			}
-			return lineData;
-		}
+		
 	
 	
 	

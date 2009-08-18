@@ -1,4 +1,10 @@
 
+Button
+{
+	upSkin: Embed(source="../org/flowDesign/images/general_links.png");
+	overSkin: Embed(source="../org/flowDesign/images/general_links.png");
+	downSkin: Embed(source="../org/flowDesign/images/general_links.png");
+}
 DataGrid
 {
 	borderSkin: Embed(source="../test/images/borderSkin.png");
