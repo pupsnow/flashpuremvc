@@ -533,12 +533,9 @@ package  org.flowDesign.data
 										var lineData:LineData=new LineData();
 										lineData.fromNodeId=fromNodeXml.@id;
 										lineData.toNodeId=nodeXml.@id;
-										var lineType:*=fromNodeXml.@type;
-										if(lineType=="curveLine"){
-											lineData.lineType="curveLine";
-										}else{
-											lineData.lineType="line";	
-										}
+										var lineType:Class=fromNodeXml.@type;
+											lineData.lineType=lineType;	
+
 										result.push(lineData);
 									}
 								}

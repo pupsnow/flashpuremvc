@@ -5,5 +5,84 @@ package  org.flowDesign.source
 		public static var complete:String="complete";
 		public static var execute:String="execute";
 		public static var noExecute:String="noExecute";
+		
+		[Embed(source="/org/flowDesign/images/general_links.png",scaleGridRight="45",scaleGridLeft="4",scaleGridTop="6",scaleGridBottom="19")]
+		[Bindable]
+		private var general_links:Class;
+		
+		[Embed(source="/org/flowDesign/images/line.png")]
+		[Bindable]
+		private var line:Class;
+		
+		[Embed(source="/org/flowDesign/images/machinery_links.png")]
+		[Bindable]
+		private var machinery_links:Class;
+		
+		
+		[Embed(source="/org/flowDesign/images/parallel_links.png")]
+		[Bindable]
+		private var parallel_links:Class;
+		
+		
+		[Embed(source="/org/flowDesign/images/sub_workflow.png")]
+		[Bindable]
+		private var sub_workflow:Class;
+		
+		
+		[Embed(source="/org/flowDesign/images/v_Broken_line.png")]
+		[Bindable]
+		private var v_Broken_line:Class;
+		
+		[Embed(source="/org/flowDesign/images/h_Broken_line.png")]
+		[Bindable]
+		private var h_Broken_line:Class;
+		
+		[Embed("/org/flowDesign/images/start.gif")]
+			[Bindable]
+			public var start:Class;
+			
+			[Embed("/org/flowDesign/images/end.gif")]
+			[Bindable]
+			public var end:Class;
+			
+			[Embed("/org/flowDesign/images/node.gif")]
+			[Bindable]
+			public var node:Class;
+			
+			[Embed("/org/flowDesign/images/transition.gif")]
+			[Bindable]
+			public var transition:Class;
+			
+			
+			[Embed("/org/flowDesign/images/drag.gif")]
+			[Bindable]
+			public var movebutton:Class;
+			
+			[Embed("/org/flowDesign/images/automatism.gif")]
+			[Bindable]
+			public var automatism:Class;
+			
+			[Embed("/org/flowDesign/images/manual.gif")]
+			[Bindable]
+			public var manual:Class;
+			
+			[Embed("/org/flowDesign/images/child.png")]
+			[Bindable]
+			public var child:Class;
+			
+			[Embed("/org/flowDesign/images/curveLine.png")]
+			[Bindable]
+			public var curveLine:Class;
+			
+		private static var Instance:NodeStyleSource;
+		public static function getInstace():NodeStyleSource
+		{
+			if(Instance==null) Instance = new NodeStyleSource();
+			return Instance;
+		}
+		public function getIcon(value:String):Class
+		{
+			return this[value] as Class;
+		}
 	}
 }

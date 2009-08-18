@@ -29,31 +29,7 @@ package   org.flowDesign.data
 		{
 			return this._name;
 		}
-		
-		
-		/**
-		 *线对应上的关系控件id 
-		 */		
-		private var _lineLabelId:String;
-		public function set lineLabelId(value:String):void{
-			this._lineLabelId=value;
-		}
-		public function get lineLabelId():String{
-			return this._lineLabelId;
-		}
-		
-	    /**
-	     *关系名称 
-	     */		
-	    private var _lineLabelText:String;
-	    public function set lineLabelText(value:String):void{
-	    	this._lineLabelText=value;
-	    }
-	    public function get lineLabelText():String{
-	    	return this._lineLabelText;
-	    }
-		
-		
+
 		/**
 		 *开始节点id 
 		 */		
@@ -84,11 +60,11 @@ package   org.flowDesign.data
 		/**
 		 *线类型 
 		 */		
-		private var _lineType:String;
-		public  function set lineType(lineType:String):void{
+		private var _lineType:Class;
+		public  function set lineType(lineType:Class):void{
 			this._lineType=lineType;
 		}
-		public function get lineType():String{
+		public function get lineType():Class{
 			return this._lineType;
 		}
 		
