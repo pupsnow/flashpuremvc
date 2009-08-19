@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
-	width="100%" height="100%" 
-	initialize="init()" xmlns:panel="org.flowDesign.panel.*">
+	width="100%" height="100%"  layout="vertical"
+	paddingBottom="0" paddingLeft="0" paddingRight="0" paddingTop="0"
+	creationComplete="init()" xmlns:panel="org.flowDesign.panel.*">
 	<mx:Script>
 		<![CDATA[
+			import mx.events.CloseEvent;
+			import mx.charts.BubbleChart;
+			import org.ImageSnop;
+			import flash.utils.setTimeout;
+			import flash.utils.setInterval;
+			import mx.controls.Alert;
 			import org.flowDesign.layout.LineTool;
 			import org.flowDesign.layout.VBrokenLineTool;
 		//拖运进入事件
@@ -31,33 +38,74 @@
 		{
 			var x:XML = fl.dataProvider;
 		}
+		
+		private function showNodeH():void
+		{
+			Alert.show("弹出修改节点属性框,或则其他","提示");
+		}
+		
+		private function showLineH():void
+		{
+			Alert.show("弹出修改线属性框,或则其他","提示");
+		}
+		
+		private function init():void
+		{
+//			aa.addEventListener(MouseEvent.CLICK,clickH);
+		}
+	      import mx.graphics.ImageSnapshot;
+          import mx.graphics.codec.*;
+
+          private const jpegEnc:JPEGEncoder = new JPEGEncoder();
+			
+		  private var fr:FileReference = new FileReference();
+		  [Bindable]
+		  private var isok:Boolean = true;
+		  private function save(evt:MouseEvent):void {
+                 var imageSnap:ImageSnop = ImageSnop.captureImage(fl,0, jpegEnc);
+                fr.save(imageSnap.data, "describeType.jpg");
+            }
+            private function delay():void
+            {
+            	proidd.text = "正在处理图片。。。。";
+            	var timer:Timer = new  Timer(500,1)
+            		timer.addEventListener(TimerEvent.TIMER,timerH);
+            		timer.start();
+            }
+            private var imageSnap:ImageSnop;
+            private function timerH(e:TimerEvent):void
+            {
+            	 imageSnap = ImageSnop.captureImage(fl,0, jpegEnc);
+            	 proidd.text = "";
+            	 Alert.show("图片处理完毕","提示",4,this,closeH);;
+            }
+            private function closeH(e:CloseEvent):void
+            {
+            	 fr.save(imageSnap.data, "describeType.jpg");
+            }
+
 		]]>
 	</mx:Script>
-	
-	<mx:VBox width="100%" height="100%"  verticalGap="1" 
-		horizontalGap="1" horizontalAlign="right">
-	<mx:Button label="xml" click="showxml()"/>
-	<mx:HBox width="100%" height="100%">
-	
 		<panel:Tools  select="selectTool(event)"   
-			id="tools"   width="140" height="100%"  horizontalAlign="center" title="工具">
+			id="tools"   width="100%"   horizontalAlign="center">
 		</panel:Tools>		
 		<mx:VBox id="flowVbox" width="100%"  height="100%" verticalGap="0" 
 			horizontalGap="0" backgroundImage="images/BG.png" >		
 			<mx:VBox id="flowPrentVbox" width="{flowVbox.width}" verticalGap="0" 
 				horizontalGap="0"  alpha="1.0" height="{flowVbox.height}"      borderStyle="inset">
-					<panel:FlowDesignPanel  width="99.8%" height="100%"  id="fl" >
-						
+					<panel:FlowDesignPanel  width="99.8%" height="100%"  id="fl" 
+						nodeProperty="showNodeH()"
+						lineProPerty="showLineH()"
+						backgroundColor="0x3e3e3e">
 					</panel:FlowDesignPanel>
 			</mx:VBox>
 		</mx:VBox>
-	</mx:HBox>	
-	<mx:HBox width="100%" height="20" backgroundColor="#C4DFFA" borderStyle="outset" 
-		horizontalAlign="right" >
-        <mx:Label id="proidd" text="" visible="false"/>
-		<mx:Label id="mousex" text=""/>
-		<mx:Label id="mousey" text=""/>	
-	</mx:HBox>
-	
-	</mx:VBox>
+		<mx:HBox width="100%" height="20" backgroundColor="#C4DFFA" borderStyle="outset" 
+			horizontalAlign="left" >
+	        <mx:Button label="xml" click="showxml()"/>
+	        <mx:Button label="保存图片" click="delay()" id="aa"/>
+	        <mx:Text id="proidd" />
+			<mx:Label id="mousex" text=""/>
+			<mx:Label id="mousey" text=""/>	
+		</mx:HBox>
 </mx:Application>
