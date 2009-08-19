@@ -1,9 +1,15 @@
 package  org.flowDesign.layout
 {
+	import flash.events.ContextMenuEvent;
+	import flash.events.MouseEvent;
+	import flash.ui.ContextMenu;
+	import flash.ui.ContextMenuItem;
+	
 	import mx.core.UIComponent;
 	
 	import org.flowDesign.data.LineData;
 	import org.flowDesign.data.WorkFlowData;
+	import org.wjx.controls.workFlow.workFlowEvent.LineEvent;
 
 	public class DrawingTool extends UIComponent implements IFlowUI
 	{
@@ -19,14 +25,127 @@ package  org.flowDesign.layout
 		public var endName:String="";
 		public var startName:String="";
 		public var workflowdata:WorkFlowData;
+		
+		 /**
+         * 线颜色
+         */        
+       
+        private var _lineColor:uint=0x000000;
+        
+        public function set lineColor(color:uint):void
+        {
+        	if(_lineColor==color) return;
+        	else
+        	{
+        	 this._lineColor=color;
+        	 this.invalidateDisplayList();
+        	}
+        }
+         
+        public function get lineColor():uint
+        {
+            return this._lineColor;
+        }
+        
+         /**
+         * 线的宽度 
+         */        
+        
+        private var _lineWidth:int=2;
+        public function set lineWidth(width:int):void
+        {
+        	this._lineWidth=width;
+        }
+        public function get lineWidth():int
+        {
+        	return this._lineWidth;
+        }
+        
+        
+		private var _uiSelect:Boolean = false;
 		public function set uiSelect(value:Boolean):void
 		{
-			
+			if(_uiSelect==value) return;
+			else
+			{
+				 _uiSelect = value;
+				 this.lineSelect= _uiSelect;
+				 if(_uiSelect)
+				 {
+				 	this.lineColor = 0xff0000;
+				 	
+				 }
+				 else
+				 {
+				 	this.lineColor = 0x000000;
+				 }
+				
+			}
 		}
 		public function get uiSelect():Boolean
 		{
-			return true;
+			return _uiSelect;
 		}
+		
+		public function DrawingTool()
+		{		
+             initMenu();
+  		}      
+  	   private var  deleteMenuItem:ContextMenuItem;
+       private var nodePropertyMenuItem:ContextMenuItem;
+       public function initMenu():void{
+	    	var contextMenu : ContextMenu = new ContextMenu();
+	    	contextMenu.addEventListener(ContextMenuEvent.MENU_SELECT,mouseRightClick);
+	    	contextMenu.hideBuiltInItems(); 
+			deleteMenuItem = new ContextMenuItem("删除");
+			deleteMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,lineDeleteClick);
+			contextMenu.customItems.push(deleteMenuItem);
+			
+			nodePropertyMenuItem= new ContextMenuItem("属性");
+			nodePropertyMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,linePropertyClick);
+			contextMenu.customItems.push(nodePropertyMenuItem);
+			this.contextMenu = contextMenu;
+                      
+	    } 
+  		/**
+	     * 鼠标右键  
+	     * @param event
+	     * @return 
+	     * 
+	     */	    
+	    public function mouseRightClick(event:ContextMenuEvent):void
+	    {
+	      	if(this.lineSelect)
+	      	{
+	       		deleteMenuItem.enabled=true;
+	       		nodePropertyMenuItem.enabled=true;
+	       		this.dispatchEvent(new LineEvent(LineEvent.rightClick));
+	       	}else
+	       	{
+	       		deleteMenuItem.enabled=false;
+	       		nodePropertyMenuItem.enabled=false;
+	       	}
+	     }
+	     /**
+	      * 删除 
+	      * @param event
+	      * @return 
+	      * 
+	      */	     
+	     public function lineDeleteClick(event:ContextMenuEvent):void
+	     {
+	     	this.dispatchEvent(new LineEvent(LineEvent.deleteClick));
+	     }
+	     /**
+	      * 查看属性 
+	      * @param event
+	      * @return 
+	      * 
+	      */	     
+	     public function linePropertyClick(event:ContextMenuEvent):void
+	     {
+	     	this.dispatchEvent(new LineEvent(LineEvent.propertyClick));
+	     }
 		public function  clear():void
 		{
 			this.graphics.clear();
@@ -40,6 +159,8 @@ package  org.flowDesign.layout
 		{
 			this.workflowdata.newLineData(linedata.fromNodeId,linedata.toNodeId,linedata.lineType);
 		}
+		
+		
 		public function lineRefresh(linedata:LineData):void
 		{
 			var formnode:Node = this.parent.getChildByName(linedata.fromNodeId) as Node;
