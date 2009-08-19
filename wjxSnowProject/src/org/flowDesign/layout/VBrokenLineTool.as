@@ -13,19 +13,19 @@ package  org.flowDesign.layout
 			this.middleX = this.startX+(this.endX-this.startX);
 			this.middleY = this.startY+(this.endY-this.startY);
 			graphics.clear();
-			graphics.lineStyle(1, 0x000000, 1);
+			graphics.lineStyle(this.lineWidth, this.lineColor, 1);
 			graphics.moveTo(startX,startY);
 			if(this.endY<this.startY)
 			{
-				graphics.lineTo(startX,startY-20);
-				graphics.lineTo(this.endX,this.startY-20);
-				super.drawArrowhead(this.endX,this.startY-20,this.endX,this.endY);
+				graphics.lineTo(startX,startY-60);
+				graphics.lineTo(this.endX,this.startY-60);
+				super.drawArrowhead(this.endX,this.startY-60,this.endX,this.endY);
 			}
 			else
 			{
-			    graphics.lineTo(startX,startY+20);
-			    graphics.lineTo(this.endX,this.startY+20);
-			    super.drawArrowhead(this.endX,this.startY+20,this.endX,this.endY);
+			    graphics.lineTo(startX,startY+60);
+			    graphics.lineTo(this.endX,this.startY+60);
+			    super.drawArrowhead(this.endX,this.startY+60,this.endX,this.endY);
 			}
 			
 			graphics.lineTo(this.endX,this.endY);

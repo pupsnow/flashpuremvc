@@ -22,7 +22,12 @@ package org.flowDesign.panel
 	import org.flowDesign.layout.IFlowUI;
 	import org.flowDesign.layout.Node;
 	import org.flowDesign.source.NodeStyleSource;
-
+	import org.wjx.controls.workFlow.workFlowEvent.LineEvent;
+	[Event (name="nodeDel", type="org.flowDesign.event.WrokFlowDesignEvent")]
+	[Event (name="lineDel", type="org.flowDesign.event.WrokFlowDesignEvent")]
+	[Event (name="nodeMove", type="org.flowDesign.event.WrokFlowDesignEvent")]
+	[Event (name="nodeProperty", type="org.flowDesign.event.WrokFlowDesignEvent")]
+	[Event (name="lineProPerty", type="org.flowDesign.event.WrokFlowDesignEvent")]
 	public class FlowDesignPanel extends Canvas
 	{
 		
@@ -217,11 +222,11 @@ package org.flowDesign.panel
 				var selectObjectName:String=this.selectObject[0].name;
 				var slectObjectType:String=this.selectObject[0].type;
 				var selectedUI:IFlowUI= this.getChildByName(selectObjectName) as IFlowUI;
+					if(selectedUI!=null)
 					selectedUI.uiSelect = false;
 				this.selectObject[0]=null;
 			}
 		}
-		
 		
 		/**
 		 * 鼠标移动 在面板上移动
@@ -330,9 +335,8 @@ package org.flowDesign.panel
 					else
 					{
 						this.drawLine=false;
-						this.temporaryLine.clear();
-						this.removeChild(this.temporaryLine);
-						this.temporaryLine = null;
+						removeLine(this.temporaryLine);
+						this.temporaryLine =  null;
 					}
 				}
 			}
@@ -350,8 +354,7 @@ package org.flowDesign.panel
 				if(this.currentTool!=null&&this.temporaryLine!=null)
 				{
 					this.drawLine=false;
-					this.temporaryLine.clear();
-					this.removeChild(this.temporaryLine);
+					removeLine(this.temporaryLine);
 					this.temporaryLine = null;
 				}
 			}
@@ -448,6 +451,37 @@ package org.flowDesign.panel
             wfNode.doubleClickEnabled=true;
 			return wfNode;
 		}
+		
+		
+		
+		/**
+		 *删除节点 
+		 * @param event
+		 * 
+		 */		
+		 
+		 protected function removeNode(node:Node):void
+		{
+			node.removeEventListener(FlexEvent.CREATION_COMPLETE,nodeCreationComplete);
+            node.removeEventListener(MouseEvent.MOUSE_OVER,nodeMouseOver);
+            node.removeEventListener(MouseEvent.MOUSE_DOWN,nodeMouseDown);
+            node.removeEventListener(MouseEvent.MOUSE_UP,nodeMouseUp);
+            node.removeEventListener(MouseEvent.MOUSE_OUT,nodeMouseOut);
+            node.removeEventListener(MouseEvent.DOUBLE_CLICK,nodeMouseDoubleClick);
+            
+            node.removeEventListener(MoveEvent.MOVE,nodeMove); 
+            node.removeEventListener(ResizeEvent.RESIZE,nodeResize);
+            
+            node.removeEventListener(NodeEvent.RIGHT_CLICK,nodeRightClick);
+            node.removeEventListener(NodeEvent.DELETE_CLICK,nodeDeleteClick);
+            node.removeEventListener(NodeEvent.PROPERTY_CLICK,nodePropertyClick);
+           	node.removeEventListener(NodeEvent.NODESTART_DRAGE,nodeDrageStart);
+           	node.removeEventListener(NodeEvent.NODESTOP_DRAGE,nodeDrageStop);
+			this.removeChild(node);
+			node = null;
+			
+		}
+		 
        /**
 		 * 节点完成
 		 * @param event
@@ -539,12 +573,7 @@ package org.flowDesign.panel
 	   	   {
 		   		node.isSelect=false;
 		   		this.temporaryLine = DrawingToolManager.createTool(this.currentTool,event);;
-		   		this.temporaryLine.startX=node.x+node.width/2;
-		   		this.temporaryLine.startY=node.y+node.height/2;
-		   		this.temporaryLine.endX=this.contentMouseX;
-		   		this.temporaryLine.endY=this.contentMouseY;
-		   		this.temporaryLine.startName=node.name;
-		   		this.addChildAt(temporaryLine,0);
+		   		addNewLine(temporaryLine,node);
 		   		this.drawLine=true;
 	   	  }
 	   	else
@@ -573,19 +602,22 @@ package org.flowDesign.panel
 		   		var linedata1:LineData = this.workFlowData.getLineData(this.temporaryLine.startName+this.temporaryLine.endName);
 		   		if(event.target==this.getChildByName(this.temporaryLine.startName)||linedata1!=null)
 		   		{
-		   			 this.temporaryLine.clear();
-		   			 this.removeChild(this.temporaryLine);
-		   			 this.temporaryLine=null;
+		   			removeLine(this.temporaryLine);
+		   			this.temporaryLine = null;
 		   		}
-		   		else
+		   		else//线条添加成功
 		   		{
-		   			this.temporaryLine.name = this.temporaryLine.startName+this.temporaryLine.endName;
+		   			addLineName(this.temporaryLine,this.temporaryLine.startName+this.temporaryLine.endName);
+		   			this.temporaryLine.endX = node.x+node.width/2;
+		   			this.temporaryLine.endY = node.y+node.height/2;
+		   			this.temporaryLine.invalidateDisplayList();
 		   			this.temporaryLine.workflowdata = this.workFlowData;
 		   			var linedata:LineData = new LineData();
 		   				linedata.fromNodeId = this.temporaryLine.startName;
 		   				linedata.toNodeId = this.temporaryLine.endName;
 		   				linedata.lineType = this.currentTool;
 		   			this.temporaryLine.addNewLine(linedata);
+		   			addEventListern(this.temporaryLine);
 		   			this.temporaryLine=null;
 		   		}
 	   	  }
@@ -630,7 +662,6 @@ package org.flowDesign.panel
 	   		if(this.currentTool!=null)
 	   		{
 	   			node.isSelect=false;
-	   			
 	   		}
 	   		else
 	   		{
@@ -659,7 +690,7 @@ package org.flowDesign.panel
 				var getFromLine:DrawingTool=DrawingTool(this.getChildByName(formLineDataId));
 				if(getFromLine!=null)
 				{
-					this.removeChild(getFromLine);
+					this.removeLine(getFromLine);
 				}
 			}
 			for(var j:int=0;j<toNodeLineDatas.length;j++)
@@ -669,13 +700,13 @@ package org.flowDesign.panel
 				var getToLine:DrawingTool=DrawingTool(this.getChildByName(toLineDataId));
 				if(getToLine!=null)
 				{
-					this.removeChild(getToLine);
+					this.removeLine(getToLine);
 				}
 			}
 			
 			if(node!=null)
 			{
-				this.removeChild(node);
+				removeNode(node);
 			}
 			this.workFlowData.delNodeData(eventWfNodeName);
 			var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.nodeDel);
@@ -691,7 +722,7 @@ package org.flowDesign.panel
 		protected function nodePropertyClick(event:NodeEvent):void
 		{
 		  var node:Node=event.currentTarget as  Node;
-		  	  node.nodeState = NodeStyleSource.complete;
+//		  	  node.nodeState = NodeStyleSource.complete;
 		  var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.nodeProperty);
           wrokFlowDesignEvent.nodeId=node.name;
           this.dispatchEvent(wrokFlowDesignEvent);
@@ -718,24 +749,7 @@ package org.flowDesign.panel
 		}
 		
 		
-		/**
-		 * 设置节点的名称 
-		 * @param nodeId
-		 * @param label
-		 * 
-		 */		
-		public function setNodeLabel(nodeId:String,label:String):void
-		{
-//			if(nodeId!=null)
-//			{
-//				var wfNodeEvent:WfNode=WfNode(this.getChildByName(nodeId));
-//			    if(wfNodeEvent!=null)
-//			    {
-//			    	wfNodeEvent.label=label;
-//			    }
-//			}
-			
-		}
+		
 		/**
 		 * 节点大小size改变 ，更新线段
 		 * @param event
@@ -743,29 +757,6 @@ package org.flowDesign.panel
 		 */		
 		public function nodeResize(event:ResizeEvent):void
 		{
-//			var wfNodeEvent:WfNode=event.currentTarget as WfNode;
-//			if(wfNodeEvent!=null)
-//			{
-//				var getNodeName:String=wfNodeEvent.name;
-//				var getNodeFromLine:Array=this.workFlowData.qryLineDataByFromNodeId(getNodeName);
-//				for(var i:int=0;i<getNodeFromLine.length;i++)
-//				{
-//				    var fromLineData:LineData=LineData(getNodeFromLine[i]);
-//				    if(fromLineData!=null)
-//				    {
-//				    	this.lineRefash(fromLineData);
-//				    }
-//				 }
-//				 var getNodeToLine:Array=this.workFlowData.qryLineDataByToNodeId(getNodeName);
-//				 for(var j:int=0;j<getNodeToLine.length;j++)
-//				 {
-//				    var toLineData:LineData=LineData(getNodeToLine[j]);
-//				    if(toLineData!=null)
-//				    {
-//				    	this.lineRefash(toLineData);
-//				    }
-//				}
-//			}
 		}
 		
 		
@@ -792,7 +783,174 @@ package org.flowDesign.panel
 			}
 			
 		}
-
+		
+		
+		
+		
+		/**
+		 * **************************************线操作************************************** 
+		 *  增加新线条
+		 * */
+		 
+		 private function addNewLine(value:DrawingTool,node:Node):void
+		 {
+        	value.startX=node.x+node.width/2;
+	   		value.startY=node.y+node.height/2;
+	   		value.endX=this.contentMouseX;
+	   		value.endY=this.contentMouseY;
+	   		value.startName=node.name;
+	   		this.addChildAt(value,0);
+		 }
+		 
+		 private function addLineName(value:DrawingTool,name:String):void
+		 {
+		 	value.name = name;
+		 }
+		 private function addEventListern(value:DrawingTool):void
+		 {
+		 	value.addEventListener(MouseEvent.MOUSE_DOWN,lineMouseDowonH);
+	 		value.addEventListener(MouseEvent.MOUSE_OVER,lineMouseOverH);
+            value.addEventListener(MouseEvent.MOUSE_OUT,lineMouseOutH);
+       		value.addEventListener(MouseEvent.DOUBLE_CLICK,lineMouseDoubleClickH);
+       		value.addEventListener(LineEvent.rightClick,lineRightClickH);
+        	value.addEventListener(LineEvent.deleteClick,lineDeleteClickH);
+        	value.addEventListener(LineEvent.propertyClick,linePropertyClickH);
+		 }
+		
+		/**
+		 * 
+		 * 删除线条
+		 * */
+		private function removeLine(value:DrawingTool):void
+		{
+			value.clear();
+			value.removeEventListener(MouseEvent.MOUSE_DOWN,lineMouseDowonH);
+			value.removeEventListener(MouseEvent.MOUSE_OVER,lineMouseOverH);
+            value.removeEventListener(MouseEvent.MOUSE_OUT,lineMouseOutH);
+       		value.removeEventListener(MouseEvent.DOUBLE_CLICK,lineMouseDoubleClickH);
+       		value.removeEventListener(LineEvent.rightClick,lineRightClickH);
+        	value.removeEventListener(LineEvent.deleteClick,lineDeleteClickH);
+        	value.removeEventListener(LineEvent.propertyClick,linePropertyClickH);
+        	this.removeChild(value);
+        	value = null;
+		}
+		
+		 /**
+		   * mouseover事件
+		   * @param event
+		   * @return 
+		   * 
+		   */         
+		  private function lineMouseOverH(event:MouseEvent):void
+		  {
+		  	
+		  		event.currentTarget.lineColor = 0x00ff00;
+		        event.stopPropagation();
+		  }
+	        /**
+	         *mouseout事件 
+	         * @param event
+	         * @return 
+	         * 
+	         */        
+	        public function lineMouseOutH(event:MouseEvent):void
+	        {
+	        	if(event.currentTarget.uiSelect)
+	        	{
+	        		
+	        	}
+	        	else
+	        	{
+	        		event.currentTarget.lineColor = 0x000000;
+	        	}
+	        	event.stopPropagation();
+	        }
+		 /**
+	   	 * 线 鼠标按下
+	   	 * @param event
+	   	 * @return 
+	   	 * 
+	   	 */
+	   	private function lineMouseDowonH(event:MouseEvent):void
+	   	{
+	   		var line:DrawingTool=event.currentTarget as DrawingTool;
+	   		var lineName:String=line.name;
+	   		    if(this.currentTool==null)
+	   		    {
+	   		    	line.uiSelect=true;
+					setSelectState(lineName,"line");
+	   		    }
+				event.stopPropagation();
+	   	}
+	   	/**
+	   	 * 线 右键
+	   	 * @param event
+	   	 * @return 
+	   	 * 
+	   	 */	   	
+	   	private function lineRightClickH(event:LineEvent):void
+	   	{
+	   		var line:DrawingTool=event.currentTarget as DrawingTool;
+	   		setSelectState(line.name,"line");
+	   		event.stopPropagation();
+	   	}
+	   	/**
+	   	 * 线 右键删除
+	   	 * @param event
+	   	 * @return 
+	   	 * 
+	   	 */	   	
+	   	private function lineDeleteClickH(event:LineEvent):void
+	   	{
+	   		var line:DrawingTool=event.currentTarget as DrawingTool;
+	   		if(line!=null)
+	   		{
+	   			var lineData:LineData=this.workFlowData.getLineData(line.name);
+	   			removeLine(line);
+	   			this.workFlowData.delLineData(line.name);
+	   			var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.lineDel);
+          		wrokFlowDesignEvent.lineData=lineData;
+          		this.dispatchEvent(wrokFlowDesignEvent);
+	   		}
+	   		
+	   	}
+	   	/**
+	   	 * 线 右键属性
+	   	 * @param event
+	   	 * @return 
+	   	 * 
+	   	 */	   	
+	   	private function linePropertyClickH(event:LineEvent):void
+	   	{
+	   		var line:DrawingTool=event.currentTarget as DrawingTool;
+	   		if(line!=null)
+	   		{
+	   			var lineData:LineData=this.workFlowData.getLineData(line.name);
+	   			var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.lineProPerty);
+          		wrokFlowDesignEvent.lineData=lineData;
+          		this.dispatchEvent(wrokFlowDesignEvent);
+      		}
+	   	}
+	   	/**
+	   	 * 线 双击
+	   	 * @param event
+	   	 * @return 
+	   	 * 
+	   	 */	   	
+	   	private function lineMouseDoubleClickH(event:MouseEvent):void
+	   	{
+	   		if(this.currentTool==null)
+	   		{
+	   			var line:DrawingTool=event.currentTarget as DrawingTool;
+	   			if(line!=null)
+	   			{
+	   				var lineData:LineData=this.workFlowData.getLineData(line.name);
+	   				var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.lineProPerty);
+          			wrokFlowDesignEvent.lineData=lineData;
+          			this.dispatchEvent(wrokFlowDesignEvent);
+      			}
+      		}
+	   	}
 		
 	}
 }

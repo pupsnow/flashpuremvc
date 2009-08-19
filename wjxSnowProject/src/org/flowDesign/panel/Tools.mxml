@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" >
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" >
 	<mx:Script>
 		<![CDATA[
 			import flash.events.Event;
@@ -70,37 +70,42 @@
 	<mx:Metadata>
 		[Event(name="select",type="flash.events.Event")]
 	</mx:Metadata>
-	<mx:Button name="node" 	id="startNode"  width="50"		
+	<mx:Button name="node" 	id="startNode"  width="80"		
 		icon="{instance.getIcon('start')}"  fontSize="12"  label="开始结点" 
 		mouseMove="dragIt(event,'start','开始结点','1');" 
-		mouseDown="toolClick(event)"/>
+		mouseDown="toolClick(event)" labelPlacement="bottom"/>
 	<mx:Button name="node"	id="endNode" icon="{instance.getIcon('end')}" 
-		width="110" label="结束结点" fontSize="12" 
+		width="80" label="结束结点" fontSize="12" 
 		mouseMove="dragIt(event,'end','结束结点','2');" 
-		mouseDown="toolClick(event)"/>
+		mouseDown="toolClick(event)" labelPlacement="bottom"/>
 	<mx:Button	name="node" id="manualNode" icon="{instance.getIcon('manual')}"
-		 width="110" label="人工结点" fontSize="12" 
-		 mouseMove="dragIt(event,'manual','人工结点','3');" 
-		 mouseDown="toolClick(event)"/>
+		 width="80" label="普通环节" fontSize="12" 
+		 mouseMove="dragIt(event,'manual','普通环节','3');" 
+		 mouseDown="toolClick(event)" labelPlacement="bottom"/>
 	<mx:Button name="node"	id="automatismNode" icon="{instance.getIcon('automatism')}" 
-		width="110" label="自动结点" fontSize="12" 
-		mouseMove="dragIt(event,'automatism','自动结点','4');" 
-		mouseDown="toolClick(event)"/>
+		width="80" label="机器环节" fontSize="12" 
+		mouseMove="dragIt(event,'automatism','机器环节','4');" 
+		mouseDown="toolClick(event)" labelPlacement="bottom"/>
+	<mx:Button name="node" label="并行环节"  icon="{instance.getIcon('parallel_links')}" 
+		fontSize="12" width="80"  
+		mouseMove="dragIt(event,'parallel_links','并行环节','5')" 
+		mouseDown="toolClick(event)" labelPlacement="bottom"/>	
 	<mx:Button name="node" label="子流程"  icon="{instance.getIcon('child')}" 
-		fontSize="12" width="110"  
+		fontSize="12" width="80"  
 		mouseMove="dragIt(event,'child','子流程','6')" 
-		mouseDown="toolClick(event)"/>
-	<mx:Button name="line" label="连接线" icon="{instance.getIcon('transition')}"   
-		fontSize="12" width="110" click="toolClick(event)"/>
-	<mx:Button name="vcurveLine" label="竖折线"  icon="{instance.getIcon('curveLine')}"  
-		fontSize="12" width="110" click="toolClick(event)" />
-	<mx:Button name="hcurveLine" label="横折线"  icon="{instance.getIcon('curveLine')}"  
-		fontSize="12" width="110" click="toolClick(event)" />	
+		mouseDown="toolClick(event)" labelPlacement="bottom"/>
+		
+	<mx:Button name="line" label="直连线" icon="{instance.getIcon('line')}"   
+		fontSize="12" width="80" click="toolClick(event)" labelPlacement="bottom"/>
+	<mx:Button name="vcurveLine" label="竖折线"  icon="{instance.getIcon('v_Broken_line')}"  
+		fontSize="12" width="80" click="toolClick(event)"  labelPlacement="bottom"/>
+	<mx:Button name="hcurveLine" label="横折线"  icon="{instance.getIcon('h_Broken_line')}"  
+		fontSize="12" width="80" click="toolClick(event)"  labelPlacement="bottom"/>	
 	<mx:Button name="move" label="移动" icon="{instance.getIcon('movebutton')}"  
-		fontSize="12" width="110" click="toolClick(event)"/>
+		fontSize="12" width="80" click="toolClick(event)" labelPlacement="bottom"/>
 	<mx:VBox width="100%" height="100%" label="工具状态" 
 		verticalAlign="bottom" horizontalAlign="center">
 		<mx:Label text="当前工具" fontSize="12"/>
 		<mx:Label id="userToolName" fontSize="12" fontWeight="bold"/>
 	</mx:VBox>
-</mx:Panel>
+</mx:HBox>

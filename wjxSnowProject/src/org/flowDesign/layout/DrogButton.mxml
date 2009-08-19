@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Button xmlns:mx="http://www.adobe.com/2006/mxml"    alpha="1.0">
+<mx:Button xmlns:mx="http://www.adobe.com/2006/mxml"    alpha="1.0"
+	labelPlacement="bottom" fontSize="12">
 	<mx:Style>
 
 	.default{   

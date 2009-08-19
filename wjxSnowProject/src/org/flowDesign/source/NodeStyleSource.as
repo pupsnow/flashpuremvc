@@ -6,7 +6,7 @@ package  org.flowDesign.source
 		public static var execute:String="execute";
 		public static var noExecute:String="noExecute";
 		
-		[Embed(source="/org/flowDesign/images/general_links.png",scaleGridRight="45",scaleGridLeft="4",scaleGridTop="6",scaleGridBottom="19")]
+		[Embed(source="/org/flowDesign/images/general_links.png")]
 		[Bindable]
 		private var general_links:Class;
 		
@@ -37,15 +37,15 @@ package  org.flowDesign.source
 		[Bindable]
 		private var h_Broken_line:Class;
 		
-		[Embed("/org/flowDesign/images/start.gif")]
+		[Embed("/org/flowDesign/images/start.png")]
 			[Bindable]
 			public var start:Class;
 			
-			[Embed("/org/flowDesign/images/end.gif")]
+			[Embed("/org/flowDesign/images/end.png")]
 			[Bindable]
 			public var end:Class;
 			
-			[Embed("/org/flowDesign/images/node.gif")]
+			[Embed("/org/flowDesign/images/line.png")]
 			[Bindable]
 			public var node:Class;
 			
@@ -54,19 +54,19 @@ package  org.flowDesign.source
 			public var transition:Class;
 			
 			
-			[Embed("/org/flowDesign/images/drag.gif")]
+			[Embed("/org/flowDesign/images/drag.png")]
 			[Bindable]
 			public var movebutton:Class;
 			
-			[Embed("/org/flowDesign/images/automatism.gif")]
+			[Embed("/org/flowDesign/images/machinery_links.png")]
 			[Bindable]
 			public var automatism:Class;
 			
-			[Embed("/org/flowDesign/images/manual.gif")]
+			[Embed("/org/flowDesign/images/general_links.png")]
 			[Bindable]
 			public var manual:Class;
 			
-			[Embed("/org/flowDesign/images/child.png")]
+			[Embed("/org/flowDesign/images/sub_workflow.png")]
 			[Bindable]
 			public var child:Class;
 			

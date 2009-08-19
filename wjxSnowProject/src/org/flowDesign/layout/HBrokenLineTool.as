@@ -11,19 +11,19 @@ package  org.flowDesign.layout
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 			
 			graphics.clear();
-			graphics.lineStyle(1, 0x000000, 1);
+			graphics.lineStyle(this.lineWidth, this.lineColor, 1);
 			graphics.moveTo(startX,startY);
 			if(this.endX<this.startX)
 			{
-				graphics.lineTo(startX-100,startY);
-				graphics.lineTo(this.startX-100,this.endY);
-				super.drawArrowhead(this.startX-100,this.endY,this.endX,this.endY);
+				graphics.lineTo(startX-60,startY);
+				graphics.lineTo(this.startX-60,this.endY);
+				super.drawArrowhead(this.startX-60,this.endY,this.endX,this.endY);
 			}
 			else
 			{
-			    graphics.lineTo(startX+100,startY);
-			    graphics.lineTo(this.startX+100,this.endY);
-			    super.drawArrowhead(this.startX+100,this.endY,this.endX,this.endY);
+			    graphics.lineTo(startX+60,startY);
+			    graphics.lineTo(this.startX+60,this.endY);
+			    super.drawArrowhead(this.startX+60,this.endY,this.endX,this.endY);
 			}
 			
 			graphics.lineTo(this.endX,this.endY);
