@@ -1,31 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
-	layout="horizontal" width="100%" height="100%" creationComplete="creatui()">
- 	<mx:Script>
- 		<![CDATA[
- 			import mx.core.UIComponent;
- 			import mx.controls.Button
- 		    private var xml:XML = <node>
- 							<node id="node1" name="测试" x="100" y="100" type="mx.controls.Button"/>
- 							<node id="node2" name="测试" x="200" y="200" type="mx.controls.Button"/>
- 							<node id="node3" name="测试" x="300" y="300" type="mx.controls.Button"/>
- 							</node>;
- 							
- 			private  function creatui():void
- 			{
- 				var x:XML = xml;
- 				for(var i:int = 0;i<xml.length();i++)
- 				{
- 					var b:Class = xml[i].@type as Class;
- 					var a:Object = new b();
- 						a.x = xml[i].@x;
- 						a.y = xml[i].@y;
- 						a.id = xml[i].@id;
- 						a.label = xml[i].@name;
- 					this.addChild(a as DisplayObject );
- 				}
-			}
-				
- 		]]>
- 	</mx:Script>
+	layout="horizontal" width="100%" height="100%" 
+	creationComplete="init()" xmlns:net="flash.net.*">
+ 	
+ 	 <mx:Script>
+        <![CDATA[
+            import mx.graphics.ImageSnapshot;
+            import mx.graphics.codec.*;
+
+            private const jpegEnc:JPEGEncoder = new JPEGEncoder();
+            private const xmlObj:XML = describeType(FileReference);
+			
+			private var fr:FileReference = new FileReference();
+			
+            private function init():void {
+                textArea.text =  "测试测试";
+            }
+
+            private function btn_click(evt:MouseEvent):void {
+                var imageSnap:ImageSnapshot = ImageSnapshot.captureImage(panel, 0, jpegEnc);
+                fr.save(imageSnap.data, "describeType.jpg");
+            }
+        ]]>
+    </mx:Script>
+
+    <mx:Panel id="panel"
+            width="500"
+            height="300"
+            verticalCenter="0"
+            horizontalCenter="0">
+        <mx:TextArea id="textArea"
+                editable="true"
+                width="100%"
+                height="100%" />
+        <mx:ControlBar horizontalAlign="right">
+           <mx:Button id="btn"
+                    label="Save"
+                    click="btn_click(event);" />
+        </mx:ControlBar>
+    </mx:Panel>
 </mx:Application>
+
