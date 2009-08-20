@@ -398,6 +398,15 @@ package org.flowDesign.panel
 			var typeId:String=event.dragSource.dataForFormat('typeId') as String;
 			var x:Number=event.localX-this.x-dragemouse.x;
 			var y:Number=event.localY-this.y-dragemouse.y;
+			trace("x:"+x+"Y"+y);
+			if(x<0) 
+			x=5;
+			if(y<0) 
+			y=5;
+			if(y+80>this.height+this.y) //y大于右边位置
+			y = y-60;//重置y
+			if(x+80>this.width+this.x)  
+			x = x-60;
 			newNode(lable,nodeType,x,y,typeId);
 		}		
 		
@@ -495,13 +504,13 @@ package org.flowDesign.panel
 		  var nodeData:NodeData=workFlowData.getNodeData(nodeId);
 		 	  nodeData.x=nodeEvent.x;
           	  nodeData.y=nodeEvent.y;
-          if(nodeEvent.x+nodeEvent.width>(this.x+this.width))
+          if(nodeEvent.x+nodeEvent.width+10>(this.x+this.width))
 		      {
 		      	this.width=this.width+(nodeEvent.x-this.width)+nodeEvent.width+100;//增加画布宽
 		      }
-          if(nodeEvent.y+nodeEvent.height>(this.y+this.height))
+          if(nodeEvent.y+nodeEvent.height+10>(this.y+this.height))
             {
-          	this.height=this.height+(nodeEvent.y-this.height)+nodeEvent.height+100;//增加画布宽
+          		this.height=this.height+(nodeEvent.y-this.height)+nodeEvent.height+100;//增加画布宽
             }
           var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.nodeComplete);
          	  wrokFlowDesignEvent.nodeData=nodeData;
@@ -707,6 +716,7 @@ package org.flowDesign.panel
 			if(node!=null)
 			{
 				removeNode(node);
+				node = null;
 			}
 			this.workFlowData.delNodeData(eventWfNodeName);
 			var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.nodeDel);

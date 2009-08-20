@@ -82,7 +82,7 @@ package  org.flowDesign.source
 		}
 		public function getIcon(value:String):Class
 		{
-			return this[value] as Class;
+			return  this[value] as Class;
 		}
 	}
 }

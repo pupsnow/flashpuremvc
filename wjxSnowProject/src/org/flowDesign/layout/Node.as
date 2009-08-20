@@ -1,11 +1,13 @@
 package org.flowDesign.layout
 {
 		import flash.events.ContextMenuEvent;
+		import flash.events.Event;
 		import flash.events.FocusEvent;
 		import flash.events.MouseEvent;
 		import flash.ui.ContextMenu;
 		import flash.ui.ContextMenuItem;
 		
+		import mx.effects.Glow;
 		import mx.events.FlexEvent;
 		
 		import org.flowDesign.event.NodeEvent;
@@ -42,15 +44,21 @@ package org.flowDesign.layout
 			this.selected=value;
 			if(value)
 			{
+				if(this.glow1!=null)
+				{
 				this.glow1.target = this;
 				this.glow1.repeatCount = 0;
 				this.glow1.end();
 				this.glow1.play();
+				}
 			}
 			else
 			{
+				if(this.glow1!=null)
+				{
 				this.glow1.target = null;
-				this.glow1.end();
+				this.glow1.end(); 
+				}
 			}
 		}
 		
@@ -102,16 +110,37 @@ package org.flowDesign.layout
 			return this._isDrage;
 		}
 
+//		private var glow1:Glow;
 		public function Node()
 		{
 	    	super();
-	    	
+//	    	glow1 = new Glow();
+//	    	glow1.blurXFrom = 0;
+//	    	glow1.blurXTo = 15;
+//	    	glow1.blurYFrom = 0;
+//	    	glow1.blurYTo = 15;
+//	    	glow1.color =  0xFF0000;
+
 	    	this.addEventListener(MouseEvent.MOUSE_DOWN,nodeMouseDown);
 	    	this.addEventListener(MouseEvent.MOUSE_UP,nodeMouseUp);
 	    	this.addEventListener(FocusEvent.FOCUS_OUT,nodeFocusOut);
+	    	this.addEventListener(Event.REMOVED_FROM_STAGE,removedH);
 	    	this.addEventListener(FlexEvent.CREATION_COMPLETE,nodeCreationComplete);
 	    	initMenu();
 	    	
+	    }
+	    
+	    private function removedH(e:Event):void
+	    {
+	    	this.removeEventListener(MouseEvent.MOUSE_DOWN,nodeMouseDown);
+	    	this.removeEventListener(MouseEvent.MOUSE_UP,nodeMouseUp);
+	    	this.removeEventListener(FocusEvent.FOCUS_OUT,nodeFocusOut);
+	    	this.removeEventListener(Event.REMOVED_FROM_STAGE,removedH);
+	    	this.removeEventListener(FlexEvent.CREATION_COMPLETE,nodeCreationComplete);
+	    	glow1.stop();
+	    	glow1.target = null
+	    	glow1 = null;
+	    	this.contextMenu  = null;
 	    }
 	     private var deleteMenuItem:ContextMenuItem;
 	     private var nodePropertyMenuItem:ContextMenuItem;
@@ -285,7 +314,6 @@ package org.flowDesign.layout
 		 */		
 		private function getNodeIcon(nodeType:String):Class
 		{
-			
 			return NodeStyleSource.getInstace().getIcon(nodeType);
 		}	
 	}
