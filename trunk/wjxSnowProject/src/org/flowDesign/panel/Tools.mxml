@@ -61,7 +61,7 @@
 			    dragProxy.label=dragInitiator.label;
 			    dragProxy.width=dragInitiator.width;
 			    dragProxy.height=dragInitiator.height; 
-				dragProxy.setStyle("icon",event.currentTarget.getStyle("icon"));
+//				dragProxy.setStyle("icon",event.currentTarget.getStyle("icon"));
 			    /**拖动管理  */
 			    DragManager.doDrag(dragInitiator, dragSource, event, dragProxy);
 			}
@@ -108,4 +108,5 @@
 		<mx:Label text="当前工具" fontSize="12"/>
 		<mx:Label id="userToolName" fontSize="12" fontWeight="bold"/>
 	</mx:VBox>
+
 </mx:HBox>

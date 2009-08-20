@@ -2,7 +2,8 @@
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
 	width="100%" height="100%"  layout="vertical"
 	paddingBottom="0" paddingLeft="0" paddingRight="0" paddingTop="0"
-	creationComplete="init()" xmlns:panel="org.flowDesign.panel.*">
+	creationComplete="init()" xmlns:panel="org.flowDesign.panel.*" 
+	xmlns:zoomer="org.flowDesign.zoomer.*">
 	<mx:Script>
 		<![CDATA[
 			import mx.events.CloseEvent;
@@ -48,11 +49,20 @@
 		{
 			Alert.show("弹出修改线属性框,或则其他","提示");
 		}
-		
+		private var timer : Timer;
 		private function init():void
 		{
-//			aa.addEventListener(MouseEvent.CLICK,clickH);
-		}
+				timer = new Timer(500);
+				timer.addEventListener( TimerEvent.TIMER, onTimerEvent );
+				timer.start();
+               var o:Object = new Object();
+				o.source = fl;
+                aa.data = o;
+          }
+			private function onTimerEvent( event : TimerEvent ) : void
+			{
+				Application.application.dispatchEvent( new Event("updateImage") );
+			}
 	      import mx.graphics.ImageSnapshot;
           import mx.graphics.codec.*;
 
@@ -83,29 +93,46 @@
             {
             	 fr.save(imageSnap.data, "describeType.jpg");
             }
-
+			
+			
+			private function mouseMove(e:MouseEvent):void
+			{
+				trace("LocalX:"+flowPrentVbox.contentMouseX+" LocalY:"+flowPrentVbox.contentMouseY)
+				var point:Point = new Point(flowPrentVbox.contentMouseX,flowPrentVbox.contentMouseY);
+					point = globalToLocal(point);
+				trace("X:"+point.x+" Y:"+point.y)
+				out.x = point.x;
+				out.y = point.y;
+			}
 		]]>
 	</mx:Script>
 		<panel:Tools  select="selectTool(event)"   
 			id="tools"   width="100%"   horizontalAlign="center">
-		</panel:Tools>		
-		<mx:VBox id="flowVbox" width="100%"  height="100%" verticalGap="0" 
-			horizontalGap="0" backgroundImage="images/BG.png" >		
-			<mx:VBox id="flowPrentVbox" width="{flowVbox.width}" verticalGap="0" 
-				horizontalGap="0"  alpha="1.0" height="{flowVbox.height}"      borderStyle="inset">
-					<panel:FlowDesignPanel  width="99.8%" height="100%"  id="fl" 
-						nodeProperty="showNodeH()"
-						lineProPerty="showLineH()"
-						backgroundColor="0x3e3e3e">
+		</panel:Tools>			
+		<mx:Canvas id="flowPrentVbox" width="100%" 
+			    alpha="1.0" height="100%" borderStyle="inset">
+				<mx:Canvas width="100%" height="100%">
+					<panel:FlowDesignPanel   id="fl" 
+						nodeProperty="showNodeH()" scaleX="{scr.value}"  scaleY="{scr.value}"
+						lineProPerty="showLineH()" maxWidth="2880" maxHeight="2880"
+						backgroundColor="0xffffff" width="2870" height="2290">
 					</panel:FlowDesignPanel>
-			</mx:VBox>
-		</mx:VBox>
+				</mx:Canvas>
+				<zoomer:UIThumbMap  id="aa" width="200" height="200" mouseMove="mouseMove(event)"
+					backgroundColor="#785C5C" right="0" top="0" backgroundAlpha="1"/>
+				<zoomer:ZoomReticle target="{aa}" width="80" height="80" 
+					 id="out"
+					zoom="10" visible="true"
+					eventType="roll-over" shape="rectangle"
+					draggable="false" followMouse="false"
+					backgroundColor="0xffffff" borderColor="0x000000"/>
+		</mx:Canvas>
 		<mx:HBox width="100%" height="20" backgroundColor="#C4DFFA" borderStyle="outset" 
 			horizontalAlign="left" >
 	        <mx:Button label="xml" click="showxml()"/>
-	        <mx:Button label="保存图片" click="delay()" id="aa"/>
+	        <mx:Button label="保存图片" click="delay()"/>
 	        <mx:Text id="proidd" />
-			<mx:Label id="mousex" text=""/>
-			<mx:Label id="mousey" text=""/>	
+			<mx:HSlider minimum="{flowPrentVbox.width/2870}" maximum="2" id="scr" value="1"
+				liveDragging="true" snapInterval="0.1" width="459"/>
 		</mx:HBox>
 </mx:Application>
