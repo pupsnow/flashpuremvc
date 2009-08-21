@@ -1,18 +1,25 @@
 package org.flowDesign.panel
 {
+	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
 	import mx.containers.Canvas;
+	import mx.controls.Alert;
+	import mx.core.Application;
 	import mx.core.UIComponent;
+	import mx.events.CloseEvent;
 	import mx.events.DragEvent;
 	import mx.events.FlexEvent;
 	import mx.events.MoveEvent;
 	import mx.events.ResizeEvent;
 	import mx.managers.DragManager;
+	import mx.managers.PopUpManager;
 	
 	import org.flowDesign.data.LineData;
+	import org.flowDesign.data.LineProperty;
 	import org.flowDesign.data.NodeData;
+	import org.flowDesign.data.NodeProperty;
 	import org.flowDesign.data.WorkFlowData;
 	import org.flowDesign.data.WorkFlowDataProvider;
 	import org.flowDesign.event.NodeEvent;
@@ -128,7 +135,7 @@ package org.flowDesign.panel
 		 /**
 		  * 
 		  */		
-		 public var _inFrist:Boolean=false;
+		 private var _inFrist:Boolean=false;
 		 public function set inFrist(value:Boolean):void
 		 {
 		 	this._inFrist=value;
@@ -141,7 +148,7 @@ package org.flowDesign.panel
 		 /**
 		  *用于记录拖动的对像名称
 		  */		 
-		 public var _drageName:String=null;
+		 private var _drageName:String=null;
 		 public function set drageName(value:String):void
 		 {
 		 	this._drageName=value;
@@ -149,6 +156,22 @@ package org.flowDesign.panel
 		 public function get drageName():String
 		 {
 		 	return this._drageName;
+		 }
+		 
+		 
+		/**
+		 *当前正在执行的环节 
+		 */		 
+		 private var _currentStep:String;
+		 
+		 public function set currentStep(value:String):void
+		 {
+		 	_currentStep = value;
+		 }
+		 
+		 public function get currentStep():String
+		 {
+		 	return _currentStep;
 		 }
 		 
 		private var temporaryLine:DrawingTool; 
@@ -217,6 +240,8 @@ package org.flowDesign.panel
 		
 		public function clearSelectObject():void
 		{
+			if(this.currentTool!=null)
+				this.currentTool =null;
 			if(this.selectObject[0]!=null)
 			{
 				var selectObjectName:String=this.selectObject[0].name;
@@ -392,13 +417,11 @@ package org.flowDesign.panel
 			var dragemouse:Point = new Point(event.dragSource.dataForFormat('x') as Number,
 								event.dragSource.dataForFormat('y') as Number)
 			var nodeType:String = event.dragSource.dataForFormat('value') as String;
-			//var icon:Class = event.dragSource.dataForFormat('icon') as Class;
 			var lable:String = event.dragSource.dataForFormat('lable') as String;
 			var typename:String=event.dragSource.dataForFormat('typename') as String;
 			var typeId:String=event.dragSource.dataForFormat('typeId') as String;
 			var x:Number=event.localX-this.x-dragemouse.x;
 			var y:Number=event.localY-this.y-dragemouse.y;
-			trace("x:"+x+"Y"+y);
 			if(x<0) 
 			x=5;
 			if(y<0) 
@@ -421,7 +444,11 @@ package org.flowDesign.panel
 		 */		
 		private  function newNode(name:String,type:String,x:int,y:int,typeId:String):void
 		{
-			var	nodeData:NodeData=workFlowData.newNode(name,type,typeId,x,y);
+			
+			//这个地方应该更具不同的 节点的 扩展属性 事例对应的类
+			var nodepro:NodeProperty = new NodeProperty();
+				nodepro.nodeTitle = name;
+			var	nodeData:NodeData=workFlowData.newNode(name,type,typeId,x,y,nodepro);
 		   	var nodeControl:UIComponent=newNodeControl(nodeData);
 			this.addChild(nodeControl);   
 		}
@@ -457,10 +484,15 @@ package org.flowDesign.panel
             wfNode.addEventListener(NodeEvent.PROPERTY_CLICK,nodePropertyClick);
            	wfNode.addEventListener(NodeEvent.NODESTART_DRAGE,nodeDrageStart);
            	wfNode.addEventListener(NodeEvent.NODESTOP_DRAGE,nodeDrageStop);
+           	
+           	wfNode.addEventListener(NodeEvent.SETCURRENT_CLICK,setCurrentClick);
+           	wfNode.addEventListener(NodeEvent.COMPLETECURRENT_CLICK,completeCurrentClick);
+           	wfNode.addEventListener(NodeEvent.PASSCURRENT_CLICK,passCurrentClick);
+           	
+           	
             wfNode.doubleClickEnabled=true;
 			return wfNode;
 		}
-		
 		
 		
 		/**
@@ -486,6 +518,9 @@ package org.flowDesign.panel
             node.removeEventListener(NodeEvent.PROPERTY_CLICK,nodePropertyClick);
            	node.removeEventListener(NodeEvent.NODESTART_DRAGE,nodeDrageStart);
            	node.removeEventListener(NodeEvent.NODESTOP_DRAGE,nodeDrageStop);
+           	node.removeEventListener(NodeEvent.SETCURRENT_CLICK,setCurrentClick);
+           	node.removeEventListener(NodeEvent.COMPLETECURRENT_CLICK,completeCurrentClick);
+           	node.removeEventListener(NodeEvent.PASSCURRENT_CLICK,passCurrentClick);
 			this.removeChild(node);
 			node = null;
 			
@@ -624,10 +659,19 @@ package org.flowDesign.panel
 		   			var linedata:LineData = new LineData();
 		   				linedata.fromNodeId = this.temporaryLine.startName;
 		   				linedata.toNodeId = this.temporaryLine.endName;
-		   				linedata.lineType = this.currentTool;
-		   			this.temporaryLine.addNewLine(linedata);
+		   				linedata.lineType = this.currentTool;		   			
+		   			var linep:LineProperty = new LineProperty();
+		   			linedata.lineProperty = linep;
+		   			
+		   			linedata = this.workFlowData.newLineData(linedata.fromNodeId,linedata.toNodeId,linedata.lineType,linedata.lineProperty)
 		   			addEventListern(this.temporaryLine);
 		   			this.temporaryLine=null;
+		   			//线添加成功 弹出条件设置
+		   			var linePUP:LinePropertyUpdataWin = new LinePropertyUpdataWin();
+		   				 linePUP.linedate = linedata;
+		   			PopUpManager.addPopUp(linePUP,Application.application as DisplayObject,true);
+		   			PopUpManager.centerPopUp(linePUP);
+		   			
 		   		}
 	   	  }
 	   		event.stopPropagation();
@@ -677,6 +721,87 @@ package org.flowDesign.panel
 	   			setSelectState(node.name,"node");
 	   		}
 		}
+		
+		
+		
+		
+		
+		
+		 /**
+	      * 设置为当前 右键 
+	      * @param event
+	      * @return 
+	      * 
+	      */	     
+	     
+	     public function setCurrentClick(event:NodeEvent):void
+	     {
+	     	var makelisten:Function=function(e:CloseEvent):void
+			{
+				if(e.detail==Alert.OK||e.detail==Alert.YES)
+				{
+					closeHandler(event);
+				}
+			}
+	     	Alert.show("你确定要把选中环节设为【当前运行环节】，设置后将不能在修改。","提示",2|4,this,closeHandler);
+	     }
+	     
+	     private function closeHandler(event:NodeEvent):void
+	     {
+	     	var nodename:String=event.currentTarget.name;
+		    var nodedata:NodeData=this.workFlowData.getNodeData(nodename);
+		    var fromNodeLineDatas:Array=this.workFlowData.qryLineDataByFromNodeId(nodename);//上级步骤 全部作为完成
+			var toNodeLineDatas:Array=this.workFlowData.qryLineDataByToNodeId(nodename);//下级步骤等待选择
+			
+			for(var j:int=0;j<toNodeLineDatas.length;j++)
+				{
+					var toLineData3:LineData=toNodeLineDatas[j];
+					var toLineDataId3:String=toLineData3.id;
+					var getToLine3:DrawingTool=DrawingTool(this.getChildByName(toLineDataId3));
+					if(getToLine3!=null)
+					{
+						getToLine3.lineState = NodeStyleSource.noExecute;
+					}
+				}
+	     }
+	     /**
+	      * 当前环节完成 右键
+	      * @param event
+	      * @return 
+	      * 
+	      */	     
+	     
+	     public function completeCurrentClick(event:NodeEvent):void
+	     {
+			var nodename:String=event.currentTarget.name;
+		    var nodedata:NodeData=this.workFlowData.getNodeData(nodename);
+		    var fromNodeLineDatas:Array=this.workFlowData.qryLineDataByFromNodeId(nodename);//上级步骤 全部作为完成
+			var toNodeLineDatas:Array=this.workFlowData.qryLineDataByToNodeId(nodename);//下级步骤等待选择
+			
+	     	var comUpdate:SetCurrentStepUpdataWin = new SetCurrentStepUpdataWin();
+	     		comUpdate.nodedate = nodedata;
+	     		comUpdate.fromNodeLineDatas = fromNodeLineDatas;
+	     		comUpdate.toNodeLineDatas = toNodeLineDatas;
+	     		comUpdate.parentView = this;
+	     		
+			   PopUpManager.addPopUp(comUpdate,Application.application as DisplayObject,true);
+			   PopUpManager.centerPopUp(comUpdate);
+	     }		
+		
+		
+		/**
+	      * 跳过当前环节完成 右键
+	      * @param event
+	      * @return 
+	      * 
+	      */	     
+	     
+	     public function passCurrentClick(event:NodeEvent):void
+	     {
+//	     	this.dispatchEvent(new NodeEvent(NodeEvent.PASSCURRENT_CLICK));
+	     }		
+		
+		
 		
 		
 		/**
@@ -732,11 +857,11 @@ package org.flowDesign.panel
 		protected function nodePropertyClick(event:NodeEvent):void
 		{
 		  var node:Node=event.currentTarget as  Node;
-//		  	  node.nodeState = NodeStyleSource.complete;
 		  var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.nodeProperty);
           wrokFlowDesignEvent.nodeId=node.name;
           this.dispatchEvent(wrokFlowDesignEvent);
-		
+			var nodeData:NodeData = this.workFlowData.getNodeData(node.id);
+          		nodePropertyUpdata(node,nodeData);
 		}
 		
 		/**
@@ -755,10 +880,19 @@ package org.flowDesign.panel
 		  		var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.nodeProperty);
           		wrokFlowDesignEvent.nodeId=node.name;
           		this.dispatchEvent(wrokFlowDesignEvent);
+          		var nodeData:NodeData = this.workFlowData.getNodeData(node.id);
+          		nodePropertyUpdata(node,nodeData);
 			}
 		}
 		
-		
+		protected function nodePropertyUpdata(target:Node,targetDate:NodeData):void
+		{
+			var updata:NodePropertyUpdataWin = new NodePropertyUpdataWin();
+				updata.ParentNode = target;
+				updata.nodedate = targetDate;
+				PopUpManager.addPopUp(updata,Application.application as DisplayObject);
+				PopUpManager.centerPopUp(updata);
+		}
 		
 		/**
 		 * 节点大小size改变 ，更新线段
@@ -796,7 +930,6 @@ package org.flowDesign.panel
 		
 		
 		
-		
 		/**
 		 * **************************************线操作************************************** 
 		 *  增加新线条
@@ -819,8 +952,8 @@ package org.flowDesign.panel
 		 private function addEventListern(value:DrawingTool):void
 		 {
 		 	value.addEventListener(MouseEvent.MOUSE_DOWN,lineMouseDowonH);
-	 		value.addEventListener(MouseEvent.MOUSE_OVER,lineMouseOverH);
-            value.addEventListener(MouseEvent.MOUSE_OUT,lineMouseOutH);
+//	 		value.addEventListener(MouseEvent.MOUSE_OVER,lineMouseOverH);
+//          value.addEventListener(MouseEvent.MOUSE_OUT,lineMouseOutH);
        		value.addEventListener(MouseEvent.DOUBLE_CLICK,lineMouseDoubleClickH);
        		value.addEventListener(LineEvent.rightClick,lineRightClickH);
         	value.addEventListener(LineEvent.deleteClick,lineDeleteClickH);
@@ -835,8 +968,8 @@ package org.flowDesign.panel
 		{
 			value.clear();
 			value.removeEventListener(MouseEvent.MOUSE_DOWN,lineMouseDowonH);
-			value.removeEventListener(MouseEvent.MOUSE_OVER,lineMouseOverH);
-            value.removeEventListener(MouseEvent.MOUSE_OUT,lineMouseOutH);
+//			value.removeEventListener(MouseEvent.MOUSE_OVER,lineMouseOverH);
+//          value.removeEventListener(MouseEvent.MOUSE_OUT,lineMouseOutH);
        		value.removeEventListener(MouseEvent.DOUBLE_CLICK,lineMouseDoubleClickH);
        		value.removeEventListener(LineEvent.rightClick,lineRightClickH);
         	value.removeEventListener(LineEvent.deleteClick,lineDeleteClickH);
@@ -845,36 +978,7 @@ package org.flowDesign.panel
         	value = null;
 		}
 		
-		 /**
-		   * mouseover事件
-		   * @param event
-		   * @return 
-		   * 
-		   */         
-		  private function lineMouseOverH(event:MouseEvent):void
-		  {
-		  	
-		  		event.currentTarget.lineColor = 0x00ff00;
-		        event.stopPropagation();
-		  }
-	        /**
-	         *mouseout事件 
-	         * @param event
-	         * @return 
-	         * 
-	         */        
-	        public function lineMouseOutH(event:MouseEvent):void
-	        {
-	        	if(event.currentTarget.uiSelect)
-	        	{
-	        		
-	        	}
-	        	else
-	        	{
-	        		event.currentTarget.lineColor = 0x000000;
-	        	}
-	        	event.stopPropagation();
-	        }
+		
 		 /**
 	   	 * 线 鼠标按下
 	   	 * @param event
@@ -939,6 +1043,7 @@ package org.flowDesign.panel
 	   			var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.lineProPerty);
           		wrokFlowDesignEvent.lineData=lineData;
           		this.dispatchEvent(wrokFlowDesignEvent);
+          		linePropertyUpdata(lineData)
       		}
 	   	}
 	   	/**
@@ -958,9 +1063,20 @@ package org.flowDesign.panel
 	   				var wrokFlowDesignEvent:WrokFlowDesignEvent=new WrokFlowDesignEvent(WrokFlowDesignEvent.lineProPerty);
           			wrokFlowDesignEvent.lineData=lineData;
           			this.dispatchEvent(wrokFlowDesignEvent);
+    
+          			linePropertyUpdata(lineData)
       			}
       		}
 	   	}
+	   	
+	   	protected function linePropertyUpdata(targetDate:LineData):void
+		{
+			var updata:LinePropertyUpdataWin = new LinePropertyUpdataWin();
+				updata.linedate = targetDate;
+				PopUpManager.addPopUp(updata,Application.application as DisplayObject);
+				PopUpManager.centerPopUp(updata);
+		}
+	   	
 		
 	}
 }

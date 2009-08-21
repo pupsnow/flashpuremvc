@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<panel:UpdateWindows xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="vertical" width="400" height="300"
+	implements="org.flowDesign.panel.IUpdateComponent" 
+	xmlns:panel="org.flowDesign.panel.*"
+	creationComplete="init()"
+	title="设置路线条件">
+	<mx:Script>
+		<![CDATA[
+			import org.flowDesign.data.LineData;
+			import org.flowDesign.data.LineProperty;
+			import mx.binding.utils.BindingUtils;
+			import mx.utils.ObjectProxy;
+			import mx.utils.ObjectUtil;
+			
+			public var linedate:LineData;
+			private var property:LineProperty;
+			private function init():void
+			{
+				property = LineProperty(linedate.lineProperty);
+				var str:XML = XML(property.getXml());
+				for(var i:int = 0;i<str.children().length();i++)
+				{
+					var xmll:XML = str.children()[i];
+					var id:String = xmll.@id;
+					var property:String = xmll.@property;
+					var value:String = xmll.@value;
+					var obj:Array = this.getChildren();
+					BindingUtils.bindProperty(this[id],property,xmll,"@value");
+				}
+			}
+			override public function sumbit():void
+			{
+				property.lineTitle = line_title.text;
+				property.lineRemark = line_remark.text;
+				super.logout();
+			}
+			
+			
+			
+			
+		]]>
+	</mx:Script>
+	<mx:Form width="100%" height="100%">
+		<mx:FormItem label="条件">
+			<mx:TextInput id="line_title" name="line_title" 
+				width="100%"  />
+		</mx:FormItem>
+		<mx:FormItem label="备注" width="100%"  height="100%">
+			<mx:TextArea id="line_remark" name="line_remark"  width="100%"  height="100%"/>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:ControlBar width="100%" height="32" paddingBottom="0" paddingTop="0"
+		verticalAlign="middle" horizontalAlign="right">
+		<mx:Button label="确定" click="sumbit()" height="25"/>
+	</mx:ControlBar>
+</panel:UpdateWindows>

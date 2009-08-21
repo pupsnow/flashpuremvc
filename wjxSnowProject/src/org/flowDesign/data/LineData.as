@@ -80,5 +80,18 @@ package   org.flowDesign.data
 			return this._lineState;
 		}
 		
+		/**
+		* 节点其他属性
+		*/			
+		private var _lineProperty:IProperty;
+		
+		public function set lineProperty(value:IProperty):void
+		{
+			_lineProperty  = value;
+		}
+		public function get lineProperty():IProperty
+		{
+			return _lineProperty;
+		}
 	}
 }

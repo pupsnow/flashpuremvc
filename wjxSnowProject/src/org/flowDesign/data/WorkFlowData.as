@@ -103,7 +103,7 @@ package  org.flowDesign.data
 		 * 节点数据操作
 		 * 产生一个新节点
 		 **/
-		public function newNode(name:String,type:String,typeId:String,x:int,y:int):NodeData
+		public function newNode(name:String,type:String,typeId:String,x:int,y:int,nodepro:IProperty):NodeData
 		{
 			var nodeData:NodeData=new NodeData();
 			nodeData.id=this.nodeId;
@@ -112,6 +112,7 @@ package  org.flowDesign.data
 		    nodeData.x=x;
 		    nodeData.y=y;
 		    nodeData.TypeId=typeId;
+		    nodeData.nodeProperty = nodepro;
 		   	this.nodeDatas.put(nodeData.id,nodeData);
 		   	return nodeData;
 		}
@@ -226,13 +227,14 @@ package  org.flowDesign.data
 		 * 线数据操作
 		 * 产生一个连接线的数据             
 		 **/
-		public function newLineData(fromNodeId:String,toNodeId:String,lineType:Class):LineData{
+		public function newLineData(fromNodeId:String,toNodeId:String,lineType:Class,linep:IProperty):LineData{
 			var lineData:LineData=new LineData();
 			lineData.id=fromNodeId+toNodeId;
 			lineData.name = fromNodeId+toNodeId;
 			lineData.fromNodeId=fromNodeId;
 			lineData.toNodeId=toNodeId;
 			lineData.lineType=lineType;
+			lineData.lineProperty = linep;
 			var fromNodeData:NodeData=this.nodeDatas.getKey(fromNodeId);
 			var toNodeData:NodeData=this.nodeDatas.getKey(toNodeId);
 			fromNodeData.addToNode(toNodeData);

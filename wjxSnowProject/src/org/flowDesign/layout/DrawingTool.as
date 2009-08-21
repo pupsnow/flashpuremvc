@@ -9,6 +9,7 @@ package  org.flowDesign.layout
 	
 	import org.flowDesign.data.LineData;
 	import org.flowDesign.data.WorkFlowData;
+	import org.flowDesign.source.NodeStyleSource;
 	import org.wjx.controls.workFlow.workFlowEvent.LineEvent;
 
 	public class DrawingTool extends UIComponent implements IFlowUI
@@ -61,7 +62,9 @@ package  org.flowDesign.layout
         	return this._lineWidth;
         }
         
-        
+		/**
+		 *是否被选中 
+		 */        
 		private var _uiSelect:Boolean = false;
 		public function set uiSelect(value:Boolean):void
 		{
@@ -77,7 +80,7 @@ package  org.flowDesign.layout
 				 }
 				 else
 				 {
-				 	this.lineColor = 0x000000;
+				 	this.lineColor = lineColor;
 				 }
 				
 			}
@@ -87,8 +90,40 @@ package  org.flowDesign.layout
 			return _uiSelect;
 		}
 		
+		
+		 /**
+          * 线的状态 
+          * 
+          * NodeStyleSource.defaultState  还没执行
+          * NodeStyleSource.complete 已经执行完的步骤
+          * NodeStyleSource.execute 当前正在进行的步骤
+          * NodeStyleSource.noExecute 不需要执行的环节
+          * 
+          */       
+	      private var _lineState:String=NodeStyleSource.defaultState;
+	      public function set lineState(value:String):void
+	      {
+	      	switch(value)
+	      	{
+	      		case NodeStyleSource.defaultState: this.lineColor =0x5369d8  ;break;
+	      		case NodeStyleSource.complete:  this.lineColor =0x499848  ;break;
+	      		case NodeStyleSource.execute: this.lineColor =0xd4d63c  ;break;
+	      		case NodeStyleSource.noExecute:  this.lineColor =0xbe5a23  ; break;
+	      	}
+	      	this._lineState=value;
+	      }
+	       
+	      public function get lineState():String
+	      {
+	      	return this._lineState;
+	      }
+		
+		
 		public function DrawingTool()
 		{		
+			this.doubleClickEnabled = true;
+			this.addEventListener(MouseEvent.MOUSE_OVER,lineMouseOverH);
+			this.addEventListener(MouseEvent.MOUSE_OUT,lineMouseOutH);
              initMenu();
   		}      
   	   private var  deleteMenuItem:ContextMenuItem;
@@ -107,6 +142,46 @@ package  org.flowDesign.layout
 			this.contextMenu = contextMenu;
                       
 	    } 
+	    
+	    
+	     /**
+		   * mouseover事件
+		   * @param event
+		   * @return 
+		   * 
+		   */         
+		  private function lineMouseOverH(event:MouseEvent):void
+		  {
+		  	
+		  		event.currentTarget.lineColor = 0x00ff00;
+		        event.stopPropagation();
+		  }
+	        /**
+	         *mouseout事件 
+	         * @param event
+	         * @return 
+	         * 
+	         */        
+	        public function lineMouseOutH(event:MouseEvent):void
+	        {
+	        	if(event.currentTarget.uiSelect)
+	        	{
+	        		
+	        	}
+	        	else
+	        	{
+	        		switch(event.currentTarget.lineState)
+	        		{
+	        			case NodeStyleSource.defaultState: event.currentTarget.lineColor =0x5369d8  ;break;
+			      		case NodeStyleSource.complete:  event.currentTarget.lineColor =0x499848  ;break;
+			      		case NodeStyleSource.execute: event.currentTarget.lineColor =0xd4d63c  ;break;
+			      		case NodeStyleSource.noExecute:  event.currentTarget.lineColor =0xbe5a23  ; break;
+	        		}
+	        	}
+	        	event.stopPropagation();
+	        }
+	    
+	    
   		/**
 	     * 鼠标右键  
 	     * @param event
@@ -157,7 +232,7 @@ package  org.flowDesign.layout
 	
 		public function addNewLine(linedata:LineData):void
 		{
-			this.workflowdata.newLineData(linedata.fromNodeId,linedata.toNodeId,linedata.lineType);
+//			this.workflowdata.newLineData(linedata.fromNodeId,linedata.toNodeId,linedata.lineType);
 		}
 		
 		

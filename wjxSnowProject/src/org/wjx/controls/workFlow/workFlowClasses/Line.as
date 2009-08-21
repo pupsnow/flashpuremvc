@@ -393,7 +393,7 @@ package  org.wjx.controls.workFlow.workFlowClasses{
        public function lineMouseDown(evnet:MouseEvent):void
        {
        	//this.lineSelect=true;
-      }
+        }
         
         
         public function lineRefash():void

@@ -7,7 +7,6 @@ package org.flowDesign.layout
 		import flash.ui.ContextMenu;
 		import flash.ui.ContextMenuItem;
 		
-		import mx.effects.Glow;
 		import mx.events.FlexEvent;
 		
 		import org.flowDesign.event.NodeEvent;
@@ -110,17 +109,9 @@ package org.flowDesign.layout
 			return this._isDrage;
 		}
 
-//		private var glow1:Glow;
 		public function Node()
 		{
 	    	super();
-//	    	glow1 = new Glow();
-//	    	glow1.blurXFrom = 0;
-//	    	glow1.blurXTo = 15;
-//	    	glow1.blurYFrom = 0;
-//	    	glow1.blurYTo = 15;
-//	    	glow1.color =  0xFF0000;
-
 	    	this.addEventListener(MouseEvent.MOUSE_DOWN,nodeMouseDown);
 	    	this.addEventListener(MouseEvent.MOUSE_UP,nodeMouseUp);
 	    	this.addEventListener(FocusEvent.FOCUS_OUT,nodeFocusOut);
@@ -144,6 +135,11 @@ package org.flowDesign.layout
 	    }
 	     private var deleteMenuItem:ContextMenuItem;
 	     private var nodePropertyMenuItem:ContextMenuItem;
+	     
+	     private var setCurrentStep:ContextMenuItem;
+	     private var completeCurrentStep:ContextMenuItem;
+	     private var passCurrentStep:ContextMenuItem;
+	     
          /**
           *右键菜单 
           * @return 
@@ -161,6 +157,19 @@ package org.flowDesign.layout
 			nodePropertyMenuItem= new ContextMenuItem("属性");
 			nodePropertyMenuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,nodePropertyClick);
 			contextMenu.customItems.push(nodePropertyMenuItem);
+			
+			
+			setCurrentStep= new ContextMenuItem("设置为当前环节");
+			setCurrentStep.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,setCurrentClick);
+			contextMenu.customItems.push(setCurrentStep);
+			
+			completeCurrentStep= new ContextMenuItem("当前环节已完成");
+			completeCurrentStep.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,completeCurrentClick);
+			contextMenu.customItems.push(completeCurrentStep);
+			
+			passCurrentStep= new ContextMenuItem("跳过当前环节");
+			passCurrentStep.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,passCurrentClick);
+			contextMenu.customItems.push(passCurrentStep);
 			this.contextMenu = contextMenu;/** 这里的this为Application对象*/
                       
 	    } 
@@ -217,8 +226,42 @@ package org.flowDesign.layout
 	     }
          	
          	
-         		
+        
+         /**
+	      * 设置为当前 右键 
+	      * @param event
+	      * @return 
+	      * 
+	      */	     
+	     
+	     public function setCurrentClick(event:ContextMenuEvent):void
+	     {
+	     	this.dispatchEvent(new NodeEvent(NodeEvent.SETCURRENT_CLICK));
+	     }
+	     /**
+	      * 当前环节完成 右键
+	      * @param event
+	      * @return 
+	      * 
+	      */	     
+	     
+	     public function completeCurrentClick(event:ContextMenuEvent):void
+	     {
+	     	this.dispatchEvent(new NodeEvent(NodeEvent.COMPLETECURRENT_CLICK));
+	     }		
 		
+		
+		/**
+	      * 跳过当前环节完成 右键
+	      * @param event
+	      * @return 
+	      * 
+	      */	     
+	     
+	     public function passCurrentClick(event:ContextMenuEvent):void
+	     {
+	     	this.dispatchEvent(new NodeEvent(NodeEvent.PASSCURRENT_CLICK));
+	     }		
 		
 		/**
 		 * 方法 失去焦点
