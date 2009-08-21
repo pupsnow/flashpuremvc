@@ -17,7 +17,6 @@
 			
 			public function set selectTool(tool:String):void
 			{
-				if(_seletTool==tool) return;
 				this._seletTool=tool;
 				this.dispatchEvent( new Event("select"));
 			}

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<panel:UpdateWindows xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="vertical" width="400" height="300"
+	implements="org.flowDesign.panel.IUpdateComponent" 
+	xmlns:panel="org.flowDesign.panel.*"
+	creationComplete="init()"
+	title="完成情况报告">
+	<mx:Script>
+		<![CDATA[
+			import org.flowDesign.source.NodeStyleSource;
+			import org.flowDesign.data.LineProperty;
+			import org.flowDesign.data.LineData;
+			import org.flowDesign.layout.DrawingTool;
+			import mx.utils.StringUtil;
+			import mx.collections.XMLListCollection;
+			import org.flowDesign.data.NodeData;
+			import org.flowDesign.data.Completion;
+			import mx.binding.utils.BindingUtils;
+			import mx.utils.ObjectProxy;
+			import mx.utils.ObjectUtil;
+			
+			public var nodedate:NodeData;
+			
+			public var fromNodeLineDatas:Array;
+			
+			public var toNodeLineDatas:Array;
+			
+			public var parentView:FlowDesignPanel;
+			
+			private var property:Completion;
+			
+			private function init():void
+			{
+				
+				property = Completion(nodedate.nodeComplete);
+				if(property == null)//说明还没有设置过
+				{
+					setCompletionData();
+					property = new Completion();
+					nodedate.nodeComplete = property;
+				}
+				else
+				{
+					completion.enabled = false;
+					var str:XML = XML(property.getXml());
+					for(var i:int = 0;i<str.children().length();i++)
+					{
+						var xmll:XML = str.children()[i];
+						var id:String = xmll.@id;
+						var property:String = xmll.@property;
+						BindingUtils.bindProperty(this[id],property,xmll,"@value");
+					}
+				}
+			}
+			override public function sumbit():void
+			{
+				if(completion.text=="全部")
+				{
+					for(var i:int=0;i<fromNodeLineDatas.length;i++)
+					{
+						var formLineData:LineData=fromNodeLineDatas[i];
+						var formLineDataId:String=formLineData.id;
+						var getFromLine:DrawingTool=DrawingTool(parentView.getChildByName(formLineDataId));
+						if(getFromLine!=null)
+						{
+							getFromLine.lineState = NodeStyleSource.execute;
+						}
+					}
+				}
+				else
+				{
+					for( i=0;i<fromNodeLineDatas.length;i++)
+					{
+						var formLineData2:LineData=fromNodeLineDatas[i];
+						if(formLineData2.toNodeId==completion.selectedItem.@data)
+						{
+							var formLineDataId2:String=formLineData2.id;
+							var getFromLine2:DrawingTool=DrawingTool(parentView.getChildByName(formLineDataId2));
+							if(getFromLine2!=null)
+							{
+								getFromLine2.lineState = NodeStyleSource.execute;
+							}
+							break;
+						}
+					}
+				}
+				for(var j:int=0;j<toNodeLineDatas.length;j++)
+				{
+					var toLineData3:LineData=toNodeLineDatas[j];
+					var toLineDataId3:String=toLineData3.id;
+					var getToLine3:DrawingTool=DrawingTool(parentView.getChildByName(toLineDataId3));
+					if(getToLine3!=null)
+					{
+						getToLine3.lineState = NodeStyleSource.complete;
+					}
+				}
+				property.completion = completion.text;
+				property.remark = remark.text;
+				super.logout();
+			}
+			
+			
+			
+			private function setCompletionData():void
+			{
+				var xmlc:XMLListCollection = new XMLListCollection();
+				var xml:XML =<item label='全部' data=""/>;
+				xmlc.addItem(xml);
+			  for(var i:int=0;i<fromNodeLineDatas.length;i++)
+				{
+					var formLineData:LineData=fromNodeLineDatas[i];
+					var xmlchild:XML = XML(StringUtil.substitute("<item label=\"{0}\"  data=\"{1}\"/>",LineProperty(formLineData.lineProperty).lineTitle,formLineData.toNodeId));
+					xmlc.addItem(xmlchild);
+				}
+				
+				completion.dataProvider = xmlc;
+			}		
+			
+		]]>
+	</mx:Script>
+	<mx:Form width="100%" height="100%">
+		<mx:FormItem label="完成情况">
+			<mx:ComboBox id="completion" name="line_title"  labelField="@label"
+				width="100%"  />
+		</mx:FormItem>
+		<mx:FormItem label="备注" width="100%"  height="100%">
+			<mx:TextArea id="remark" name="line_remark"  width="100%"  height="100%"/>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:ControlBar width="100%" height="32" paddingBottom="0" paddingTop="0"
+		verticalAlign="middle" horizontalAlign="right">
+		<mx:Button label="确定" click="sumbit()" height="25"/>
+	</mx:ControlBar>
+</panel:UpdateWindows>

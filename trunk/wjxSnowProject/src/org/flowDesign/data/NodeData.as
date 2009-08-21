@@ -187,7 +187,34 @@ package   org.flowDesign.data
 		}
 		public function get nodeState():String{
 			return this._nodeState;
-		}	
+		}
 		
+		/**
+		* 节点其他属性()
+		*/			
+		private var _nodeProperty:IProperty;
+		
+		public function set nodeProperty(value:IProperty):void
+		{
+			_nodeProperty  = value;
+		}
+		public function get nodeProperty():IProperty
+		{
+			return _nodeProperty;
+		}
+		
+		/**
+		* 节点其他属性()
+		*/			
+		private var _nodeComplete:IProperty;
+		
+		public function set nodeComplete(value:IProperty):void
+		{
+			_nodeComplete  = value;
+		}
+		public function get nodeComplete():IProperty
+		{
+			return _nodeComplete;
+		}
 	}
 }

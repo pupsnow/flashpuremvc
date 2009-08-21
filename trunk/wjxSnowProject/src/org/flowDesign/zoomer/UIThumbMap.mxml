@@ -9,6 +9,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.containers.HBox;
 			import mx.containers.Canvas;
 			import mx.containers.VBox;
 			import mx.containers.Panel;
@@ -44,11 +45,11 @@
 					var scarey:Number =h/(imageSmall*h/w);
 					var x:Number = event.localX;
 					var y:Number  = event.localY;
-					var realx:Number = x*scarex-Canvas(UIComponent( data.source ).parent).width/2;
-					var realy:Number = y*scarey-Canvas(UIComponent( data.source ).parent).height/2;
+					var realx:Number = x*scarex-HBox(UIComponent( data.source ).parent).width/2;
+					var realy:Number = y*scarey-HBox(UIComponent( data.source ).parent).height/2;
 					trace("X:"+realx+" Y:"+realy)
-					Canvas(UIComponent( data.source ).parent).horizontalScrollPosition = realx;
-					Canvas(UIComponent( data.source ).parent).verticalScrollPosition = realy;
+					HBox(UIComponent( data.source ).parent).horizontalScrollPosition = realx;
+					HBox(UIComponent( data.source ).parent).verticalScrollPosition = realy;
 				}
 			}
 			

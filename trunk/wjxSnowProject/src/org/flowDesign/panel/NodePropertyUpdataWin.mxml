@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<panel:UpdateWindows xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="vertical" width="400" height="300"
+	implements="org.flowDesign.panel.IUpdateComponent" 
+	xmlns:panel="org.flowDesign.panel.*"
+	creationComplete="init()"
+	title="设置环节其他属性">
+	<mx:Script>
+		<![CDATA[
+			import mx.binding.utils.BindingUtils;
+			import mx.utils.ObjectProxy;
+			import mx.utils.ObjectUtil;
+			import org.flowDesign.data.NodeProperty;
+			import org.flowDesign.data.NodeData;
+			import org.flowDesign.layout.Node;
+			public var ParentNode:Node;
+			public var nodedate:NodeData;
+			
+			private var property:NodeProperty;
+			private function init():void
+			{
+				property = NodeProperty(nodedate.nodeProperty);
+				var str:XML = XML(property.getXml());
+				for(var i:int = 0;i<str.children().length();i++)
+				{
+					var xmll:XML = str.children()[i];
+					var id:String = xmll.@id;
+					var property:String = xmll.@property;
+					var value:String = xmll.@value;
+					var obj:Array = this.getChildren();
+					BindingUtils.bindProperty(this[id],property,xmll,"@value");
+				}
+			}
+			override public function sumbit():void
+			{
+				ParentNode.label = node_title.text;
+				nodedate.name = node_title.text;
+				property.nodeTitle = node_title.text;
+				property.remark = remark.text;
+				super.logout();
+			}
+		]]>
+	</mx:Script>
+	<mx:Form width="100%" height="100%">
+		<mx:FormItem label="环节名称">
+			<mx:TextInput id="node_title" name="node_title" 
+				width="100%"  />
+		</mx:FormItem>
+		<mx:FormItem label="备注" width="100%"  height="100%">
+			<mx:TextArea id="remark" name="remark"  width="100%"  height="100%"/>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:ControlBar width="100%" height="32" paddingBottom="0" paddingTop="0"
+		verticalAlign="middle" horizontalAlign="right">
+		<mx:Button label="确定" click="sumbit()" height="25"/>
+	</mx:ControlBar>
+</panel:UpdateWindows>
