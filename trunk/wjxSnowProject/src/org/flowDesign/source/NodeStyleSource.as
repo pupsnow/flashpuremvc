@@ -6,6 +6,12 @@ package  org.flowDesign.source
 		public static var execute:String="execute";
 		public static var noExecute:String="noExecute";
 		
+		//线条在不同状态的颜色;
+		public static var defaultState_Color:uint = 0x5369d8;
+		public static var complete_Color:uint = 0x499848;
+		public static var execute_Color:uint = 0xd4d63c;
+		public static var noExecute_Color:uint = 0xbe5a23;
+		
 		[Embed(source="/org/flowDesign/images/general_links.png")]
 		[Bindable]
 		private var general_links:Class;

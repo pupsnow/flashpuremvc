@@ -1,5 +1,8 @@
 package  org.flowDesign.data
 {
+	import flash.utils.getQualifiedClassName;
+	
+	import mx.formatters.DateFormatter;
 	import mx.utils.StringUtil;
 	/**
 	 * 主要储存操作面板上 线和节点的数据。包括线的hashmap，节点的hashmap，以及
@@ -30,10 +33,12 @@ package  org.flowDesign.data
 		
 		public function get nodeId():String
 		{
-		  var nodeIdSting:String;
-		  nodeIdSting=this.nodeName+this._nodeId;
-		  _nodeId++;
-		  return nodeIdSting;
+		   var date:Date=new Date();
+		   var formatdate:DateFormatter=new DateFormatter();
+		   formatdate.formatString="YYYYMMDDJJNNSS";
+		   var nodeIdSting:String;
+		   nodeIdSting=this.nodeName+formatdate.format(date);
+		   return nodeIdSting;
 		}
 		
 		
@@ -70,14 +75,14 @@ package  org.flowDesign.data
 			for(var i:int = 0;i<nodearr.length;i++)
 			{
 			var c:NodeData =hashmap.getKey(nodearr[i]);
-			var xml1:String=StringUtil.substitute("<node id='{0}' name='{1}' nodeState='{2}' type='{3}' TypeId='{4}'/>",c.id,c.name,c.nodeState,c.type,c.TypeId);
+			var xml1:XMLList=XMLList(StringUtil.substitute("<node id='{0}' name='{1}' nodeState='{2}' type='{3}' TypeId='{4}'  x='{5}' y='{6}'> {7} </node>",c.id,c.name,c.nodeState,c.type,c.TypeId,c.x,c.y,c.nodeProperty.getXml()));
 			nodexml.appendChild(xml1);
 			
 			}
 			for(var j:int = 0;j<linearr.length;j++)
 			{
 			var d:LineData =linehap.getKey(linearr[j]);
-			var xml2:String=StringUtil.substitute("<node id='{0}' name='{1}' fromNodeId='{2}' toNodeId='{3}' lineType='{4}'/>",d.id,d.name,d.fromNodeId,d.toNodeId,d.lineType);
+			var xml2:XMLList=XMLList(StringUtil.substitute("<node id='{0}' name='{1}' fromNodeId='{2}' toNodeId='{3}' lineType='{4}' lineState='{5}'> {6} </node>",d.id,d.name,d.fromNodeId,d.toNodeId,getQualifiedClassName(d.lineType),d.lineState,d.lineProperty.getXml()));
 			linexml.appendChild(xml2);
 			
 			}

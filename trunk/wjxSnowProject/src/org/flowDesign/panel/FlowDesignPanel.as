@@ -3,6 +3,8 @@ package org.flowDesign.panel
 	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.net.getClassByAlias;
+	import flash.net.registerClassAlias;
 	
 	import mx.containers.Canvas;
 	import mx.controls.Alert;
@@ -21,12 +23,13 @@ package org.flowDesign.panel
 	import org.flowDesign.data.NodeData;
 	import org.flowDesign.data.NodeProperty;
 	import org.flowDesign.data.WorkFlowData;
-	import org.flowDesign.data.WorkFlowDataProvider;
 	import org.flowDesign.event.NodeEvent;
 	import org.flowDesign.event.WrokFlowDesignEvent;
 	import org.flowDesign.layout.DrawingTool;
 	import org.flowDesign.layout.DrawingToolManager;
+	import org.flowDesign.layout.HBrokenLineTool;
 	import org.flowDesign.layout.IFlowUI;
+	import org.flowDesign.layout.LineTool;
 	import org.flowDesign.layout.Node;
 	import org.flowDesign.source.NodeStyleSource;
 	import org.wjx.controls.workFlow.workFlowEvent.LineEvent;
@@ -55,10 +58,12 @@ package org.flowDesign.panel
 		 * */
 		private var workFlowData:WorkFlowData;
 		
-//		public function set dataProvider(dataProvider:XML):void
-//		{
-//			this.workFlowData.dataProvider=dataProvider;
-//		}
+		private var _dataProvider:XML;
+		public function set dataProvider(value:XML):void
+		{
+			this._dataProvider=value;
+		}
+		
 		public function get dataProvider():XML
 		{
 			return this.workFlowData.dataProvider;
@@ -68,7 +73,7 @@ package org.flowDesign.panel
 		 * 整个流程图内的数据保存
 		 * 
 		 * */
-		private var _workFlowDataProvider:WorkFlowDataProvider;
+//		private var _workFlowDataProvider:WorkFlowDataProvider;
 		
 //		[Bindable]
 //		public function set DataProvider(value:XML):void
@@ -179,8 +184,10 @@ package org.flowDesign.panel
 		
 		public function FlowDesignPanel()
 		{
+			
 			workFlowData=new WorkFlowData(this);
-			_workFlowDataProvider=new WorkFlowDataProvider(this);
+//			_workFlowDataProvider=new WorkFlowDataProvider(this);
+			this.addEventListener(FlexEvent.CREATION_COMPLETE,creatCh);
 			this.addEventListener(MouseEvent.MOUSE_DOWN,mouseDown_Event_Handler);
 			this.addEventListener(MouseEvent.MOUSE_MOVE,mouseMove_Event_Handler);
 			this.addEventListener(MouseEvent.MOUSE_UP,mouseUp_Event_Handler);
@@ -189,6 +196,124 @@ package org.flowDesign.panel
 			this.addEventListener(DragEvent.DRAG_DROP,	dragDropHandler);
 			this.addEventListener(DragEvent.DRAG_EXIT,	dragExitHandler);
 		}
+		
+		 /******************************************************************
+		  * 根据数据源还原画面 
+		  * @param e
+		  * 
+		  */		
+		 protected function creatCh(e:FlexEvent):void
+			{
+				if(this._dataProvider!=null)
+				{
+					for(var j:int = this.numChildren;j>0;j--)
+					{
+						if(this.getChildAt(j) is DrawingTool)
+						{
+							removeLine(this.getChildAt(j) as DrawingTool);
+						}
+						else if(this.getChildAt(j) is Node)
+						{
+							removeNode(this.getChildAt(j) as Node);
+						}
+						
+					}
+					
+					registerClass()
+					if(this._dataProvider is XML)
+					{
+						var node:XMLList = this._dataProvider.node;
+						var line:XMLList = this._dataProvider.line;
+						for(var i:int = 0;i<node.children().length();i++)
+						{
+							creatNewNode(node.children()[i]);
+							
+						}
+						for(var j:int = 0;j<line.children().length();j++)
+						{
+							creatLineNode(line.children()[j]);
+							
+						}
+					}
+				}
+			}
+		protected function 	creatNewNode(nodexml:XML):void
+		{
+			var nodeData:NodeData=new NodeData();
+			var nodePro:NodeProperty = new NodeProperty();
+			var nodeproData:XMLList = nodexml.property;
+				for(var i:int=  0;i<nodeproData.children().length();i++)
+				{
+					var xml:XML = nodeproData.children()[i];
+					var id:String = xml.@id;
+					var value:String = xml.@value;
+					nodePro.setProValue(id,value);
+				}
+			nodeData.id=nodexml.@id;
+			nodeData.name=nodexml.@name;
+		    nodeData.type=nodexml.@type;
+		    nodeData.x=nodexml.@x;
+		    nodeData.y=nodexml.@y;
+		    nodeData.nodeState = nodexml.@nodeState
+		    nodeData.TypeId=nodexml.@typeid;
+		    nodeData.nodeProperty = nodePro;
+		   	this.workFlowData.nodeDatas.put(nodeData.id,nodeData);
+		   	var nodeControl:UIComponent=newNodeControl(nodeData);
+			this.addChild(nodeControl);  
+		}
+		/**
+		 * 
+		 * 注册 类关联
+		 */		
+		protected function registerClass():void
+		{
+			registerClassAlias("org.flowDesign.layout::HBrokenLineTool",org.flowDesign.layout.HBrokenLineTool);
+			registerClassAlias("org.flowDesign.layout::VBrokenLineTool",org.flowDesign.layout.VBrokenLineTool);
+			registerClassAlias("org.flowDesign.layout::LineTool",org.flowDesign.layout.LineTool);
+		}
+		
+		protected function creatLineNode(linexml:XML):void
+		{
+			var lineData:LineData =new LineData();
+			var linePro:LineProperty = new LineProperty();
+			var lineproData:XMLList = linexml.property;
+				for(var i:int=  0;i<lineproData.children().length();i++)
+				{
+					var xml:XML = lineproData.children()[i];
+					var id:String = xml.@id;
+					var value:String = xml.@value;
+					linePro.setProValue(id,value);
+				}
+			lineData.id=linexml.@id;
+			lineData.name=linexml.@name;
+		    lineData.lineType=getClassByAlias(linexml.@lineType);
+		    lineData.fromNodeId=linexml.@fromNodeId;
+		    lineData.toNodeId=linexml.@toNodeId;
+		    lineData.lineState=linexml.@lineState;
+		    lineData.lineProperty = linePro;
+		   	this.workFlowData.lineDatas.put(lineData.id,lineData);
+		   	creatLine(lineData.lineType,linexml.@fromNodeId,linexml.@toNodeId)
+		}	
+		
+		private function creatLine(className:Class,startNode:String,endNode:String):void
+		{
+			temporaryLine = new className();
+			temporaryLine.startX = this.getChildByName(startNode).x+ this.getChildByName(startNode).width/2
+	    	temporaryLine.startY = this.getChildByName(startNode).y+ this.getChildByName(startNode).height/2
+	    	temporaryLine.endX = this.getChildByName(endNode).x+ this.getChildByName(endNode).width/2
+	    	temporaryLine.endY = this.getChildByName(endNode).y+ this.getChildByName(endNode).height/2
+	    	temporaryLine.invalidateDisplayList();
+	    	temporaryLine.startName=startNode;
+	    	temporaryLine.name = startNode+endNode;
+	    	this.addChildAt(temporaryLine,0);
+	    	addEventListern(this.temporaryLine);
+	    	this.temporaryLine =null;
+		}
+			
+	
+		 /*********************************************************************************************** */	
+		 			
+			
 		/**
 		 *鼠标按下 清空当前选择对象
 		 * @param event
@@ -197,7 +322,7 @@ package org.flowDesign.panel
 		protected  function  mouseDown_Event_Handler(event:MouseEvent):void
 		{
 			clearSelectObject();
-			event.stopPropagation();
+//			event.stopPropagation();
 		}
 		
 		
@@ -447,7 +572,7 @@ package org.flowDesign.panel
 			
 			//这个地方应该更具不同的 节点的 扩展属性 事例对应的类
 			var nodepro:NodeProperty = new NodeProperty();
-				nodepro.nodeTitle = name;
+				nodepro.node_title = name;
 			var	nodeData:NodeData=workFlowData.newNode(name,type,typeId,x,y,nodepro);
 		   	var nodeControl:UIComponent=newNodeControl(nodeData);
 			this.addChild(nodeControl);   
@@ -743,26 +868,49 @@ package org.flowDesign.panel
 					closeHandler(event);
 				}
 			}
-	     	Alert.show("你确定要把选中环节设为【当前运行环节】，设置后将不能在修改。","提示",2|4,this,closeHandler);
+	     	Alert.show("你确定要把选中环节设为【当前运行环节】，设置后将不能在修改。","提示",Alert.YES|Alert.NO,this,makelisten);
 	     }
 	     
 	     private function closeHandler(event:NodeEvent):void
 	     {
-	     	var nodename:String=event.currentTarget.name;
+	     	var node:Node =  event.currentTarget as Node;
+	     	var nodename:String=node.name;
 		    var nodedata:NodeData=this.workFlowData.getNodeData(nodename);
 		    var fromNodeLineDatas:Array=this.workFlowData.qryLineDataByFromNodeId(nodename);//上级步骤 全部作为完成
 			var toNodeLineDatas:Array=this.workFlowData.qryLineDataByToNodeId(nodename);//下级步骤等待选择
-			
+			if(fromNodeLineDatas.length==0&&toNodeLineDatas.length==0)//如果当前节点为孤点
+			{
+				Alert.show("当前节点为 孤点 设置不成功。","提示",Alert.YES);
+				return;
+			}
+			else
+			{
+				nodedata.nodeState =  NodeStyleSource.execute;
+				node.nodeState =  NodeStyleSource.execute;//当前为正在执行 状态			
+			}
 			for(var j:int=0;j<toNodeLineDatas.length;j++)
 				{
-					var toLineData3:LineData=toNodeLineDatas[j];
-					var toLineDataId3:String=toLineData3.id;
-					var getToLine3:DrawingTool=DrawingTool(this.getChildByName(toLineDataId3));
-					if(getToLine3!=null)
+					var toLineData:LineData=toNodeLineDatas[j];
+					var toLineDataId:String=toLineData.id;
+					var getToLine:DrawingTool=DrawingTool(this.getChildByName(toLineDataId));
+					var getToNode:Node =Node(this.getChildByName( toLineData.fromNodeId));
+					var getToNodeData:NodeData = this.workFlowData.getNodeData(toLineData.fromNodeId);
+					if(getToLine!=null)
 					{
-						getToLine3.lineState = NodeStyleSource.noExecute;
+						getToNodeData.nodeState = NodeStyleSource.noExecute;
+						getToNode.nodeState = NodeStyleSource.noExecute;
+						toLineData.lineState = NodeStyleSource.noExecute;
+						getToLine.lineState = NodeStyleSource.noExecute;
 					}
 				}
+	     }
+	     /**
+	      *当前节点的父节点都不需要执行 修改状态为 noExecute; 
+	      * 
+	      */	     
+	     private function ParentNodeNoExecute(fromNodeLineDatas:Array):void
+	     {
+	     	
 	     }
 	     /**
 	      * 当前环节完成 右键
@@ -783,6 +931,8 @@ package org.flowDesign.panel
 	     		comUpdate.fromNodeLineDatas = fromNodeLineDatas;
 	     		comUpdate.toNodeLineDatas = toNodeLineDatas;
 	     		comUpdate.parentView = this;
+	     		comUpdate.currentNode = Node(event.currentTarget);
+	     		comUpdate.workFlowData = this.workFlowData;
 	     		
 			   PopUpManager.addPopUp(comUpdate,Application.application as DisplayObject,true);
 			   PopUpManager.centerPopUp(comUpdate);
@@ -952,8 +1102,6 @@ package org.flowDesign.panel
 		 private function addEventListern(value:DrawingTool):void
 		 {
 		 	value.addEventListener(MouseEvent.MOUSE_DOWN,lineMouseDowonH);
-//	 		value.addEventListener(MouseEvent.MOUSE_OVER,lineMouseOverH);
-//          value.addEventListener(MouseEvent.MOUSE_OUT,lineMouseOutH);
        		value.addEventListener(MouseEvent.DOUBLE_CLICK,lineMouseDoubleClickH);
        		value.addEventListener(LineEvent.rightClick,lineRightClickH);
         	value.addEventListener(LineEvent.deleteClick,lineDeleteClickH);
@@ -968,8 +1116,6 @@ package org.flowDesign.panel
 		{
 			value.clear();
 			value.removeEventListener(MouseEvent.MOUSE_DOWN,lineMouseDowonH);
-//			value.removeEventListener(MouseEvent.MOUSE_OVER,lineMouseOverH);
-//          value.removeEventListener(MouseEvent.MOUSE_OUT,lineMouseOutH);
        		value.removeEventListener(MouseEvent.DOUBLE_CLICK,lineMouseDoubleClickH);
        		value.removeEventListener(LineEvent.rightClick,lineRightClickH);
         	value.removeEventListener(LineEvent.deleteClick,lineDeleteClickH);

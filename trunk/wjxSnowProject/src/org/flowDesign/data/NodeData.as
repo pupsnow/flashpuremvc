@@ -1,5 +1,7 @@
 package   org.flowDesign.data
 {
+	import org.flowDesign.source.NodeStyleSource;
+	
 	public class NodeData
 	{
 		/**
@@ -181,7 +183,7 @@ package   org.flowDesign.data
 		/**
 		 *节点类型 
 		 */			
-		private var _nodeState:String=null;
+		private var _nodeState:String=NodeStyleSource.defaultState;
 		public function set nodeState(value:String):void{
 			this._nodeState=value;
 		}

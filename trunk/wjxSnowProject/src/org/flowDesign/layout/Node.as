@@ -26,6 +26,20 @@ package org.flowDesign.layout
 		public function set nodeState(value:String):void
 		{
 			this._nodeSate=value;
+			if(value==NodeStyleSource.execute)
+			{
+				this.execute.target = this;
+				this.execute.repeatCount = 0;
+				this.execute.end();
+				this.execute.play();
+			}
+			else
+			{
+				this.execute.target = null;
+				this.execute.end();
+			}
+			this.styleName=value;
+			 
 		}
 		public function get nodeState():String
 		{
@@ -50,6 +64,11 @@ package org.flowDesign.layout
 				this.glow1.end();
 				this.glow1.play();
 				}
+				if(this.nodeState==NodeStyleSource.execute)
+				{
+					this.execute.target = null;
+					this.execute.end();
+				}
 			}
 			else
 			{
@@ -58,7 +77,17 @@ package org.flowDesign.layout
 				this.glow1.target = null;
 				this.glow1.end(); 
 				}
+				if(this.nodeState==NodeStyleSource.execute)
+				{
+					this.execute.target = this;
+					this.execute.repeatCount = 0;
+					this.execute.end();
+					this.execute.play();
+				}
 			}
+			
+			
+			
 		}
 		
 		public function get uiSelect():Boolean

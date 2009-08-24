@@ -7,6 +7,8 @@
 	modalTransparency="0.2" modalTransparencyBlur="0.1">
 	<mx:Script>
 		<![CDATA[
+			import mx.managers.PopUpManager;
+			import org.flowDesign.panel.ShowDataWin;
 			import mx.events.CloseEvent;
 			import mx.charts.BubbleChart;
 			import org.ImageSnop;
@@ -38,7 +40,11 @@
 		
 		private function showxml():void
 		{
-			var x:XML = fl.dataProvider;
+			var xml:XML = fl.dataProvider;
+			var re:ShowDataWin = new ShowDataWin();
+				re.res ="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+xml.toString();
+			PopUpManager.addPopUp(re,this,true);
+			PopUpManager.centerPopUp(re);
 		}
 		
 		private function showNodeH():void
@@ -109,6 +115,62 @@
 			}
 		]]>
 	</mx:Script>
+	<mx:Style>
+		global
+			{
+				fontSize: 12;
+			}
+	</mx:Style>
+	<mx:XML xmlns="" id="da">
+<result>
+  <node>
+    <node id="node20090824152712" name="结束结点" nodeState="default" type="end" TypeId="2" x="273" y="71">
+      <property>
+        <property id="node_title" property="text" value="结束结点"/>
+        <property id="remark" property="text" value=""/>
+      </property>
+    </node>
+    <node id="node20090824152709" name="子流程" nodeState="default" type="child" TypeId="6" x="535" y="236">
+      <property>
+        <property id="node_title" property="text" value="子流程"/>
+        <property id="remark" property="text" value=""/>
+      </property>
+    </node>
+    <node id="node20090824152711" name="开始结点" nodeState="default" type="start" TypeId="1" x="73" y="159">
+      <property>
+        <property id="node_title" property="text" value="开始结点"/>
+        <property id="remark" property="text" value=""/>
+      </property>
+    </node>
+    <node id="node20090824152714" name="并行环节" nodeState="default" type="parallel_links" TypeId="5" x="270" y="315">
+      <property>
+        <property id="node_title" property="text" value="并行环节"/>
+        <property id="remark" property="text" value=""/>
+      </property>
+    </node>
+  </node>
+  <line>
+    <node id="node20090824152711node20090824152712" name="node20090824152711node20090824152712" fromNodeId="node20090824152711" toNodeId="node20090824152712" lineType="org.flowDesign.layout::LineTool" lineState="default">
+      <property>
+        <property id="line_title" property="text" value="1111111111111"/>
+        <property id="line_remark" property="text" value="111111"/>
+      </property>
+    </node>
+    <node id="node20090824152714node20090824152709" name="node20090824152714node20090824152709" fromNodeId="node20090824152714" toNodeId="node20090824152709" lineType="org.flowDesign.layout::LineTool" lineState="default">
+      <property>
+        <property id="line_title" property="text" value="44444"/>
+        <property id="line_remark" property="text" value="4444444444"/>
+      </property>
+    </node>
+    <node id="node20090824152711node20090824152714" name="node20090824152711node20090824152714" fromNodeId="node20090824152711" toNodeId="node20090824152714" lineType="org.flowDesign.layout::LineTool" lineState="default">
+      <property>
+        <property id="line_title" property="text" value="22222222"/>
+        <property id="line_remark" property="text" value="2222222222"/>
+      </property>
+    </node>
+  </line>
+</result>
+	</mx:XML>
 		<panel:Tools  select="selectTool(event)"   
 			id="tools"   width="100%"   horizontalAlign="center">
 		</panel:Tools>			
@@ -116,7 +178,7 @@
 			    alpha="1.0" height="100%" borderStyle="inset">
 				<panel:DragScrollingCanvas width="100%" height="100%" 
 					childrenDoDrag="true">
-					<panel:FlowDesignPanel   id="fl" 
+					<panel:FlowDesignPanel   id="fl"  dataProvider="{da}"
 						nodeProperty="showNodeH()" 
 						lineProPerty="showLineH()" maxWidth="2880" maxHeight="2880"
 						backgroundColor="0xffffff" width="2870" height="2290">
