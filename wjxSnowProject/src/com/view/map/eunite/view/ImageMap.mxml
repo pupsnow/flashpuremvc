@@ -103,7 +103,7 @@
 		 outlineAlpha="1.0" outlineColor="0xffffff"  id="image1"
 		 fillAlpha="0.2" fillColor="0xffffff"   
 		 showToolTips="true"  
-		 width="1000" height="549">
+		 width="2280" height="1240">
 		
 		<controls:map>
 			<!--绘制各个小模块-->

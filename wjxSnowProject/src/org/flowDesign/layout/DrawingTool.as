@@ -76,11 +76,16 @@ package  org.flowDesign.layout
 				 if(_uiSelect)
 				 {
 				 	this.lineColor = 0xff0000;
-				 	
 				 }
 				 else
 				 {
-				 	this.lineColor = lineColor;
+				 	switch(this.lineState)
+	        		{
+	        			case NodeStyleSource.defaultState: this.lineColor =NodeStyleSource.defaultState_Color  ;break;
+			      		case NodeStyleSource.complete:  this.lineColor =NodeStyleSource.complete_Color  ;break;
+			      		case NodeStyleSource.execute: this.lineColor =NodeStyleSource.execute_Color  ;break;
+			      		case NodeStyleSource.noExecute: this.lineColor =NodeStyleSource.noExecute_Color  ; break;
+	        		}
 				 }
 				
 			}
@@ -105,10 +110,10 @@ package  org.flowDesign.layout
 	      {
 	      	switch(value)
 	      	{
-	      		case NodeStyleSource.defaultState: this.lineColor =0x5369d8  ;break;
-	      		case NodeStyleSource.complete:  this.lineColor =0x499848  ;break;
-	      		case NodeStyleSource.execute: this.lineColor =0xd4d63c  ;break;
-	      		case NodeStyleSource.noExecute:  this.lineColor =0xbe5a23  ; break;
+	      		case NodeStyleSource.defaultState: this.lineColor =NodeStyleSource.defaultState_Color  ;break;
+	      		case NodeStyleSource.complete:  this.lineColor =NodeStyleSource.complete_Color  ;break;
+	      		case NodeStyleSource.execute: this.lineColor =NodeStyleSource.execute_Color  ;break;
+	      		case NodeStyleSource.noExecute: this.lineColor =NodeStyleSource.noExecute_Color  ; break;
 	      	}
 	      	this._lineState=value;
 	      }
@@ -152,8 +157,14 @@ package  org.flowDesign.layout
 		   */         
 		  private function lineMouseOverH(event:MouseEvent):void
 		  {
-		  	
+		  	if(event.currentTarget.uiSelect)
+	        	{
+	        		trace("selected");	
+	        	}
+	        	else
+	        	{
 		  		event.currentTarget.lineColor = 0x00ff00;
+	        	}
 		        event.stopPropagation();
 		  }
 	        /**
@@ -166,16 +177,16 @@ package  org.flowDesign.layout
 	        {
 	        	if(event.currentTarget.uiSelect)
 	        	{
-	        		
+	        		trace("selected");	
 	        	}
 	        	else
 	        	{
 	        		switch(event.currentTarget.lineState)
 	        		{
-	        			case NodeStyleSource.defaultState: event.currentTarget.lineColor =0x5369d8  ;break;
-			      		case NodeStyleSource.complete:  event.currentTarget.lineColor =0x499848  ;break;
-			      		case NodeStyleSource.execute: event.currentTarget.lineColor =0xd4d63c  ;break;
-			      		case NodeStyleSource.noExecute:  event.currentTarget.lineColor =0xbe5a23  ; break;
+	        			case NodeStyleSource.defaultState: this.lineColor =NodeStyleSource.defaultState_Color  ;break;
+			      		case NodeStyleSource.complete:  this.lineColor =NodeStyleSource.complete_Color  ;break;
+			      		case NodeStyleSource.execute: this.lineColor =NodeStyleSource.execute_Color  ;break;
+			      		case NodeStyleSource.noExecute: this.lineColor =NodeStyleSource.noExecute_Color  ; break;
 	        		}
 	        	}
 	        	event.stopPropagation();

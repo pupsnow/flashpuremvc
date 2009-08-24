@@ -5,6 +5,8 @@
  	
  	 <mx:Script>
         <![CDATA[
+        	import flash.net.registerClassAlias;
+        	import flash.net.getClassByAlias;
             import mx.graphics.ImageSnapshot;
             import mx.graphics.codec.*;
 
@@ -14,6 +16,7 @@
 			private var fr:FileReference = new FileReference();
 			private var timer : Timer;
             private function init():void {
+            	registerClassAlias("mx.controls.Button",mx.controls.Button);
             	timer = new Timer(500);
 				timer.addEventListener( TimerEvent.TIMER, onTimerEvent );
 				timer.start();
@@ -30,8 +33,15 @@
                 var imageSnap:ImageSnapshot = ImageSnapshot.captureImage(panel, 0, jpegEnc);
                 fr.save(imageSnap.data, "describeType.jpg");
             }
+            
+            private function add():void
+            {
+            	var cal:Class = getClassByAlias("mx.controls.Button");
+            	panel.addChild(new cal());
+            }
         ]]>
     </mx:Script>
+    <mx:Button  label="click" click="add()"/>
 	<uiThumbnailsMap:ItemRenderer  id="aa" width="200" height="200"/>
     <mx:VBox width="200" height="300">
 	    	<mx:Panel id="panel"

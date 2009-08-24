@@ -1,4 +1,8 @@
 
+global
+{
+	fontSize: 12;
+}
 Button
 {
 	upSkin: Embed(source="../org/flowDesign/images/general_links.png");
