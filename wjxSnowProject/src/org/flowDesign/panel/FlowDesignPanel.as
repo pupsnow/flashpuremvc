@@ -59,9 +59,14 @@ package org.flowDesign.panel
 		private var workFlowData:WorkFlowData;
 		
 		private var _dataProvider:XML;
+		private var dataProviderChange:Boolean = false;
 		public function set dataProvider(value:XML):void
 		{
+			if(this._dataProvider==value) return;
 			this._dataProvider=value;
+			dataProviderChange = true;
+			this.invalidateDisplayList();
+			
 		}
 		
 		public function get dataProvider():XML
@@ -187,7 +192,6 @@ package org.flowDesign.panel
 			
 			workFlowData=new WorkFlowData(this);
 //			_workFlowDataProvider=new WorkFlowDataProvider(this);
-			this.addEventListener(FlexEvent.CREATION_COMPLETE,creatCh);
 			this.addEventListener(MouseEvent.MOUSE_DOWN,mouseDown_Event_Handler);
 			this.addEventListener(MouseEvent.MOUSE_MOVE,mouseMove_Event_Handler);
 			this.addEventListener(MouseEvent.MOUSE_UP,mouseUp_Event_Handler);
@@ -202,11 +206,13 @@ package org.flowDesign.panel
 		  * @param e
 		  * 
 		  */		
-		 protected function creatCh(e:FlexEvent):void
-			{
-				if(this._dataProvider!=null)
+		 override protected  function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+		 {
+		 	super.updateDisplayList(unscaledWidth,unscaledHeight);
+		 	try{
+				if(this._dataProvider!=null&&this.dataProviderChange)
 				{
-					for(var j:int = this.numChildren;j>0;j--)
+					for(var j:int = this.numChildren-1;j>-1;j--)
 					{
 						if(this.getChildAt(j) is DrawingTool)
 						{
@@ -229,14 +235,22 @@ package org.flowDesign.panel
 							creatNewNode(node.children()[i]);
 							
 						}
-						for(var j:int = 0;j<line.children().length();j++)
+						for(var k:int = 0;k<line.children().length();k++)
 						{
-							creatLineNode(line.children()[j]);
+							creatLineNode(line.children()[k]);
 							
 						}
 					}
 				}
+				this.dataProviderChange = false;
 			}
+			catch(e:Error)
+			{
+				Alert.show("数据源格式有错","提示");
+				return;
+			}
+		 }
+		
 		protected function 	creatNewNode(nodexml:XML):void
 		{
 			var nodeData:NodeData=new NodeData();
@@ -292,10 +306,10 @@ package org.flowDesign.panel
 		    lineData.lineState=linexml.@lineState;
 		    lineData.lineProperty = linePro;
 		   	this.workFlowData.lineDatas.put(lineData.id,lineData);
-		   	creatLine(lineData.lineType,linexml.@fromNodeId,linexml.@toNodeId)
+		   	creatLine(lineData.lineType,linexml.@fromNodeId,linexml.@toNodeId,linexml.@lineState)
 		}	
 		
-		private function creatLine(className:Class,startNode:String,endNode:String):void
+		private function creatLine(className:Class,startNode:String,endNode:String,linestate:String):void
 		{
 			temporaryLine = new className();
 			temporaryLine.startX = this.getChildByName(startNode).x+ this.getChildByName(startNode).width/2
@@ -305,6 +319,7 @@ package org.flowDesign.panel
 	    	temporaryLine.invalidateDisplayList();
 	    	temporaryLine.startName=startNode;
 	    	temporaryLine.name = startNode+endNode;
+	    	temporaryLine.lineState = linestate;
 	    	this.addChildAt(temporaryLine,0);
 	    	addEventListern(this.temporaryLine);
 	    	this.temporaryLine =null;
