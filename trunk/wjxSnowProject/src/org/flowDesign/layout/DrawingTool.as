@@ -31,7 +31,7 @@ package  org.flowDesign.layout
          * 线颜色
          */        
        
-        private var _lineColor:uint=0x000000;
+        private var _lineColor:uint=NodeStyleSource.defaultState_Color;
         
         public function set lineColor(color:uint):void
         {

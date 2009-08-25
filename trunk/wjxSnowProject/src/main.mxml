@@ -7,6 +7,7 @@
 	modalTransparency="0.2" modalTransparencyBlur="0.1">
 	<mx:Script>
 		<![CDATA[
+			import flash.net.navigateToURL;
 			import mx.managers.PopUpManager;
 			import org.flowDesign.panel.ShowDataWin;
 			import mx.events.CloseEvent;
@@ -59,6 +60,9 @@
 		private var timer : Timer;
 		private function init():void
 		{
+				fr.addEventListener(Event.SELECT,startUpload);
+               //读取完毕
+               fr.addEventListener(Event.COMPLETE,uploadComplete);
 				timer = new Timer(500);
 				timer.addEventListener( TimerEvent.TIMER, onTimerEvent );
 				timer.start();
@@ -76,6 +80,7 @@
           private const jpegEnc:JPEGEncoder = new JPEGEncoder();
 			
 		  private var fr:FileReference = new FileReference();
+		  private var filter:FileFilter=new FileFilter("wjx(*.wjx)","*.wjx");
 		  [Bindable]
 		  private var isok:Boolean = true;
 		  private function save(evt:MouseEvent):void {
@@ -113,6 +118,42 @@
 				out.x = x;
 				out.y = y;
 			}
+			private function startUpload(event:Event):void{
+
+              //选择好文件后，开始读取
+
+              fr.load();
+
+           }
+
+           
+
+           private function uploadComplete(event:Event):void{
+
+              //file.data是ByteArray类型
+
+              //读取完成后将此值赋给Image的source属性
+
+              trace(event.target.data)
+             fl.dataProvider = XML(event.target.data);
+
+           }
+
+           
+
+           private function choosePic():void{
+
+              fr.browse([filter]);
+
+           }
+           
+           
+           private function talk():void
+           {
+           	var url:String = "http://sighttp.qq.com/cgi-bin/check?sigkey=924249652dde2ad7af48687e97e45d59b24c014b18978c93fce12022a50e8cf6";
+           	var req:URLRequest = new URLRequest(url);
+           	navigateToURL(req);
+           }
 		]]>
 	</mx:Script>
 	<mx:Style>
@@ -194,11 +235,15 @@
 					draggable="false" followMouse="false"
 					backgroundColor="0xffffff" borderColor="0x000000"/>
 		</mx:Canvas>
-		<mx:HBox width="100%" height="20" backgroundColor="#C4DFFA" borderStyle="outset" 
+		<mx:HBox width="100%" height="32" backgroundColor="#C4DFFA" borderStyle="outset" 
 			horizontalAlign="left" >
-	        <mx:Button label="xml" click="showxml()"/>
+	        <mx:Button label="保存数据" click="showxml()"/>
 	        <mx:Button label="保存图片" click="delay()"/>
 	        <mx:Text id="proidd" />
+	        <mx:Label text="|" fontWeight="bold" textAlign="center" /> 
+  			<mx:Button label="数据导入" click="choosePic()" /> 
+			<mx:Image click="talk()"
+				source="http://wpa.qq.com/pa?p=1:32674085:6"/> 
 			<!--<mx:HSlider minimum="{flowPrentVbox.width/2870}"
 				scaleX="{scr.value}"  scaleY="{scr.value}"
 			 maximum="2" id="scr" value="1"

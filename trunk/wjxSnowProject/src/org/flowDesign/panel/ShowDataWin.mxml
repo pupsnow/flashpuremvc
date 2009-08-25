@@ -11,7 +11,7 @@
 			private function saveTxt():void
 			{
 				fl =new FileReference();
-				fl.save(res,"Res.xml");
+				fl.save(res,"workflox.wjx");
 			}
 		]]>
 	</mx:Script>
