@@ -8,7 +8,7 @@ package org.flowDesign.data
 		public function getXml():String
 		{
 			
-			var str:String=AssemblyResult.PROPERTY_START;
+			var str:String=AssemblyResult.LINE_PROPERTY_START;
 				str += AssemblyResult.getProperty("line_title","text",line_title);
 				str += AssemblyResult.getProperty("line_remark","text",line_remark);
 				str += AssemblyResult.PROPERTY_END;

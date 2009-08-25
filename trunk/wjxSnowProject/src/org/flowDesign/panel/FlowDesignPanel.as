@@ -9,6 +9,7 @@ package org.flowDesign.panel
 	import mx.containers.Canvas;
 	import mx.controls.Alert;
 	import mx.core.Application;
+	import mx.core.IFlexDisplayObject;
 	import mx.core.UIComponent;
 	import mx.events.CloseEvent;
 	import mx.events.DragEvent;
@@ -18,10 +19,12 @@ package org.flowDesign.panel
 	import mx.managers.DragManager;
 	import mx.managers.PopUpManager;
 	
+	import org.flowDesign.data.EndNodeProperty;
 	import org.flowDesign.data.LineData;
 	import org.flowDesign.data.LineProperty;
 	import org.flowDesign.data.NodeData;
 	import org.flowDesign.data.NodeProperty;
+	import org.flowDesign.data.StartNodeProperty;
 	import org.flowDesign.data.WorkFlowData;
 	import org.flowDesign.event.NodeEvent;
 	import org.flowDesign.event.WrokFlowDesignEvent;
@@ -206,10 +209,10 @@ package org.flowDesign.panel
 		  * @param e
 		  * 
 		  */		
-		 override protected  function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+	  override protected  function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		 {
 		 	super.updateDisplayList(unscaledWidth,unscaledHeight);
-		 	try{
+//		 	try{
 				if(this._dataProvider!=null&&this.dataProviderChange)
 				{
 					for(var j:int = this.numChildren-1;j>-1;j--)
@@ -243,19 +246,20 @@ package org.flowDesign.panel
 					}
 				}
 				this.dataProviderChange = false;
-			}
-			catch(e:Error)
-			{
-				Alert.show("数据源格式有错","提示");
-				return;
-			}
-		 }
+//			}
+//			catch(e:Error)
+//			{
+//				Alert.show("数据源格式有错","提示");
+//				return;
+//			}
+		 } 
 		
 		protected function 	creatNewNode(nodexml:XML):void
 		{
 			var nodeData:NodeData=new NodeData();
-			var nodePro:NodeProperty = new NodeProperty();
 			var nodeproData:XMLList = nodexml.property;
+			var temp:Class = getClassByAlias(nodeproData.@Class);
+			var nodePro:Object = new temp();
 				for(var i:int=  0;i<nodeproData.children().length();i++)
 				{
 					var xml:XML = nodeproData.children()[i];
@@ -268,9 +272,10 @@ package org.flowDesign.panel
 		    nodeData.type=nodexml.@type;
 		    nodeData.x=nodexml.@x;
 		    nodeData.y=nodexml.@y;
+		    nodeData.nodeUpdateClass =getClassByAlias(nodexml.@nodePropertyClass);
 		    nodeData.nodeState = nodexml.@nodeState
 		    nodeData.TypeId=nodexml.@typeid;
-		    nodeData.nodeProperty = nodePro;
+		    nodeData.nodeProperty =temp(nodePro);
 		   	this.workFlowData.nodeDatas.put(nodeData.id,nodeData);
 		   	var nodeControl:UIComponent=newNodeControl(nodeData);
 			this.addChild(nodeControl);  
@@ -281,9 +286,20 @@ package org.flowDesign.panel
 		 */		
 		protected function registerClass():void
 		{
+			///注册线
 			registerClassAlias("org.flowDesign.layout::HBrokenLineTool",org.flowDesign.layout.HBrokenLineTool);
 			registerClassAlias("org.flowDesign.layout::VBrokenLineTool",org.flowDesign.layout.VBrokenLineTool);
 			registerClassAlias("org.flowDesign.layout::LineTool",org.flowDesign.layout.LineTool);
+			
+			///注册节点升级window
+			
+			registerClassAlias("org.flowDesign.panel::StartNodePropertyUpdateWin",org.flowDesign.panel.StartNodePropertyUpdateWin);
+			registerClassAlias("org.flowDesign.panel::EndNodePropertyUpdateWin",org.flowDesign.panel.EndNodePropertyUpdateWin);
+			
+			//注册节点升级window 对应vo
+			registerClassAlias("org.flowDesign.data::StartNodeProperty",org.flowDesign.data.StartNodeProperty);
+			registerClassAlias("org.flowDesign.data::EndNodeProperty",org.flowDesign.data.EndNodeProperty);
+			registerClassAlias("org.flowDesign.data::NodeProperty",org.flowDesign.data.NodeProperty);
 		}
 		
 		protected function creatLineNode(linexml:XML):void
@@ -557,6 +573,7 @@ package org.flowDesign.panel
 			var dragemouse:Point = new Point(event.dragSource.dataForFormat('x') as Number,
 								event.dragSource.dataForFormat('y') as Number)
 			var nodeType:String = event.dragSource.dataForFormat('value') as String;
+			var nodeUdataClass:Class = event.dragSource.dataForFormat('nodePropertyClass') as Class;
 			var lable:String = event.dragSource.dataForFormat('lable') as String;
 			var typename:String=event.dragSource.dataForFormat('typename') as String;
 			var typeId:String=event.dragSource.dataForFormat('typeId') as String;
@@ -570,7 +587,7 @@ package org.flowDesign.panel
 			y = y-60;//重置y
 			if(x+80>this.width+this.x)  
 			x = x-60;
-			newNode(lable,nodeType,x,y,typeId);
+			newNode(lable,nodeType,x,y,typeId,nodeUdataClass);
 		}		
 		
 		/**
@@ -582,13 +599,14 @@ package org.flowDesign.panel
 		 * @param typeId
 		 * 
 		 */		
-		private  function newNode(name:String,type:String,x:int,y:int,typeId:String):void
+		private  function newNode(name:String,type:String,x:int,y:int,typeId:String,nodePropertyClass:Class):void
 		{
 			
 			//这个地方应该更具不同的 节点的 扩展属性 事例对应的类
 			var nodepro:NodeProperty = new NodeProperty();
 				nodepro.node_title = name;
 			var	nodeData:NodeData=workFlowData.newNode(name,type,typeId,x,y,nodepro);
+		   		nodeData.nodeUpdateClass = nodePropertyClass;
 		   	var nodeControl:UIComponent=newNodeControl(nodeData);
 			this.addChild(nodeControl);   
 		}
@@ -1052,11 +1070,14 @@ package org.flowDesign.panel
 		
 		protected function nodePropertyUpdata(target:Node,targetDate:NodeData):void
 		{
-			var updata:NodePropertyUpdataWin = new NodePropertyUpdataWin();
+			var temp:Class = targetDate.nodeUpdateClass;
+			var updata:Object = new temp();
+			
+//			new NodePropertyUpdataWin();
 				updata.ParentNode = target;
 				updata.nodedate = targetDate;
-				PopUpManager.addPopUp(updata,Application.application as DisplayObject);
-				PopUpManager.centerPopUp(updata);
+				PopUpManager.addPopUp(updata as IFlexDisplayObject,Application.application as DisplayObject);
+				PopUpManager.centerPopUp(updata as IFlexDisplayObject);
 		}
 		
 		/**
@@ -1107,6 +1128,7 @@ package org.flowDesign.panel
 	   		value.endX=this.contentMouseX;
 	   		value.endY=this.contentMouseY;
 	   		value.startName=node.name;
+	   		value.lineState = NodeStyleSource.defaultState;
 	   		this.addChildAt(value,0);
 		 }
 		 
