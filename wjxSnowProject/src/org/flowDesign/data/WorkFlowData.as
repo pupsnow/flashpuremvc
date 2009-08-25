@@ -75,7 +75,7 @@ package  org.flowDesign.data
 			for(var i:int = 0;i<nodearr.length;i++)
 			{
 			var c:NodeData =hashmap.getKey(nodearr[i]);
-			var xml1:XMLList=XMLList(StringUtil.substitute("<node id='{0}' name='{1}' nodeState='{2}' type='{3}' TypeId='{4}'  x='{5}' y='{6}'> {7} </node>",c.id,c.name,c.nodeState,c.type,c.TypeId,c.x,c.y,c.nodeProperty.getXml()));
+			var xml1:XMLList=XMLList(StringUtil.substitute("<node id='{0}' name='{1}' nodeState='{2}' type='{3}' TypeId='{4}'  x='{5}' y='{6}' nodePropertyClass='{7}'> {8} </node>",c.id,c.name,c.nodeState,c.type,c.TypeId,c.x,c.y,getQualifiedClassName(c.nodeUpdateClass),c.nodeProperty.getXml()));
 			nodexml.appendChild(xml1);
 			
 			}

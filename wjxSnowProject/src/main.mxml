@@ -165,48 +165,110 @@
 	<mx:XML xmlns="" id="da">
 <result>
   <node>
-    <node id="node20090824152712" name="结束结点" nodeState="default" type="end" TypeId="2" x="273" y="71">
-      <property>
-        <property id="node_title" property="text" value="结束结点"/>
-        <property id="remark" property="text" value=""/>
+    <node id="node20090825212930" name="Over" nodeState="default" type="end" TypeId="" x="833" y="226" nodePropertyClass="org.flowDesign.panel::EndNodePropertyUpdateWin">
+      <property Class="org.flowDesign.data::EndNodeProperty">
+        <property id="node_title" property="text" value="Over"/>
+        <property id="remark" property="text" value="结束"/>
+        <property id="condition" property="text" value="结束"/>
       </property>
     </node>
-    <node id="node20090824152709" name="子流程" nodeState="default" type="child" TypeId="6" x="535" y="236">
-      <property>
+    <node id="node20090825212935" name="子流程" nodeState="default" type="child" TypeId="" x="436" y="61" nodePropertyClass="org.flowDesign.panel::StartNodePropertyUpdateWin">
+      <property Class="org.flowDesign.data::StartNodeProperty">
         <property id="node_title" property="text" value="子流程"/>
         <property id="remark" property="text" value=""/>
       </property>
     </node>
-    <node id="node20090824152711" name="开始结点" nodeState="default" type="start" TypeId="1" x="73" y="159">
-      <property>
-        <property id="node_title" property="text" value="开始结点"/>
+    <node id="node20090825212926" name="第一步" nodeState="execute" type="manual" TypeId="" x="236" y="207" nodePropertyClass="org.flowDesign.panel::StartNodePropertyUpdateWin">
+      <property Class="org.flowDesign.data::StartNodeProperty">
+        <property id="node_title" property="text" value="第一步"/>
+        <property id="remark" property="text" value="第一个环节"/>
+      </property>
+    </node>
+    <node id="node20090825212928" name="机器环节" nodeState="default" type="automatism" TypeId="" x="669" y="223" nodePropertyClass="org.flowDesign.panel::StartNodePropertyUpdateWin">
+      <property Class="org.flowDesign.data::StartNodeProperty">
+        <property id="node_title" property="text" value="机器环节"/>
         <property id="remark" property="text" value=""/>
       </property>
     </node>
-    <node id="node20090824152714" name="并行环节" nodeState="default" type="parallel_links" TypeId="5" x="270" y="315">
-      <property>
-        <property id="node_title" property="text" value="并行环节"/>
+    <node id="node20090825212940" name="子流程" nodeState="default" type="child" TypeId="" x="436" y="207" nodePropertyClass="org.flowDesign.panel::StartNodePropertyUpdateWin">
+      <property Class="org.flowDesign.data::StartNodeProperty">
+        <property id="node_title" property="text" value="子流程"/>
+        <property id="remark" property="text" value=""/>
+      </property>
+    </node>
+    <node id="node20090825215322" name="结束结点" nodeState="default" type="end" TypeId="" x="668" y="54" nodePropertyClass="org.flowDesign.panel::EndNodePropertyUpdateWin">
+      <property Class="org.flowDesign.data::EndNodeProperty">
+        <property id="node_title" property="text" value="结束结点"/>
+        <property id="remark" property="text" value=""/>
+        <property id="condition" property="text" value=""/>
+      </property>
+    </node>
+    <node id="node20090825212923" name="Start" nodeState="complete" type="start" TypeId="" x="56" y="204" nodePropertyClass="org.flowDesign.panel::StartNodePropertyUpdateWin">
+      <property Class="org.flowDesign.data::StartNodeProperty">
+        <property id="node_title" property="text" value="Start"/>
+        <property id="remark" property="text" value="开始"/>
+      </property>
+    </node>
+    <node id="node20090825212945" name="子流程" nodeState="default" type="child" TypeId="" x="435" y="369" nodePropertyClass="org.flowDesign.panel::StartNodePropertyUpdateWin">
+      <property Class="org.flowDesign.data::StartNodeProperty">
+        <property id="node_title" property="text" value="子流程"/>
         <property id="remark" property="text" value=""/>
       </property>
     </node>
   </node>
   <line>
-    <node id="node20090824152711node20090824152712" name="node20090824152711node20090824152712" fromNodeId="node20090824152711" toNodeId="node20090824152712" lineType="org.flowDesign.layout::LineTool" lineState="default">
+    <node id="node20090825212935node20090825212928" name="node20090825212935node20090825212928" fromNodeId="node20090825212935" toNodeId="node20090825212928" lineType="org.flowDesign.layout::LineTool" lineState="default">
       <property>
-        <property id="line_title" property="text" value="1111111111111"/>
-        <property id="line_remark" property="text" value="111111"/>
+        <property id="line_title" property="text" value="完成"/>
+        <property id="line_remark" property="text" value="完成"/>
       </property>
     </node>
-    <node id="node20090824152714node20090824152709" name="node20090824152714node20090824152709" fromNodeId="node20090824152714" toNodeId="node20090824152709" lineType="org.flowDesign.layout::LineTool" lineState="default">
+    <node id="node20090825212926node20090825212940" name="node20090825212926node20090825212940" fromNodeId="node20090825212926" toNodeId="node20090825212940" lineType="org.flowDesign.layout::HBrokenLineTool" lineState="default">
       <property>
-        <property id="line_title" property="text" value="44444"/>
-        <property id="line_remark" property="text" value="4444444444"/>
+        <property id="line_title" property="text" value="第二"/>
+        <property id="line_remark" property="text" value="第2条件"/>
       </property>
     </node>
-    <node id="node20090824152711node20090824152714" name="node20090824152711node20090824152714" fromNodeId="node20090824152711" toNodeId="node20090824152714" lineType="org.flowDesign.layout::LineTool" lineState="default">
+    <node id="node20090825212926node20090825212945" name="node20090825212926node20090825212945" fromNodeId="node20090825212926" toNodeId="node20090825212945" lineType="org.flowDesign.layout::HBrokenLineTool" lineState="default">
       <property>
-        <property id="line_title" property="text" value="22222222"/>
-        <property id="line_remark" property="text" value="2222222222"/>
+        <property id="line_title" property="text" value="第三"/>
+        <property id="line_remark" property="text" value="满足第3个条件"/>
+      </property>
+    </node>
+    <node id="node20090825212945node20090825212928" name="node20090825212945node20090825212928" fromNodeId="node20090825212945" toNodeId="node20090825212928" lineType="org.flowDesign.layout::LineTool" lineState="default">
+      <property>
+        <property id="line_title" property="text" value="完成"/>
+        <property id="line_remark" property="text" value="完成"/>
+      </property>
+    </node>
+    <node id="node20090825212923node20090825212926" name="node20090825212923node20090825212926" fromNodeId="node20090825212923" toNodeId="node20090825212926" lineType="org.flowDesign.layout::LineTool" lineState="execute">
+      <property>
+        <property id="line_title" property="text" value="启用"/>
+        <property id="line_remark" property="text" value=""/>
+      </property>
+    </node>
+    <node id="node20090825212926node20090825212935" name="node20090825212926node20090825212935" fromNodeId="node20090825212926" toNodeId="node20090825212935" lineType="org.flowDesign.layout::HBrokenLineTool" lineState="default">
+      <property>
+        <property id="line_title" property="text" value="第一"/>
+        <property id="line_remark" property="text" value="第一步"/>
+      </property>
+    </node>
+    <node id="node20090825212928node20090825215322" name="node20090825212928node20090825215322" fromNodeId="node20090825212928" toNodeId="node20090825215322" lineType="org.flowDesign.layout::LineTool" lineState="default">
+      <property>
+        <property id="line_title" property="text" value="3333"/>
+        <property id="line_remark" property="text" value="3333333333333"/>
+      </property>
+    </node>
+    <node id="node20090825212928node20090825212930" name="node20090825212928node20090825212930" fromNodeId="node20090825212928" toNodeId="node20090825212930" lineType="org.flowDesign.layout::LineTool" lineState="default">
+      <property>
+        <property id="line_title" property="text" value="最后验证"/>
+        <property id="line_remark" property="text" value="验证"/>
+      </property>
+    </node>
+    <node id="node20090825212940node20090825212928" name="node20090825212940node20090825212928" fromNodeId="node20090825212940" toNodeId="node20090825212928" lineType="org.flowDesign.layout::LineTool" lineState="default">
+      <property>
+        <property id="line_title" property="text" value="完成"/>
+        <property id="line_remark" property="text" value="完成"/>
       </property>
     </node>
   </line>

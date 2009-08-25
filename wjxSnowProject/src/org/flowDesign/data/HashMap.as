@@ -158,7 +158,7 @@ package  org.flowDesign.data
 			}
 			return ary;
 		}
-		return undefined;
+		return [];
 	}
 	
 	/**

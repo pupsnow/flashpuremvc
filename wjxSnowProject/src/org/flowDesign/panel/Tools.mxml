@@ -41,7 +41,7 @@
 			}
 			
 			/**拖动相关节点到画图板  此页的关键代码*/
-			private function dragIt(event:MouseEvent, value:String,
+			private function dragIt(event:MouseEvent, value:String,nodeUpdateClass:Class,
 								 typename:String,typeId:String):void
 			{
 				/**初始化拖动  */
@@ -51,7 +51,7 @@
 				dragSource.addData(typename, 'typename');
 				dragSource.addData(typeId, 'typeId');
 				dragSource.addData(value, 'value');
-//				dragSource.addData(icon,"icon");
+				dragSource.addData(nodeUpdateClass,"nodePropertyClass");
 				dragSource.addData(dragInitiator.label,"lable");
 				dragSource.addData(dragInitiator.mouseX,"x");
 				dragSource.addData(dragInitiator.mouseY,"y");
@@ -71,27 +71,27 @@
 	</mx:Metadata>
 	<mx:Button name="node" 	id="startNode"  width="80"		
 		icon="{instance.getIcon('start')}"  fontSize="12"  label="开始结点" 
-		mouseMove="dragIt(event,'start','开始结点','1');" 
+		mouseMove="dragIt(event,'start',org.flowDesign.panel.StartNodePropertyUpdateWin,'开始结点','1');" 
 		mouseDown="toolClick(event)" labelPlacement="bottom"/>
 	<mx:Button name="node"	id="endNode" icon="{instance.getIcon('end')}" 
 		width="80" label="结束结点" fontSize="12" 
-		mouseMove="dragIt(event,'end','结束结点','2');" 
+		mouseMove="dragIt(event,'end',org.flowDesign.panel.EndNodePropertyUpdateWin,'结束结点','2');" 
 		mouseDown="toolClick(event)" labelPlacement="bottom"/>
 	<mx:Button	name="node" id="manualNode" icon="{instance.getIcon('manual')}"
 		 width="80" label="普通环节" fontSize="12" 
-		 mouseMove="dragIt(event,'manual','普通环节','3');" 
+		 mouseMove="dragIt(event,'manual',org.flowDesign.panel.StartNodePropertyUpdateWin,'普通环节','3');" 
 		 mouseDown="toolClick(event)" labelPlacement="bottom"/>
 	<mx:Button name="node"	id="automatismNode" icon="{instance.getIcon('automatism')}" 
 		width="80" label="机器环节" fontSize="12" 
-		mouseMove="dragIt(event,'automatism','机器环节','4');" 
+		mouseMove="dragIt(event,'automatism',org.flowDesign.panel.StartNodePropertyUpdateWin,'机器环节','4');" 
 		mouseDown="toolClick(event)" labelPlacement="bottom"/>
 	<mx:Button name="node" label="并行环节"  icon="{instance.getIcon('parallel_links')}" 
 		fontSize="12" width="80"  
-		mouseMove="dragIt(event,'parallel_links','并行环节','5')" 
+		mouseMove="dragIt(event,'parallel_links',org.flowDesign.panel.StartNodePropertyUpdateWin,'并行环节','5')" 
 		mouseDown="toolClick(event)" labelPlacement="bottom"/>	
 	<mx:Button name="node" label="子流程"  icon="{instance.getIcon('child')}" 
 		fontSize="12" width="80"  
-		mouseMove="dragIt(event,'child','子流程','6')" 
+		mouseMove="dragIt(event,'child',org.flowDesign.panel.StartNodePropertyUpdateWin,'子流程','6')" 
 		mouseDown="toolClick(event)" labelPlacement="bottom"/>
 		
 	<mx:Button name="line" label="直连线" icon="{instance.getIcon('line')}"   

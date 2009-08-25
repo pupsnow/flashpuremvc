@@ -218,5 +218,18 @@ package   org.flowDesign.data
 		{
 			return _nodeComplete;
 		}
+		
+		/**
+		* 节点对应的弹出框 class
+		*/		
+		private var _nodeUpdateClass:Class;
+		public function set nodeUpdateClass(value:Class):void
+		{
+			_nodeUpdateClass  = value;
+		}
+		public function get nodeUpdateClass():Class
+		{
+			return _nodeUpdateClass;
+		}
 	}
 }

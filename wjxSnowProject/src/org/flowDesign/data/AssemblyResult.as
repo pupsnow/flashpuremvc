@@ -5,7 +5,8 @@ package org.flowDesign.data
 	public class AssemblyResult
 	{
 		
-		public static const PROPERTY_START:String="<property>"
+		public static const PROPERTY_START:String="<property Class='{0}'>"
+		public static const LINE_PROPERTY_START:String="<property>"
 		public static const PROPERTY_END:String="</property>"
 		public static function getProperty(id:String,property:String,value:String):String
 		{
