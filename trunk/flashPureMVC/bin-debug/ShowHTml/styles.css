@@ -1,0 +1,12 @@
+/* CSS file */
+
+Application
+{
+	backgroundColor: #FFFFFF;
+	backgroundGradientAlphas: 1.0, 1.0;
+	backgroundGradientColors: #FFFFFF, #C6C6C6;
+}
+
+TextInput {
+	borderStyle: "solid";
+}
